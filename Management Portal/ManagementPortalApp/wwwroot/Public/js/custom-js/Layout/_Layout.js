@@ -335,33 +335,30 @@ function removeToast(id) {
 }
 $(document).on("click", "#BackupBtn", function () {
 
-    savebackup();
-});
-function savebackup() {
-
     UTILITY.CheckSession((data_) => {
 
 
-            new APICALL(GetGlobalURL('Base', 'CreateBackup'), 'GET', '', true).FETCH((result, error) => {
+        new APICALL(GetGlobalURL('Base', 'CreateBackup'), 'GET', '', true).FETCH((result, error) => {
 
-                if (result) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success...',
-                        text: 'DB Backup Create Successfully!',
-                        footer: ''
-                    });
-                }
+            if (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success...',
+                    text: 'DB Backup Create Successfully!',
+                    footer: ''
+                });
+            }
 
-                if (error) {
+            if (error) {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error...',
-                        text: error.data.responseText,
-                        footer: ''
-                    });
-                }
-            });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error...',
+                    text: error.data.responseText,
+                    footer: ''
+                });
+            }
+        });
     });
-}
+});
+
