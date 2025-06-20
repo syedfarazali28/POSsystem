@@ -333,6 +333,10 @@ function HideLoader(divid) {
 function removeToast(id) {
     $('.c_toast_' + id).remove();
 }
+$(document).on("click", "#BackupBtn", function () {
+
+    savebackup();
+});
 function savebackup() {
 
     UTILITY.CheckSession((data_) => {
