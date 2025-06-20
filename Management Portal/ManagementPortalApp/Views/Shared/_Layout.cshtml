@@ -1,0 +1,287 @@
+﻿@inject ManagementPortalApp.Models.Session.Sessions Sessions_
+
+@{
+    System.Security.Claims.ClaimsPrincipal claimsPrincipal = Context.User;
+    var UniqueKey = (from c in claimsPrincipal.Claims where c.Type == "Guid" select c.Value).FirstOrDefault();
+    var UserID = (from c in claimsPrincipal.Claims where c.Type == "UserID" select c.Value).FirstOrDefault();
+    ManagementPortalApp.Models.Session.SessionItems sessionItems = Sessions_.GetSession(UniqueKey, UserID);
+    ManagementPortalApp.Models.Authentication.UserInfo userInfo = sessionItems.userInfo;
+    string authToken = sessionItems.authToken.access_token;
+    List<ManagementPortalApp.Models.Authentication.Form> _Form = sessionItems.forms;
+    string RequestUrl = Context.Request.RouteValues["controller"].ToString() + "/" + Context.Request.RouteValues["action"].ToString();
+    
+    @functions {
+        public void RenderDesktopViewNavs(ManagementPortalApp.Models.Authentication.Form form, string requestUrl)
+        {
+            string url = "#";
+            if (form.FormController != "" && form.FormController != null)
+            {
+                url = "../" + form.FormController + "/" + form.FormAction;
+            }
+            string active_1 = form.Childrens.Any(x => x.FormController + "/" + x.FormAction == requestUrl) ? "active" : "collapsed";
+            string active_2 = form.Childrens.Any(x => x.FormController + "/" + x.FormAction == requestUrl) ? "show" : "";
+
+
+            if (form.Childrens.Count() > 0)
+            {
+                
+                <div>
+                    <a class="nav-link parent" data-bs-toggle="collapse" href="#GROUP_@form.FormID" role="button" aria-expanded="false" aria-controls="@form.FormDisplayName">
+                        @Html.Raw(@form.Icon)                        
+                        <span class="nav_name">@form.FormDisplayName</span>
+                        <i class="bx @((active_1 == "active") ? "bx-chevron-down" : "bx-chevron-right") toggleClassParent"></i>
+                    </a>
+
+                </div>
+
+                <div class="collapse navbar-collapse @active_2" id="GROUP_@form.FormID">
+                    <ul class="navbar-nav">
+                        @foreach (var child in form.Childrens)
+                        {
+                            string active_3 = (requestUrl == child.FormController + "/" + child.FormAction) ? "active" : "";
+
+                            <li class="nav-item">
+                                @if (child.Childrens.Any())
+                                {
+                                    this.RenderDesktopViewNavs(child, requestUrl);
+                                }
+                                else
+                                {
+                                    <a class="nav-link @active_3" href="../@child.FormController/@child.FormAction">@child.FormDisplayName</a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+
+        public void RenderMobileViewNavs(ManagementPortalApp.Models.Authentication.Form form, string requestUrl)
+        {
+            string url = "#";
+            if (form.FormController != "" && form.FormController != null)
+            {
+                url = "../" + form.FormController + "/" + form.FormAction;
+            }
+            string active_1 = form.Childrens.Any(x => x.FormController + "/" + x.FormAction == requestUrl) ? "active" : "collapsed";
+            string active_2 = form.Childrens.Any(x => x.FormController + "/" + x.FormAction == requestUrl) ? "show" : "";
+
+            //Dont Show Forms That Have Zero Childrens
+            if (form.Childrens.Count() > 0)
+            {
+                <div>
+                    <a class="nav-link parent" data-bs-toggle="collapse" href="#GROUP_@form.FormID" role="button" aria-expanded="false" aria-controls="@form.FormDisplayName">
+                        @Html.Raw(@form.Icon) 
+                        <span class="nav_name">@form.FormDisplayName</span>
+                        <i class="bx @((active_1 == "active") ? "bx-chevron-down" : "bx-chevron-right") toggleClassParent"></i>
+                    </a>
+
+                    <a class="nav_link dropdown-nav-mobile" data-bs-toggle="collapse" href="#GROUP_@form.FormID" role="button" aria-expanded="false" aria-controls="@form.FormDisplayName">
+                        <i class='bx bx-chevron-down'></i>
+                    </a>
+                </div>
+
+                <div class="collapse navbar-collapse @active_2" id="GROUP_@form.FormID">
+                    <ul class="navbar-nav">
+                        @foreach (var child in form.Childrens)
+                        {
+                            string active_3 = (requestUrl == child.FormController + "/" + child.FormAction) ? "active" : "";
+
+                            <li class="nav-item">
+                                @if (child.Childrens.Any())
+                                {
+                                    this.RenderMobileViewNavs(child, requestUrl);
+                                }
+                                else
+                                {
+                                    <a class="nav-link @active_3" href="../@child.FormController/@child.FormAction">@child.FormDisplayName</a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+    }
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title | Management Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="~/Public/image/favicon.ico">
+    <link href="~/Public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/css/custom-css/Layout/_Layout.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/css/custom-css/Layout/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/css/custom-css/Layout/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/vendor/select2/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/vendor/datatables/css/datatables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/vendor/sweetalert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Public/vendor/Highcharts-11.0.1/code/css/highcharts.css" />
+    @RenderSection("TopCss", false)
+</head>
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle d-none d-lg-flex">
+            <img src="~/Public/image/logo.png" alt="logo" class="main-logo">
+            <i class='bx bx-toggle-right' id="header-toggle"></i>
+        </div>
+        <nav class="navbar navbar-dark navbar-expand-lg mobile-nav d-block d-lg-none">
+            <a class="navbar-brand" href="~/Admin/Dashboard">
+                <img src="~/Public/image/logo.png" alt="logo" class="mobile-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    @{
+                        @if (_Form.Count > 0)
+                        {
+                            @foreach (var form in _Form)
+                            {
+                                <div>
+                                    @{
+                                        this.RenderMobileViewNavs(form, RequestUrl);
+                                    }
+                                </div>
+                            }
+                        }
+                    }
+                    <li class="nav-item">
+                        <div class="mobile-profile dropdown">
+                            <div class="media-name mr-5 justify-content-end">
+                                <button class="btn btn-primary btn-block btn-orange BackupBtn" id="BackupBtn" type="button">
+                                    <i class="bx bxs-user"></i> Db Backup
+                                </button>
+                            </div>
+
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                             
+                                <div class="profile-media">
+                                    <img src="~/Public/image/@(userInfo.UserImage == null ? "profile.png": "UserImage/" + userInfo.UserImage)" alt="profile">
+                                </div>
+                                <div class="media-name">
+                                    <p class="profile-name mb-0">@userInfo.UserName</p>
+                                    <span class="profile-role mb-0">@userInfo.RoleName</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="~/Forms/UserProfile">
+                                        <i class='bx bxs-user'></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/Forms/ChangePassword">
+                                        <i class='bx bxs-lock-alt'></i> Change Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/Login/Logout">
+                                        <i class='bx bx-log-out'></i> Signout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="profile-nav mobile-profile d-none d-lg-flex">
+            <div class="media-name mr-5 justify-content-end">
+                <button class="btn btn-primary btn-block btn-orange BackupBtn" id="BackupBtn" type="button">
+                    <i class="bx bxs-user"></i> Db Backup
+                </button>
+            </div>
+
+            
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                
+                <div class="profile-media">
+                    <img src="~/Public/image/@(userInfo.UserImage == null ? "profile.png": "UserImage/" + userInfo.UserImage)" alt="profile">
+                </div>
+                <div class="media-name">
+                    <p class="profile-name mb-0">@userInfo.UserName</p>
+                    <span class="profile-role mb-0">@userInfo.RoleName</span>
+                </div>
+            </a>
+
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="~/Forms/UserProfile">
+                        <i class='bx bxs-user'></i> Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="~/Forms/ChangePassword">
+                        <i class='bx bxs-lock-alt'></i> Change Password
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="~/Login/Logout">
+                        <i class='bx bx-log-out'></i> Signout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="l-navbar d-none d-lg-block" id="nav-bar">
+        <nav class="nav">
+            <div class="subnav">
+                <div class="nav_list">
+                    <div href="javascript:void(0);" class="menu_name">
+                        <span class="nav_name"></span>
+                        <hr />
+                    </div>
+
+                    @if (_Form.Count > 0)
+                    {
+                        @foreach (var form in _Form)
+                        {
+                            <div>
+                                @{
+                                    this.RenderDesktopViewNavs(form, RequestUrl);
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <section class="main">
+        <div class="container-fluid main-content">
+            @RenderBody()
+        </div>
+    </section>
+
+    <script src="~/Public/vendor/jquery/jquery-3.7.1.min.js"></script>
+    <script src="~/Public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Public/vendor/jquery/jquery.validate.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/dataTables.rowGroup.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/rowGroup.dataTables.js"></script>
+    <script src="~/Public/vendor/datatables/js/datatables.buttons.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/jszip.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/pdfmake.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/vfs_fonts.js"></script>
+    <script src="~/Public/vendor/datatables/js/buttons.html5.min.js"></script>
+    <script src="~/Public/vendor/datatables/js/buttons.print.min.js"></script>
+    <script src="~/Public/vendor/select2/select2.min.js"></script>
+    <script src="~/Public/vendor/SignalR/jquery.signalR-2.4.3.min.js"></script>
+    <script src="~/Public/vendor/sweetalert/sweetalert2.all.min.js"></script>
+    <script src="~/Public/vendor/Highcharts-11.0.1/code/highcharts.js"></script>
+    <script src="~/public/js/classes/APICALL.js"></script>
+    <script src="~/public/js/classes/UTILITY.js"></script>
+    <script src="~/public/js/classes/JSONTOEXCEL.js"></script>
+    <script src="~/public/js/classes/REPORTGENERATOR.js"></script>
+
+    <script src="~/Public/js/custom-js/Layout/_Layout.js"></script>
+    @RenderSection("BottomJS", false)
+</body>
+</html>

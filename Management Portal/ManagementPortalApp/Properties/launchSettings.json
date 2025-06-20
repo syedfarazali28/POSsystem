@@ -1,0 +1,52 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5249"
+    },
+    "https": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "AM_SALT_SIZE": "32",
+        "AM_KEY_SIZE": "64",
+        "AM_ITERATIONS": "15000",
+        "AM_ENCRYPTION_KEY": "M@Kv2$PBn!992!2-2024",
+        "AM_CHAR_SET": "ThI$I$R@nD0MKeYGeNeR@T0RbY$@L@R",
+        "AM_FOLDERPATH": "C:\\ManagementPortalLogs",
+        "AM_CONNECT_SRC": "https://localhost:7163 wss://localhost:7163/signalr",
+        "AM_SERVICE_URL": "https://localhost:7163/api/",
+        "AM_TARGET_API": "https://localhost:7163",
+        "AM_DATABASE": "Data Source=.;Initial Catalog=TeryLeneDatabase;Persist Security Info=True;User id=sa;Password=Pakistan1234;",
+        "AM_JWT_KEY": "$M!G-SF12345%,dns1.namingserver1.com",
+        "AM_JWT_ISSUER": "https://contabo.net/",
+        "AM_JWT_AUDIENCE": "contabo.net",
+        "AM_VIEWURL": "https://localhost:7201",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7201;http://localhost:5249"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:45809",
+      "sslPort": 44315
+    }
+  }
+}

@@ -1,0 +1,186 @@
+﻿@inject ManagementPortalApp.Models.Session.Sessions Sessions_
+@{
+    ViewBag.Title = "User Master";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section TopCss {
+    <link href="~/Public/css/custom-css/Settings/UserMaster.css" rel="stylesheet" />
+}
+
+@{
+
+    System.Security.Claims.ClaimsPrincipal claimsPrincipal = Context.User;
+    var UniqueKey = (from c in claimsPrincipal.Claims where c.Type == "Guid" select c.Value).FirstOrDefault();
+    var UserID = (from c in claimsPrincipal.Claims where c.Type == "UserID" select c.Value).FirstOrDefault();
+
+    ManagementPortalApp.Models.Session.SessionItems sessionItems = Sessions_.GetSession(UniqueKey, UserID);
+
+    List<ManagementPortalApp.Models.Authentication.RolesMapping> rolesMapping = sessionItems.rolesMapping;
+
+    var FilterForm = rolesMapping.FirstOrDefault(x => x.FormName == Context.Request.RouteValues["controller"] + "/" + Context.Request.RouteValues["action"]);
+    bool _allowinsert = FilterForm.AllowInsert;
+    bool _allowupdate = FilterForm.AllowUpdate;
+    bool _allowdelete = FilterForm.AllowDelete;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <h4 class="mb-0">Form Master</h4>
+            </div>
+            <div class="card-body">
+                <form id="formmasterform" name="formmasterform" action="" autocomplete="off">
+                    <div class="row">
+                        <div class="col-12" id="Form1">
+                            <div class="row">
+                                <div class="d-none">
+                                    <input type="text" class="form-control" id="EditformID" name="EditformID" value="">
+                                </div>
+                                <div class="d-none">
+                                    <input type="text" class="form-control" id="formID" name="formID" value="">
+                                </div>
+                                <div class="d-none">
+                                    <input type="text" class="form-control" id="StatusID" name="StatusID" value="">
+                                </div>
+                                <div class="d-none">
+                                    <input type="text" class="form-control" id="DomainName" name="DomainName" value="">
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                    <label>Form Controller</label>
+                                    <input type="text" class="form-control" id="FormController" name="FormController" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                    <label>Form Action</label>
+                                    <input type="text" class="form-control" id="FormAction" name="FormAction" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-3 mt-lg-0">
+                                    <label>Form Display Name</label>
+                                    <input type="text" class="form-control" id="FormDisplayName" name="FormDisplayName" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                <label>Icon</label>
+                                <input type="text" placeholder="Add Icon HTML" class="form-control" id="Icon" name="Icon" autocomplete="off">
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                <label>Paresent Form</label>
+                                <select class="formname form-select" name="FormID" id="FormID" required>
+                                    <option value="">Select Default Form</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                <label>Role Name</label>
+                                <select class="rolename form-select" name="RoleID" id="RoleID" required>
+                                    <option value="">Select Role</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-5">
+                                <label>Is View</label>
+                                <input type="checkbox" checked id="isview" name="isview">
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-5">
+                                <label>Allow Update</label>
+                                <input type="checkbox" checked id="AllowUpdate" name="AllowUpdate">
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-5">
+                                <label>Allow Delete</label>
+                                <input type="checkbox" checked id="AllowDelete" name="AllowDelete">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-5">
+                            <label>Allow Insert</label>
+                            <input type="checkbox" checked id="AllowInsert" name="AllowInsert">
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 mt-5">
+                            <label>Active</label>
+                            <input type="checkbox" checked id="IsActive" name="IsActive">
+                        </div>
+                    </div>
+
+
+                    <div class="row mt-3">
+
+                        <div class="col-12 d-flex justify-content-end">
+                            @if (_allowinsert)
+                            {
+                                <button class="btn btn-primary btn-block btn-orange d-block savebutton" id="SaveBtn" type="button"><i class='bx bxs-save pe-2'></i>Save</button>
+
+                            }
+                            @if (_allowupdate)
+                            {
+                                <button class="btn btn-primary btn-block btn-orange d-none d-block  updatebutton" id="UpdateBtn" type="button"><i class='bx bxs-save pe-2'></i>Update</button>
+
+                            }
+                            <button class="btn btn-primary btn-block btn-orange d-block d-block ms-2 clearbutton" id="ClearBtn" type="button"><i class='bx bxs-save pe-2'></i>Clear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="formMasterDiv">
+                    <div class="div-loader">
+                        <div class="loader-wrapper d-none">
+                            <span class="loader"></span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="form-master">
+                                <thead>
+                                    <tr>
+                                        <th>Form Controller</th>
+                                        <th>Form Action</th>
+                                        <th>Form Display Name</th>
+                                        <th>Icon</th>
+                                        <th>Paresent Form</th>
+                                        <th>Role Name</th>
+                                        <th>Allow View</th>
+                                        <th>Allow Update</th>
+                                        <th>Allow Delete</th>
+                                        <th>Allow Insert</th>
+                                        <th>Active</th>
+                                        @if (_allowupdate)
+                                        {
+                                            <th>Edit</th>
+                                        }
+                                        @if (_allowdelete)
+                                        {
+                                            <th>Delete</th>
+                                        }
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section BottomJS {
+    <script src="~/Public/js/custom-js/Settings/formsmaster.js"></script>
+}
+
