@@ -373,6 +373,9 @@ namespace ManagementPortalApp.Controllers
         #endregion
 
 
+        #region masterform
+
+       
         #region Category
         [HttpPost]
         public IActionResult SaveCategoryData([FromBody] Parameters Data)
@@ -388,6 +391,12 @@ namespace ManagementPortalApp.Controllers
         public IActionResult GetCategoryData()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetCategory", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetactiveCategory()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetactiveCategory", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
@@ -431,6 +440,12 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetProductData", "Settings");
             return new HttpResponseMessageResult(response);
         }
+        [HttpGet]
+        public IActionResult GetactiveProductData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetactiveProductData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         [HttpPost]
         public IActionResult SaveProductData([FromBody] Parameters Data)
         {
@@ -463,6 +478,7 @@ namespace ManagementPortalApp.Controllers
         }
 
         #endregion
+
         #region Supplier's
         [HttpGet]
         public IActionResult GetSupplyData()
@@ -501,6 +517,7 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         #endregion
+
         #region Distributor's
         [HttpGet]
         public IActionResult GetDistributorData()
@@ -536,6 +553,92 @@ namespace ManagementPortalApp.Controllers
             string jsonString = JsonConvert.SerializeObject(Data);
 
             HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteDistributorDataByid", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region SalesPerson
+        [HttpGet]
+        public IActionResult GetSalesPersonData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetSalesPersonData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult SaveSalesPersonData([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveSalesPersonData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetSalesPersonByid([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSalesPersonByid", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult DeleteSalesPersonByid([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteSalesPersonByid", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+
+
+
+
+        #endregion
+
+
+
+        #region productsku's
+        [HttpGet]
+        public IActionResult GetproductskuData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetproductskuData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult SaveproductskuData([FromBody] List<Parameters> Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveproductskuData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetproductskuDataByid([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetproductskuDataByid", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult DeleteproductskuDataByid([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteproductskuDataByid", "Settings");
             return new HttpResponseMessageResult(response);
         }
         #endregion

@@ -8,7 +8,7 @@
                 </td>
                 <td>
                     <label>Category Name</label>
-                    <input type="text" class="form-control category-name" id="category" name="Category" autocomplete="off" required>
+                    <input type="text" class="form-control category-name" id="category" validate-required name="Category" autocomplete="off" required>
                 </td>
                 <td>
                     <label>Active</label>

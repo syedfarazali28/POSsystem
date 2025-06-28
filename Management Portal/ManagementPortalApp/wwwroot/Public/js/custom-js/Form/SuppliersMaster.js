@@ -1,6 +1,4 @@
-﻿$(document).ready(function () {
-    $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
+﻿var html = `
             <tr>
                 <td class="d-none">
               
@@ -37,7 +35,10 @@
                     </button>
                 </td>
             </tr>
-        `);
+        `
+$(document).ready(function () {
+    $("#inputtable tbody").html('');
+    $("#inputtable tbody").append(html);
     GetSuppliersData();
 });
 
@@ -142,44 +143,7 @@ $(document).on('click', '#ClearBtn', function () {
 });
 function Clear() {
     $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
-            <tr>
-                <td class="d-none">
-              
-                    <input type="text" class="form-control Suppliers-name" id="Suppliersid" name="Suppliers" autocomplete="off" required>
-                </td>
-                <td>
-                    <label>Suppliers Name</label>
-                    <input type="text" validate-required class="form-control Suppliers-name" id="Suppliers" name="Suppliers" autocomplete="off" required>
-                </td>     
-                <td>
-                    <label>Address</label>
-                    <input type="text" validate-required class="form-control Suppliers-name" id="Address" name="Suppliers" autocomplete="off" required>
-                </td>    
-                <td>
-                    <label>ContactNumber</label>
-                    <input type="text" class="form-control Suppliers-name" validate-phone id="ContactNumber" name="Suppliers" autocomplete="off" required>
-                </td>    
-                <td>
-                    <label>Email</label>
-                    <input type="text" class="form-control Suppliers-name" id="Email" validate-email name="Suppliers" autocomplete="off" required>
-                </td>    
-                <td>
-                    <label>Active</label>
-                    <div class="form-check">
-                        <input class="form-check-input is-active"  id="is-active" checked type="checkbox" name="IsActive">
-                    </div>
-                </td>
-                <td class="text-end">
-                    <button class="btn btn-primary addnewrowbtn d-none" type="button">
-                        <i class='bx bx-plus'></i>
-                    </button>
-                    <button class="btn btn-danger removebtn d-none" type="button">
-                        <i class='bx bxs-trash'></i>
-                    </button>
-                </td>
-            </tr>
-        `);
+    $("#inputtable tbody").append(html);
     if ($('.updatebutton').hasClass('d-none')) {
         $('.savebutton').toggleClass('d-none');
         $('.updatebutton').toggleClass('d-none');

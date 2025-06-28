@@ -1,19 +1,18 @@
-﻿$(document).ready(function () {
-    $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
+﻿
+var html = `
          <div class="container">
     <div class="row align-items-center mb-3">
         <div class="col-md-4">
-        <input type="hidden" class="form-control" id="Productid" name="Productid" autocomplete="off" required>
+        <input type="hidden" class="form-control" id="Productid" name="Productid" autocomplete="off" >
             <label for="category">Category Name</label>
-            <select id="category" class="form-select" required>
+            <select id="category" class="form-select searchingenable" validate-required>
                 <option></option>
                 <!-- Add options here -->
             </select>
         </div>
         <div class="col-md-4">
             <label for="Product">Product Name</label>
-            <input type="text" class="form-control" id="Product" name="Product" autocomplete="off" required>
+            <input type="text" class="form-control" id="Product" name="Product" autocomplete="off" validate-required>
         </div>
         <div class="col-md-4 d-flex align-items-center">
             <div>
@@ -26,38 +25,15 @@
    
 </div>
 
-        `);
+        `
+$(document).ready(function () {
+    $("#inputtable tbody").html('');
+    $("#inputtable tbody").append(html);
     GetCategoryData();
     GetProductData();
 });
 $(document).on('click', '.addnewrowbtn', function () {
-    $("#inputtable tbody").append(`
-         <div class="container">
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4">
-        <input type="hidden" class="form-control" id="Productid" name="Productid" autocomplete="off" required>
-            <label for="category">Category Name</label>
-            <select id="category" class="form-select" required>
-                <option></option>
-                <!-- Add options here -->
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="Product">Product Name</label>
-            <input type="text" class="form-control" id="Product" name="Product" autocomplete="off" required>
-        </div>
-        <div class="col-md-4 d-flex align-items-center">
-            <div>
-                <label for="is-active" class="me-2">Active</label>
-                <input class="form-check-input" id="is-active" type="checkbox" name="IsActive" checked>
-            </div>
-        </div>
-    </div>
-    
-   
-</div>
-
-        `);
+    $("#inputtable tbody").append(html);
 });
 
 $(document).on('click', '.removebtn', function () {
@@ -153,33 +129,7 @@ $(document).on('click', '#ClearBtn', function () {
 });
 function Clear() {
     $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
-         <div class="container">
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4">
-        <input type="hidden" class="form-control" id="Productid" name="Productid" autocomplete="off" required>
-            <label for="category">Category Name</label>
-            <select id="category" class="form-select" required>
-                <option></option>
-                <!-- Add options here -->
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="Product">Product Name</label>
-            <input type="text" class="form-control" id="Product" name="Product" autocomplete="off" required>
-        </div>
-        <div class="col-md-4 d-flex align-items-center">
-            <div>
-                <label for="is-active" class="me-2">Active</label>
-                <input class="form-check-input" id="is-active" type="checkbox" name="IsActive" checked>
-            </div>
-        </div>
-    </div>
-    
-   
-</div>
-
-        `);
+    $("#inputtable tbody").append(html);
     if ($('.updatebutton').hasClass('d-none')) {
         $('.savebutton').toggleClass('d-none');
         $('.updatebutton').toggleClass('d-none');
@@ -254,7 +204,7 @@ function GetCategoryData() {
 
         if (data_) {
 
-            new APICALL(GetGlobalURL('Base', 'GetCategoryData'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetactiveCategory'), 'GET', '', true).FETCH((result, error) => {
 
                 if (result) {
 
@@ -272,15 +222,15 @@ function GetCategoryData() {
                         if ($.fn.select2 && $('#category').hasClass("select2-hidden-accessible")) {
                             $('#category').select2('destroy');
                         }
-                        $('#category').select2({
-                            placeholder: "-- Select Category --",
-                            allowClear: true,
-                            width: 'resolve',
-                            minimumResultsForSearch: 0
-                        });
+                    
                     }
 
-                  
+                    $('.searchingenable').select2({
+                        placeholder: "-- Select Category --",
+                        allowClear: true,
+                        width: 'resolve',
+                        minimumResultsForSearch: 0
+                    });
                 }
 
                 if (error) {

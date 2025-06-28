@@ -13,9 +13,12 @@ using System.DirectoryServices;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
+using System.Security.Cryptography;
+using System.Text;
 namespace ManagementPortalApi.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
@@ -1020,6 +1023,36 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
 
+        [HttpGet]
+        public IActionResult GetactiveCategory()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_activecategory", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+
         [HttpPost]
         public IActionResult GetCategoryDataByid(Parameters p)
         {
@@ -1093,6 +1126,35 @@ namespace ManagementPortalApi.Controllers
                 nv.Clear();
 
                 dt = _DAL.GetData("sp_select_Product", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetactiveProductData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_activeProduct", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
@@ -1438,6 +1500,288 @@ namespace ManagementPortalApi.Controllers
                 nv.Add("ID-INT", p.Param1);
 
                 result = _DAL.GetData("sp_delete_distributor", nv, _DAL.CSManagementPortalDatabase);
+                if (result.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
+        #endregion
+
+        #region ProductSku Data
+        [HttpPost]
+        public IActionResult GetProductSkuDataByid(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Id-INT", p.Param1);
+
+                dt = _DAL.GetData("sp_select_ProductSkubyid", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetProductSkuData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_ProductSku", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult SaveProductSkuData([FromBody] List<Parameters> Data)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                for (int i = 0; i < Data.Count; i++)
+                {
+
+               
+                string  barcode = GeneratorBarCode();
+
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("SkuID-INT", Data[i].Param1 == null ? "0" : Data[i].Param1);
+                nv.Add("ProductID-INT", Data[i].Param2);
+                nv.Add("ProductName-VARCHAR", Data[i].Param4);
+                nv.Add("Base64Image-VARCHAR", Data[i].Param5);
+                nv.Add("Amount-DECIMAL", Data[i].Param6);
+                nv.Add("IsActive-INT", (Data[i].Param7 == "true" ? "1" : "0"));
+                nv.Add("ImageName-VARCHAR", Data[i].Param8);
+                nv.Add("Barcode-VARCHAR", barcode);
+                //nv.Add("ExpiryDate-DATETIME", Data[i].Param5);
+                
+           
+              
+
+                var isInserted = _DAL.InsertData("sp_insert_productSku", nv, _DAL.CSManagementPortalDatabase);
+               
+                }
+                //if (!isInserted)
+                //{
+                //    return BadRequest("Failed to Updated Product.");
+                //}
+                return Ok("Product Updated successfully.");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        public string GeneratorBarCode() {
+
+            string? Param;   
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            var result = new StringBuilder();
+            int length = 10; // Or any desired length
+
+            for (int i = 0; i < length; i++)
+            {
+                result.Append(chars[random.Next(chars.Length)]);
+            }
+            string datetimePart = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+
+            Param = result.ToString() + datetimePart;
+            return Param;
+           
+            
+        }
+        [HttpPost]
+        public IActionResult DeleteProductSkuDataByid(Parameters p)
+        {
+            var result = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("ID-INT", p.Param1);
+
+                result = _DAL.GetData("sp_delete_productsku", nv, _DAL.CSManagementPortalDatabase);
+                if (result.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
+        #endregion
+
+        #region SalesPerson
+        [HttpGet]
+        public IActionResult GetSalesPersonData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_salesperson", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult GetsalespersonByid(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Id-INT", p.Param1);
+
+                dt = _DAL.GetData("sp_select_salespersonbyid", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+    
+        [HttpPost]
+        public IActionResult SavesalespersonData(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("ID-INT", p.Param1 == null ? "0" : p.Param1);
+                nv.Add("salespersonName-VARCHAR", p.Param2);
+                nv.Add("Address-VARCHAR", p.Param3);
+                nv.Add("ContactNumber-VARCHAR", p.Param4);
+                nv.Add("Email-VARCHAR", p.Param5);
+                nv.Add("IsActive-INT", (p.Param6 == "true" ? "1" : "0"));
+                var isInserted = _DAL.InsertData("sp_insert_salesperson", nv, _DAL.CSManagementPortalDatabase);
+                if (!isInserted)
+                {
+                    return BadRequest("Failed to Updated Product.");
+                }
+
+                return Ok("Product Updated successfully.");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult DeletesalespersonByid(Parameters p)
+        {
+            var result = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("ID-INT", p.Param1);
+
+                result = _DAL.GetData("sp_delete_salesperson", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");

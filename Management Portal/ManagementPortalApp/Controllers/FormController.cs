@@ -24,5 +24,14 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
+        public IActionResult ProductskuMaster()
+        {
+            return View();
+        }
+
+        public IActionResult SalesPersonMaster()
+        {
+            return View();
+        }
     }
 }

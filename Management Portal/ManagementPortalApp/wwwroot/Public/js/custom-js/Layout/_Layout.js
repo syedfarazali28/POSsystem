@@ -1,9 +1,21 @@
-﻿$(document).on("click", "#SaveBtn", function (e) {
-    let isValid = true;
+﻿
+$(document).on("click", "#SaveBtn", function (e) {
+    var isValid = true;
+    $(".form-select").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]"; console.log(currentFieldId);
 
+        if (val === "") {
+            Swal.fire("Selection Required.");
+            $(currentFieldId).focus();
+            isValid = false;
+            return false;
+        }
+    });
     // Email Validation
     $("[validate-email]").each(function () {
-        let val = $(this).val().trim();
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
         if (val === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
             Swal.fire("Invalid email address.");
             $(this).focus();
@@ -15,7 +27,8 @@
 
     // Phone Validation
     $("[validate-phone]").each(function () {
-        let val = $(this).val().trim();
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
         if (val === "" || !/^[0-9]{10,15}$/.test(val)) {
             Swal.fire("Invalid phone number.");
             $(this).focus();
@@ -27,7 +40,8 @@
 
     // CNIC Validation
     $("[validate-cnic]").each(function () {
-        let val = $(this).val().trim();
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
         if (val === "" || !/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(val)) {
             Swal.fire("Invalid CNIC. Format: 12345-1234567-1");
             $(this).focus();
@@ -39,7 +53,117 @@
 
     // Required Field
     $("[validate-required]").each(function () {
-        let val = $(this).val().trim();
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+        if (val === "") {
+              Swal.fire("This field is required.");
+            $(this).focus();
+        
+
+        
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    // Number Field
+    $("[validate-number]").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+        if (val === "" || !/^\d+$/.test(val)) {
+            Swal.fire("Only numbers are allowed.");
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    // File Field
+    $("[validate-file]").each(function () {
+        var fileInput = $(this)[0];
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+
+        // Check if a file is selected
+        if (!fileInput.files || fileInput.files.length === 0) {
+            Swal.fire("Please select a file.");
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+
+        // Optional: Check file type (e.g., only allow images)
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+        var fileName = fileInput.files[0].name;
+        if (!allowedExtensions.exec(fileName)) {
+            Swal.fire("Only JPG, JPEG, PNG, or PDF files are allowed.");
+            $(this).val(""); // Clear the input
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+
+        // Optional: Check file size (e.g., max 2MB)
+        var maxSize = 2 * 1024 * 1024; // 2MB
+        if (fileInput.files[0].size > maxSize) {
+            Swal.fire("File size must be less than 2MB.");
+            $(this).val(""); // Clear the input
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    
+});
+$(document).on("click", "#UpdateBtn", function (e) {
+    var isValid = true;
+
+    // Email Validation
+    $("[validate-email]").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+        if (val === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+            Swal.fire("Invalid email address.");
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    // Phone Validation
+    $("[validate-phone]").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+        if (val === "" || !/^[0-9]{10,15}$/.test(val)) {
+            Swal.fire("Invalid phone number.");
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    // CNIC Validation
+    $("[validate-cnic]").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
+        if (val === "" || !/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(val)) {
+            Swal.fire("Invalid CNIC. Format: 12345-1234567-1");
+            $(this).focus();
+            isValid = false;
+            return false;
+        }
+    });
+    if (!isValid) { e.stopImmediatePropagation(); return false; }
+
+    // Required Field
+    $("[validate-required]").each(function () {
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
         if (val === "") {
             Swal.fire("This field is required.");
             $(this).focus();
@@ -51,7 +175,8 @@
 
     // Number Field
     $("[validate-number]").each(function () {
-        let val = $(this).val().trim();
+        var val = $(this).val().trim();
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
         if (val === "" || !/^\d+$/.test(val)) {
             Swal.fire("Only numbers are allowed.");
             $(this).focus();
@@ -61,151 +186,47 @@
     });
     if (!isValid) { e.stopImmediatePropagation(); return false; }
 
-    
-});
+    // File Field
+    $("[validate-file]").each(function () {
+        var fileInput = $(this)[0];
+        var currentFieldId = $(this).attr("id") || "[No ID]";  console.log(currentFieldId);
 
-
-$(document).on("click", "#UpdateBtn", function (e) {
-    let isValid = true;
-
-    $("[validate-email]").each(function () {
-        let val = $(this).val().trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (val !== "" && !emailRegex.test(val)) {
-            Swal.fire({
-                title: 'Invalid email address.',
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-
-            $(this).focus();
-            isValid = false;
-            return false; // break loop
-        }
-        if (val == "") {
-            Swal.fire({
-                title: 'Invalid email address.',
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-            $(this).focus();
-            isValid = false;
-            return false; // break loop
-        }
-    });
-
-    if (!isValid) { e.stopImmediatePropagation(); return false; }
-
-    $("[validate-phone]").each(function () {
-        let val = $(this).val().trim();
-        let phoneRegex = /^[0-9]{10,15}$/;
-        if (val !== "" && !phoneRegex.test(val)) {
-            Swal.fire({
-                title: "Invalid phone number.",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-
+        // Check if a file is selected
+        if (!fileInput.files || fileInput.files.length === 0) {
+            Swal.fire("Please select a file.");
             $(this).focus();
             isValid = false;
             return false;
         }
-        if (val == "") {
-            Swal.fire({
-                title: "Invalid phone number.",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-            $(this).focus();
-            isValid = false;
-            return false; // break loop
-        }
-    });
 
-    if (!isValid) { e.stopImmediatePropagation(); return false; }
-
-    $("[validate-cnic]").each(function () {
-        let val = $(this).val().trim();
-        let cnicRegex = /^[0-9]{5}-[0-9]{7}-[0-9]{1}$/;
-        if (val !== "" && !cnicRegex.test(val)) {
-            Swal.fire({
-                title: "Invalid CNIC format. Use 12345-1234567-1",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-
+        // Optional: Check file type (e.g., only allow images)
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+        var fileName = fileInput.files[0].name;
+        if (!allowedExtensions.exec(fileName)) {
+            Swal.fire("Only JPG, JPEG, PNG, or PDF files are allowed.");
+            $(this).val(""); // Clear the input
             $(this).focus();
             isValid = false;
             return false;
         }
-        if (val == "") {
-            Swal.fire({
-                title: "Invalid CNIC format. Use 12345-1234567-1",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
 
-            $(this).focus();
-            isValid = false;
-            return false; // break loop
-        }
-    });
-
-    if (!isValid) { e.stopImmediatePropagation(); return false; }
-
-    $("[validate-required]").each(function () {
-        let val = $(this).val().trim();
-        if (val === "") {
-            Swal.fire({
-                title: "This field is required.",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
+        // Optional: Check file size (e.g., max 2MB)
+        var maxSize = 2 * 1024 * 1024; // 2MB
+        if (fileInput.files[0].size > maxSize) {
+            Swal.fire("File size must be less than 2MB.");
+            $(this).val(""); // Clear the input
             $(this).focus();
             isValid = false;
             return false;
         }
     });
-
-    if (!isValid) { e.stopImmediatePropagation(); return false; }
-
-    $("[validate-number]").each(function () {
-        let val = $(this).val().trim();
-        if (val !== "" && !/^\d+$/.test(val)) {
-            Swal.fire({
-                title: "Only numbers are allowed.",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-            $(this).focus();
-            isValid = false;
-            return false;
-        }
-        if (val == "") {
-            Swal.fire({
-                title: "Only numbers are allowed.",
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            });
-            $(this).focus();
-            isValid = false;
-            return false; // break loop
-        }
-    });
-
     if (!isValid) { e.stopImmediatePropagation(); return false; }
 
 
 });
+
+
+
 
 
 

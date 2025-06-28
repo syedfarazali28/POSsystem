@@ -71,7 +71,7 @@ namespace ManagementPortalApp.Middleware
                 "form-action 'self';" +
                 "frame-ancestors 'none';" +
                 "frame-src 'self';" +
-                "img-src 'self';" +
+               "img-src 'self' data:;"+
                 "manifest-src 'self';" +
                 "media-src 'self';" +
                 "object-src 'self';" +
