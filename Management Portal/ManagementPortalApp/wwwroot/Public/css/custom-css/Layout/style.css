@@ -5,14 +5,14 @@
     --secondary-color: #0d6d6e;
     --third-color: #0d6d6e;
     --fourth-color: #0d6d6e;
-    --white-color: #FFF;
-    --body-font: 'Nunito', sans-serif;
+    --white-color: #fff;
+    --body-font: 'nunito', sans-serif;
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-    --danger-btn: #FE6A49;
-}*/
-
+    --danger-btn: #fe6a49;
+}
+*/
 :root {
     --header-height: 3rem;
     --nav-width: 100px;
@@ -28,10 +28,29 @@
     --z-fixed: 100;
     --danger-btn: #1b1a1a;
 }
+/*:root {
+    --header-height: 3rem;
+    --nav-width: 100px;
+    --primary-color: #007BFF;
+    --secondary-color: #1E2A38;*/ /*nav color*/
+    /*--third-color: #272528;
+    --fourth-color: #0056b3;*//* hovor color*/
+    /*--button-color: #007BFF;
+    --white-color: #FFF;*/ /*text color*/
+    /*--body-font: 'Nunito', sans-serif;
+    --normal-font-size: 1rem;
+    --small-font-size: 0.8rem;
+    --z-fixed: 100;
+    --danger-btn: #1b1a1a;
+}*/
+
 *,::before,::after {
     box-sizing: border-box;
 }
-
+.ui-state-active {
+    background-color: #eda739!important;
+    border-color: #eda739!important;
+}
 body {
     position: relative;
     margin: var(--header-height) 0 0 0;
