@@ -42,6 +42,8 @@ $(document).on('click', '.removebtn', function () {
 });
 
 $(document).on("click", "#SaveBtn", function () {
+    ShowLoader('CategoryMasterDiv');
+
     var categoryName = $("#category").val();
     var isActive = $("#is-active").prop("checked");
 
@@ -69,6 +71,7 @@ $(document).on("click", "#SaveBtn", function () {
                     });
                     Clear();
                     GetCategoryData();
+                    HideLoader('CategoryMasterDiv');
                 }
 
                 if (error) {
@@ -79,6 +82,7 @@ $(document).on("click", "#SaveBtn", function () {
                     });
                 }
             });
+            HideLoader('CategoryMasterDiv');
         }
     });
 });
