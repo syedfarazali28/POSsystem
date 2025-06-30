@@ -643,6 +643,15 @@ namespace ManagementPortalApp.Controllers
         }
         #endregion
 
+        #region Purchase
+        [HttpGet]
+        public IActionResult GetInvoiceno()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetInvoiceno", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
     }
 
 }

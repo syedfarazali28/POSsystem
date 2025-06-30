@@ -1,14 +1,11 @@
 ﻿@inject ManagementPortalApp.Models.Session.Sessions Sessions_
 @{
-    ViewBag.Title = "ProductskuMaster";
+    ViewBag.Title = "Category";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section TopCss {
-
-
     <link href="~/Public/css/custom-css/Settings/UserMaster.css" rel="stylesheet" />
-    <link href="~/Public/css/custom-css/Settings/productsku.css" rel="stylesheet" />
 }
 
 @{
@@ -26,207 +23,22 @@
     bool _allowupdate = FilterForm.AllowUpdate;
     bool _allowdelete = FilterForm.AllowDelete;
 }
-<div class="card">
-    <div class="card-header">
-        <h4 class="mb-0">Product Sku</h4>
-    </div>
-    <div id="tabs">
-        <ul>
-            <li><a href="#FormScreen">New Product SKU</a></li>
-            <li><a href="#DataScreen">Product SKU List</a></li>
-        </ul>
-
-        <!-- Tab 1: Your original content -->
-        <div id="FormScreen">
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex">
-                            <h4 class="mb-0">Add To Card Form</h4>
-                            <button class="btn btn-primary btn-block btn-orange d-block d-block ms-auto d-none" id="DistributorUploadBtn" type="button"><i class='bx bxs-user'></i>Bulk Insert</button>
-                        </div>
-
-
-                        <div class="card-body">
-                            <form id="" name="" method="post" action="" autocomplete="off">
-                                <div class="row">
-                                    <div class="col-12" id="Form1">
-                                        <table class="table datatable" id="inputtable">
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                                <div class="row mt-3">
-
-                                    <div class="col-12 d-flex justify-content-end">
-
-                                        <button class="btn btn-primary btn-block btn-orange d-block addbutton" id="addbutton" type="button"><i class='bx bxs-save pe-2'></i>Add In List</button>
-                                        <button class="btn btn-primary btn-block btn-orange d-block d-block ms-2 clearbutton" id="ClearBtn" type="button"><i class='bx bxs-save pe-2'></i>Clear</button>
-                                    </div>
-                                </div>
-
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <h4 class="mb-0">Purchase Entry</h4>
+                <span class="ms-auto" id="currentDateTime"></span>
             </div>
-
-            <div class="row mt-3">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="mb-0">Add To Card List</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="DistributorMasterDiv">
-                                <div class="div-loader">
-                                    <div class="loader-wrapper d-none">
-                                        <span class="loader"></span>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered" id="Productsku">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product Name</th>
-                                                    <th>ProductSku Name</th>
-                                                    <th>Image</th>
-                                                    <th>Amount</th>
-                                                    <th>Is Active</th>
-                                                    <th colspan="2">Actions</th>
-
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row mt-3">
-
-                                        <div class="col-12 d-flex justify-content-end">
-                                            @if (_allowinsert)
-                                            {
-                                                <button class="btn btn-primary btn-block btn-orange d-block savebutton" id="SavedataBtn" type="button"><i class='bx bxs-save pe-2'></i>Save</button>
-
-                                            }
-                                            @if (_allowupdate)
-                                            {
-                                                <button class="btn btn-primary btn-block btn-orange d-none updatebutton" type="button" id="UpdateBtn"><i class='bx bxs-save pe-2'></i>Update</button>
-                                            }
-
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Tab 2: New second table -->
-        <div id="DataScreen">
-            <div class="row" id="UpdateDiv">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex">
-                            <h4 class="mb-0">Update Product Sku</h4>
-                            <button class="btn btn-primary btn-block btn-orange d-block d-block ms-auto d-none" id="DistributorUploadBtn" type="button"><i class='bx bxs-user'></i>Bulk Insert</button>
-                        </div>
-
-
-                        <div class="card-body">
-                            <form id="" name="" method="post" action="" autocomplete="off">
-                                <div class="row">
-                                    <div class="col-12" id="Form1">
-                                        <table class="table datatable" id="updateform">
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                                <div class="row mt-3">
-
-                                    <div class="col-12 d-flex justify-content-end">
-
-                             
-                                        @if (_allowupdate)
-                                        {
-                                            <button class="btn btn-primary btn-block btn-orange d-none UpdateNewBtn" type="button" id="UpdateNewBtn"><i class='bx bxs-save pe-2'></i>Update</button>
-                                        }
-                                        <button class="btn btn-primary btn-block btn-orange d-block d-block ms-2 clearbutton" id="datascreenClearBtn" type="button"><i class='bx bxs-save pe-2'></i>Clear</button>
-                                    </div>
-                                </div>
-
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="mb-0">Product Sku Table</h4>
-                        </div>
-                        <div id="ProductSkuDiv">
-                            <div class="div-loader">
-                                <div class="loader-wrapper d-none">
-                                    <span class="loader"></span>
-                                </div>
-                                <div class="card-body table-responsive">
-                                    <table class="table table-striped table-bordered" id="Productskudata">
-                                        <thead>
-                                            <tr>
-                                                <th>ProductName</th>
-                                                <th>Sku Name</th>
-                                                <th>Image</th>
-                                                <th>Amount</th>
-                                                <th>Is Active</th>
-                                                @if (_allowupdate)
-                                                {
-                                                    <th>Edit</th>
-                                                }
-                                                @if (_allowdelete)
-                                                {
-                                                    <th>Delete</th>
-                                                }
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="Purchaseform" class="card-body">
+               
             </div>
         </div>
-
     </div>
+</div>
 
+@section BottomJS {
+    <script src="~/public/js/custom-js/Form/purchase.js"></script>
 
-
-
-
-
-
-
-
-
-    @section BottomJS {
-        <script src="~/public/js/custom-js/Form/productsku.js"></script>
-
-
-    }
+}
 

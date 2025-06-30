@@ -1801,5 +1801,92 @@ namespace ManagementPortalApi.Controllers
             return Ok(result);
         }
         #endregion
+
+        #region Purchase
+        [HttpGet]
+        public IActionResult GetInvoiceno()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_invoiceno", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult SavePurchaseWithDetails(Parameters p)
+        {
+            var result = false;
+            try
+            {
+                DataTable purchaseDetailTable = new DataTable();
+                purchaseDetailTable.Columns.Add("ProductID", typeof(int));
+                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));
+                purchaseDetailTable.Columns.Add("Quantity", typeof(int));
+                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Barcode", typeof(string));
+                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
+                purchaseDetailTable.Columns.Add("Total", typeof(decimal));
+
+
+
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Add("PurchaseDate-VarChar", DateTime.Now.ToString("yyyy-MM-dd"));
+                nvc.Add("InvoiceNumber-VarChar", "INV-001");
+                nvc.Add("SupplierID-Int", "1");
+                nvc.Add("TotalAmount-Decimal", "800");
+                nvc.Add("PaymentModeID-Int", "1");
+                nvc.Add("Remarks-VarChar", "First stock purchase");
+                nvc.Add("CreatedBy-Int", "101");
+
+                
+
+                DataSet ds = new DataSet();
+                ds.Tables.Add(purchaseDetailTable);
+
+                string[] typeParams = { "@PurchaseDetails" };
+
+                 result = _DAL.InsertDataWithType("sp_insert_purchase", nvc,typeParams,ds, _DAL.CSManagementPortalDatabase);
+
+        
+
+                if (result)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
+        #endregion
     }
 }

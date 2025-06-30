@@ -1,6 +1,4 @@
-﻿$(document).ready(function () {
-    $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
+﻿var html = `
             <tr>
                 <td class="d-none">
               
@@ -25,36 +23,16 @@
                     </button>
                 </td>
             </tr>
-        `);
+        `;
+$(document).ready(function () {
+    $("#inputtable tbody").html('');
+    $("#inputtable tbody").append(html);
     GetCategoryData();
 });
+
+
 $(document).on('click', '.addnewrowbtn', function () {
-    $("#inputtable tbody").append(`
-            <tr>
-                <td class="d-none">
-              
-                    <input type="text" class="form-control category-name" id="categoryid" name="Category" autocomplete="off" required>
-                </td>
-                <td>
-                    <label>Category Name</label>
-                    <input type="text" class="form-control category-name" id="Category" name="Category" autocomplete="off" required>
-                </td>
-                <td>
-                    <label>Active</label>
-                    <div class="form-check">
-                        <input class="form-check-input is-active" id="is-active" type="checkbox" name="IsActive">
-                    </div>
-                </td>
-                <td class="text-end">
-                    <button class="btn btn-primary addnewrowbtn d-none" type="button">
-                        <i class='bx bx-plus'></i>
-                    </button>
-                    <button class="btn btn-danger removebtn d-none" type="button">
-                        <i class='bx bxs-trash'></i>
-                    </button>
-                </td>
-            </tr>
-        `);
+    $("#inputtable tbody").append(html);
 });
 
 $(document).on('click', '.removebtn', function () {
@@ -142,32 +120,7 @@ $(document).on('click', '#ClearBtn', function () {
 });
 function Clear() {
     $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(`
-            <tr>
-             <td class="d-none">
-              
-                    <input type="text" class="form-control category-name" id="categoryid" name="Category" autocomplete="off" required>
-                </td>
-                <td>
-                    <label>Category Name</label>
-                    <input type="text" class="form-control category-name" id="category" name="Category" autocomplete="off" required>
-                </td>
-                <td>
-                    <label>Active</label>
-                    <div class="form-check">
-                        <input class="form-check-input is-active"  id="is-active" checked type="checkbox" name="IsActive">
-                    </div>
-                </td>
-                <td class="text-end">
-                    <button class="btn btn-primary addnewrowbtn d-none" type="button">
-                        <i class='bx bx-plus'></i>
-                    </button>
-                    <button class="btn btn-danger removebtn d-none" type="button">
-                        <i class='bx bxs-trash'></i>
-                    </button>
-                </td>
-            </tr>
-        `);
+    $("#inputtable tbody").append(html);
     if ($('.updatebutton').hasClass('d-none')) {
         $('.savebutton').toggleClass('d-none');
         $('.updatebutton').toggleClass('d-none');

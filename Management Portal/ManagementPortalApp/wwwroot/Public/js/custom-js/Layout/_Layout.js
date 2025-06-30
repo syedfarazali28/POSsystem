@@ -355,6 +355,7 @@ function removeToast(id) {
     $('.c_toast_' + id).remove();
 }
 $(document).on("click", "#BackupBtn", function () {
+    ShowLoader('body-pd');
 
     UTILITY.CheckSession((data_) => {
 
@@ -362,16 +363,18 @@ $(document).on("click", "#BackupBtn", function () {
         new APICALL(GetGlobalURL('Base', 'CreateBackup'), 'GET', '', true).FETCH((result, error) => {
 
             if (result) {
+                HideLoader('body-pd');
                 Swal.fire({
                     icon: 'success',
                     title: 'Success...',
                     text: 'DB Backup Create Successfully!',
                     footer: ''
                 });
+
             }
 
             if (error) {
-
+                HideLoader('body-pd');
                 Swal.fire({
                     icon: 'error',
                     title: 'Error...',
@@ -381,5 +384,7 @@ $(document).on("click", "#BackupBtn", function () {
             }
         });
     });
+    
+
 });
 

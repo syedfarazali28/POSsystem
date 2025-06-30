@@ -32,6 +32,7 @@ $(document).ready(function () {
     GetCategoryData();
     GetProductData();
 });
+
 $(document).on('click', '.addnewrowbtn', function () {
     $("#inputtable tbody").append(html);
 });
@@ -128,8 +129,10 @@ $(document).on('click', '#ClearBtn', function () {
     GetCategoryData();
 });
 function Clear() {
-    $("#inputtable tbody").html('');
-    $("#inputtable tbody").append(html);
+    $('#category').val(null).trigger('change');
+    $("#Product").val('');
+    $("#is-active").prop("checked");
+    $("#Productid").val('');
     if ($('.updatebutton').hasClass('d-none')) {
         $('.savebutton').toggleClass('d-none');
         $('.updatebutton').toggleClass('d-none');

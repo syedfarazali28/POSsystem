@@ -110,6 +110,11 @@ var Updateformhtml = `
 
     
 </tr>`
+
+
+
+
+//#region formscreen
 $(document).ready(function () {
     //$('#UpdateDiv').hide();
     $('#tabs').tabs({
@@ -162,6 +167,9 @@ $(document).on('click', '.addnewrowbtn', function () {
     }
 });
 $(document).on('click', '#addbutton', function () {
+    addinlist();
+});
+function addinlist() {
     validration();
     var file = $('#imagefile')[0].files[0];
     var imageName = file ? file.name : "";
@@ -213,10 +221,20 @@ $(document).on('click', '#addbutton', function () {
     $('#previewImage').attr('src', ''); // ✅ This sets the src to empty
 
     $('#previewImage').hide();
+}
+$(document).on('click', '#ClearBtn', function () {
+    Clear();
 });
+function Clear() {
+    $('#Product').val("").trigger('change');
+    $('#productsku').val("");
+    $('#Amount').val("");
 
+    $('#imagefile').val(""); // Clear file input
+    $('#previewImage').attr('src', ''); // ✅ This sets the src to empty
 
-
+    $('#previewImage').hide();
+}
 function RenderTable() {
     var row = "";
     for (var i = 0; i < dataArray.length; i++) {
@@ -228,31 +246,52 @@ function RenderTable() {
         row += "<td>" + dataArray[i].param6 + "</td>";
         row += dataArray[i].param7 ? '<td><input type="checkbox" disabled checked></td>' : '<td><input type="checkbox" disabled></td>';
         row += "<td 'colspan='2' ><button class='btn btn-sm btn-primary edit-btn me-1' data-index='" + i + "'>Edit</button><button class='btn btn-sm btn-danger delete-btn' data-index='" + i + "'>Delete</button></td>";
-        
+
         row += "</tr>";
     }
     $("#Productsku tbody").html(row);
 }
-$(document).on('click', '.edit-btn', function () {
-    editIndex = $(this).data('index');
-    var row = dataArray[editIndex];
+$(document).on("click", "#SavedataBtn", function () {
 
-    $('#Product').val(row.param2).trigger('change');
-    $('#productsku').val(row.param4);
-    $('#Amount').val(row.param6);
-    $('#is-active').prop('checked', row.param7);
 
-    
-    $('#previewImage').attr('src', row.param5);
-    $('#previewImage').show();
+
+    var productskuModel = JSON.stringify(dataArray); // send raw array
+    Swal.fire({
+        title: 'Do you want to save the changes?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Ok',
+        denyButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            new APICALL(GetGlobalURL('Base', 'SaveproductskuData'), 'POST', productskuModel, true).FETCH((result, error) => {
+
+                if (result) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success...",
+                        text: "productsku saved successfully!",
+                    });
+                    Clear();
+                    dataArray = [];
+                    $('#Productsku tbody').text('');
+                    DataScreen = true;
+                }
+
+                if (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error...",
+                        text: error.data.responseText,
+                    });
+                }
+
+            });
+        }
+    });
 });
-$(document).on('click', '.delete-btn', function () {
-    var index = $(this).data('index');
-    dataArray.splice(index, 1);
-    RenderTable();
-});
-
-
+//#endregion
+//#region Datascreen
 function GetproductData() {
     ShowLoader('productskuMasterDiv');
 
@@ -304,60 +343,28 @@ function GetproductData() {
         }
     });
 }
+$(document).on('click', '.edit-btn', function () {
+    editIndex = $(this).data('index');
+    var row = dataArray[editIndex];
 
+    $('#Product').val(row.param2).trigger('change');
+    $('#productsku').val(row.param4);
+    $('#Amount').val(row.param6);
+    $('#is-active').prop('checked', row.param7);
 
-$(document).on("click", "#SavedataBtn", function () {
     
-
-
-    var productskuModel = JSON.stringify(dataArray); // send raw array
-    Swal.fire({
-        title: 'Do you want to save the changes?',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: 'Ok',
-        denyButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            new APICALL(GetGlobalURL('Base', 'SaveproductskuData'), 'POST', productskuModel, true).FETCH((result, error) => {
-
-                if (result) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Success...",
-                        text: "productsku saved successfully!",
-                    });
-                    Clear();
-                    dataArray = [];
-                    $('#Productsku tbody').text('');
-                    DataScreen = true;
-                }
-
-                if (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error...",
-                        text: error.data.responseText,
-                    });
-                }
-                
-            });
-        }
-    });
+    $('#previewImage').attr('src', row.param5);
+    $('#previewImage').show();
+});
+$(document).on('click', '.delete-btn', function () {
+    var index = $(this).data('index');
+    dataArray.splice(index, 1);
+    RenderTable();
 });
 
-
-
-
-$(document).on('click', '#ClearBtn', function () {
-    Clear();
-});
 $(document).on('click', '#datascreenClearBtn', function () {
     DatascreenClear();
 });
-
-
-
 function validration() {
     var isValid = true;
 
@@ -478,9 +485,6 @@ function validration() {
     if (!isValid) { e.stopImmediatePropagation(); return false; }
 
 }
-
-
-
 function Deleteproductsku(Id) {
 
     Swal.fire({
@@ -534,8 +538,6 @@ function Deleteproductsku(Id) {
         }
     });
 }
-
-
 function Getproductsku() {
     ShowLoader('ProductSkuDiv');
 
@@ -605,7 +607,6 @@ function Getproductsku() {
         }
     });
 }
-
 function Editproductsku(Id) {
     var dt = {
         Param1: Id
@@ -675,8 +676,6 @@ function Editproductsku(Id) {
         }
     });
 }
-
-
 $(document).on('click', '#UpdateNewBtn', function () {
     var file = $('#updateimagefile')[0].files[0]; // Move this to top
     var reader = new FileReader(); // Make sure reader is defined
@@ -746,19 +745,6 @@ $(document).on('click', '#UpdateNewBtn', function () {
         reader.onload({ target: { result: $('#UpdateDiv #previewImage').attr('src') } });
     }
 });
-
-
-function Clear() {
-    $('#Product').val("").trigger('change');
-    $('#productsku').val("");
-    $('#Amount').val("");
-
-    $('#imagefile').val(""); // Clear file input
-    $('#previewImage').attr('src', ''); // ✅ This sets the src to empty
-
-    $('#previewImage').hide();
-}
-
 function DatascreenClear() {
 
     $('#updateproductskuid').val('');
@@ -769,3 +755,5 @@ function DatascreenClear() {
     $('#updatepreviewImage').attr('src', '');
     $('#updatepreviewImage').hide();
 }
+
+//#endregion
