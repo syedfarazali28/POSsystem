@@ -144,8 +144,8 @@ $(document).on('click', '.removebtn', function () {
 $(document).on('click', '.addnewrowbtn', function () {
     $("#inputtable tbody").append(html);
 
-    const $newRow = $("#inputtable tbody tr").last();
-    const $dropdown = $newRow.find('.product-dropdown');
+    var $newRow = $("#inputtable tbody tr").last();
+    var $dropdown = $newRow.find('.product-dropdown');
 
     if (productdata?.length > 0) {
         $dropdown.empty().append('<option value="">-- Select Product --</option>');
@@ -551,7 +551,7 @@ function Getproductsku() {
 
                     $('#Productskudata tbody').html('');
                     if (result.data != null) {
-                        roles = result.data;
+                        
                         $.each(result.data, function (i, option) {
                             var ActiveCell = option.IsActive
                                 ? '<td><input type="checkbox" class="role-active checkboxsize" disabled checked></td>'
@@ -567,6 +567,7 @@ function Getproductsku() {
 
                             $('#Productskudata tbody').append(
                                 '<tr id="rowid-' + i + '">' +
+                                '<td>' + option.CategoryName + '</td>' +
                                 '<td>' + option.ProductName + '</td>' +
                                 '<td>' + option.SkuName + '</td>' +
                                 '<td><img src="' + option.Base64Image + '" width="50" height="50" /></td>' +

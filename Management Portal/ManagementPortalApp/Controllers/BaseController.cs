@@ -393,6 +393,8 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetCategory", "Settings");
             return new HttpResponseMessageResult(response);
         }
+   
+ 
         [HttpGet]
         public IActionResult GetactiveCategory()
         {
@@ -440,6 +442,7 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetProductData", "Settings");
             return new HttpResponseMessageResult(response);
         }
+
         [HttpGet]
         public IActionResult GetactiveProductData()
         {
@@ -486,6 +489,13 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetSupplyData", "Settings");
             return new HttpResponseMessageResult(response);
         }
+        [HttpGet]
+        public IActionResult GetSupplyActiveData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetSupplyActiveData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+     
         [HttpPost]
         public IActionResult SaveSuppliersData([FromBody] Parameters Data)
         {
@@ -611,6 +621,8 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetproductskuData", "Settings");
             return new HttpResponseMessageResult(response);
         }
+
+
         [HttpPost]
         public IActionResult SaveproductskuData([FromBody] List<Parameters> Data)
         {
@@ -645,9 +657,77 @@ namespace ManagementPortalApp.Controllers
 
         #region Purchase
         [HttpGet]
+        public IActionResult GetMapCategory()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetMapCategory", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetProductByCategoryID([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetProductByCategoryID", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetProductskuByProductID([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetProductskuByProductID", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetSupplierBalance([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierBalance", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
         public IActionResult GetInvoiceno()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetInvoiceno", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetPaymentModeData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetPaymentModeData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetPriceByskuID([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetPriceByskuID", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult SavePurchaseWithDetails([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param9 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SavePurchaseWithDetails", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetStockLocationTypeData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetStockLocationTypeData", "Settings");
             return new HttpResponseMessageResult(response);
         }
         #endregion

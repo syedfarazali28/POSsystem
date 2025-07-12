@@ -232,8 +232,8 @@ $(document).on("click", "#UpdateBtn", function (e) {
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    const showNavbar = (toggleId, navId, bodyId, headerId) => {
-        const toggle = document.getElementById(toggleId),
+    var showNavbar = (toggleId, navId, bodyId, headerId) => {
+        var toggle = document.getElementById(toggleId),
             nav = document.getElementById(navId),
             bodypd = document.getElementById(bodyId),
             headerpd = document.getElementById(headerId)

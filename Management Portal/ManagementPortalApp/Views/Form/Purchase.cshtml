@@ -5,6 +5,7 @@
 }
 
 @section TopCss {
+    <link href="~/public/css/custom-css/layout/purchase.css" rel="stylesheet" />
     <link href="~/Public/css/custom-css/Settings/UserMaster.css" rel="stylesheet" />
 }
 
@@ -31,7 +32,27 @@
                 <span class="ms-auto" id="currentDateTime"></span>
             </div>
             <div id="Purchaseform" class="card-body">
-               
+                <form id="purchaseForm" method="post" autocomplete="off" enctype="multipart/form-data">
+
+
+                 
+                </form>
+                <div class="row mt-3">
+
+                    <div class="col-12 d-flex justify-content-end">
+                        @if (_allowinsert)
+                        {
+                            <button type="button" class="btn btn-primary btn-orange me-2" id="SaveBtn"><i class="bx bxs-save pe-2"></i>Save</button>
+
+                        }
+                        @if (_allowupdate)
+                        {
+                            <button class="btn btn-primary btn-block btn-orange d-none updatebutton" type="button" id="UpdateBtn"><i class='bx bxs-save pe-2'></i>Update</button>
+                        }
+
+                        <button type="reset" class="btn btn-secondary" id="ClearForm"><i class="bx bx-refresh pe-2"></i>Clear</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

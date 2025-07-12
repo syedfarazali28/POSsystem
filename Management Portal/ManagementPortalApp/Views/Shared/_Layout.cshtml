@@ -129,139 +129,74 @@
 </head>
 
 <body id="body-pd">
-    <header class="header" id="header">
-        <div class="header_toggle d-none d-lg-flex">
-            <img src="~/Public/image/logo.png" alt="logo" class="main-logo">
-            <i class='bx bx-toggle-right' id="header-toggle"></i>
-        </div>
-        <nav class="navbar navbar-dark navbar-expand-lg mobile-nav d-block d-lg-none">
-            <a class="navbar-brand" href="~/Admin/Dashboard">
-                <img src="~/Public/image/logo.png" alt="logo" class="mobile-logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    @{
-                        @if (_Form.Count > 0)
-                        {
-                            @foreach (var form in _Form)
-                            {
-                                <div>
-                                    @{
-                                        this.RenderMobileViewNavs(form, RequestUrl);
-                                    }
-                                </div>
-                            }
-                        }
-                    }
-                    <li class="nav-item">
-                        <div class="mobile-profile dropdown">
-                            <div class="media-name mr-5 justify-content-end">
-                                <button class="btn btn-primary btn-block btn-orange BackupBtn" id="BackupBtn" type="button">
-                                    <i class="bx bxs-user"></i> Db Backup
-                                </button>
-                            </div>
+    <header class="header navbar navbar-expand-lg px-3 py-2" id="header" >
+        <!-- Logo + Toggle -->
+        
+            <img src="~/Public/image/logo.png" alt="logo" class="main-logo me-2" >
+        
 
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                             
-                                <div class="profile-media">
-                                    <img src="~/Public/image/@(userInfo.UserImage == null ? "profile.png": "UserImage/" + userInfo.UserImage)" alt="profile">
-                                </div>
-                                <div class="media-name">
-                                    <p class="profile-name mb-0">@userInfo.UserName</p>
-                                    <span class="profile-role mb-0">@userInfo.RoleName</span>
-                                </div>
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Nav items -->
+        <div class="collapse navbar-collapse justify-content-between" id="topNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @if (_Form.Count > 0)
+                {
+                    foreach (var form in _Form)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown_@form.FormID" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Html.Raw(form.Icon) @form.FormDisplayName
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="~/Forms/UserProfile">
-                                        <i class='bx bxs-user'></i> Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="~/Forms/ChangePassword">
-                                        <i class='bx bxs-lock-alt'></i> Change Password
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="~/Login/Logout">
-                                        <i class='bx bx-log-out'></i> Signout
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div class="profile-nav mobile-profile d-none d-lg-flex">
-            <div class="media-name mr-5 justify-content-end">
-                <button class="btn btn-primary btn-block btn-orange BackupBtn" id="BackupBtn" type="button">
+                            @if (form.Childrens.Count > 0)
+                            {
+                                <ul class="dropdown-menu" aria-labelledby="dropdown_@form.FormID">
+                                    @foreach (var child in form.Childrens)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" href="../@child.FormController/@child.FormAction">@child.FormDisplayName</a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+
+            <!-- Profile section -->
+            <div class="dropdown d-flex align-items-center">
+                <button class="btn btn-orange me-3" id="BackupBtn" type="button">
                     <i class="bx bxs-user"></i> Db Backup
                 </button>
+
+                <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                    <div class="profile-media me-2">
+                        <img src="~/Public/image/@(userInfo.UserImage == null ? "profile.png": "UserImage/" + userInfo.UserImage)" alt="profile" >
+                    </div>
+                    <div>
+                        <div class="fw-bold">@userInfo.UserName</div>
+                        <small>@userInfo.RoleName</small>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="~/Forms/UserProfile"><i class='bx bxs-user'></i> Profile</a></li>
+                    <li><a class="dropdown-item" href="~/Forms/ChangePassword"><i class='bx bxs-lock-alt'></i> Change Password</a></li>
+                    <li><a class="dropdown-item" href="~/Login/Logout"><i class='bx bx-log-out'></i> Signout</a></li>
+                </ul>
             </div>
-
-            
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                
-                <div class="profile-media">
-                    <img src="~/Public/image/@(userInfo.UserImage == null ? "profile.png": "UserImage/" + userInfo.UserImage)" alt="profile">
-                </div>
-                <div class="media-name">
-                    <p class="profile-name mb-0">@userInfo.UserName</p>
-                    <span class="profile-role mb-0">@userInfo.RoleName</span>
-                </div>
-            </a>
-
-            <ul class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" href="~/Forms/UserProfile">
-                        <i class='bx bxs-user'></i> Profile
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="~/Forms/ChangePassword">
-                        <i class='bx bxs-lock-alt'></i> Change Password
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="~/Login/Logout">
-                        <i class='bx bx-log-out'></i> Signout
-                    </a>
-                </li>
-            </ul>
         </div>
     </header>
-    <div class="l-navbar d-none d-lg-block" id="nav-bar">
-        <nav class="nav">
-            <div class="subnav">
-                <div class="nav_list">
-                    <div href="javascript:void(0);" class="menu_name">
-                        <span class="nav_name"></span>
-                        <hr />
-                    </div>
 
-                    @if (_Form.Count > 0)
-                    {
-                        @foreach (var form in _Form)
-                        {
-                            <div>
-                                @{
-                                    this.RenderDesktopViewNavs(form, RequestUrl);
-                                }
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        </nav>
-    </div>
+  
+ 
 
-    <section class="main">
-        <div class="container-fluid main-content">
+     
             @RenderBody()
-        </div>
-    </section>
+     
 
     <script src="~/Public/vendor/jquery/jquery-3.7.1.min.js"></script>
     <script src="~/Public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

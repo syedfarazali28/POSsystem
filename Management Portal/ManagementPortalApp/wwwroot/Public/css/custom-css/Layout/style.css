@@ -13,6 +13,9 @@
     --danger-btn: #fe6a49;
 }
 */
+#BackupBtn {
+    width: 129px;
+}
 :root {
     --header-height: 3rem;
     --nav-width: 100px;
@@ -109,18 +112,6 @@ a {
     width: 40px;
 }
 
-.l-navbar {
-    position: fixed;
-    top: calc(var(--header-height) + 1rem);
-    left: -30%;
-    width: var(--nav-width);
-    width: calc(var(--nav-width) + 170px);
-    height: 100vh;
-    background-color: var(--secondary-color);
-    /*padding: .5rem 1rem 0 0;*/
-    transition: .5s;
-    z-index: 1;
-}
 
 .nav {
     height: 100%;
@@ -261,13 +252,6 @@ a {
     padding:1rem;
 }
 
-.nav_list .navbar-collapse {
-    margin-top: 0px;
-    padding: 0;
-    /*padding-left: 25px;*/
-    border: 1px solid var(--secondary-color);
-}
-
 .navbar-toggler {
     float: right;
     margin-right: 10px;
@@ -328,35 +312,8 @@ a {
     padding: 20px 0px;
 }
 
-.l-navbar.show .nav_link {
-    display: block;
-    font-size: var(--small-font-size);
-    padding: 0.5rem;
-    text-align:center;
-}
 
-.l-navbar.show .bx {
-    display: block;
-    text-align:center;
-}
 
-.l-navbar.show .nav {
-    display: block;    
-}
-
-.l-navbar.show .subnav {
-    height: 80%;
-}
-
-.l-navbar.show .submenu {
-    margin-left: 0;
-    padding-left:0;
-}
-
-.l-navbar.show .navbar-collapse.show {
-    width: inherit;
-    padding:0;
-}
 
 .navbar-collapse .navbar-nav {
     width: 100%;
@@ -483,4 +440,41 @@ table tr td {
     color: white;
     background-color: var(--fourth-color);
     border-bottom: var(--bs-card-border-width) solid var(--bs-card-border-color);
+}
+
+
+/* New Top Nav Styles */
+.header .nav {
+    margin-left: 2rem;
+}
+
+.header .nav .nav-item {
+    margin-right: 1rem;
+}
+
+.header .nav .nav-link {
+    color: var(--white-color);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.header .nav .nav-link:hover {
+        background-color: var(--fourth-color);
+        border-radius: 5px;
+}
+
+.header .dropdown-menu {
+    background-color: var(--fourth-color);
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    opacity:1;
+}
+
+.header .dropdown-item {
+    color: var(--white-color);
+}
+
+.header .dropdown-item:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
 }

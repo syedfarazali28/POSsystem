@@ -166,7 +166,7 @@ function GetSuppliersData() {
 
                     $('#Suppliers-master tbody').html('');
                     if (result.data != null) {
-                        roles = result.data;
+                        
                         $.each(result.data, function (i, option) {
                             var ActiveCell = option.IsActive == true ? '<td><input type="checkbox" class="role-active checkboxsize" disabled checked="checked"></td>' : '<td><input type="checkbox" class="role-active checkboxsize" disabled></td>'
                             var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block EditSuppliers" data-value="' + option.ID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
