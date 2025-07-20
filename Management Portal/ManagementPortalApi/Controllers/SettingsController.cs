@@ -2014,7 +2014,7 @@ namespace ManagementPortalApi.Controllers
             {
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
-                nv.Add("Id-INT", p.Param1);
+                nv.Add("ID-INT", p.Param1);
 
                 dt = _DAL.GetData("sp_select_supplierpaymentrealateinfo", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
@@ -2053,6 +2053,35 @@ namespace ManagementPortalApi.Controllers
                 else
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetStockLocationTypeData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_StockLocation", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_StockLocation");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_StockLocation");
                 }
             }
             catch (Exception ex)
@@ -2122,25 +2151,26 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(dt);
         }
-
-        [HttpGet]
-        public IActionResult GetStockLocationTypeData()
+    
+        [HttpPost]
+        public IActionResult GetSupplierLedgers(Parameters p)
         {
             DataTable dt = new DataTable();
             try
             {
-
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
-
-                dt = _DAL.GetData("sp_select_StockLocation", nv, _DAL.CSManagementPortalDatabase);
+                nv.Add("sdate-DateTime", p.Param1);
+                nv.Add("edate-DateTime", p.Param2);
+                nv.Add("SupplierID-INT", p.Param3);
+                dt = _DAL.GetData("sp_select_suppliersedgers", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_suppliersedgers");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_suppliersedgers");
                 }
             }
             catch (Exception ex)
@@ -2152,6 +2182,8 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(dt);
         }
+
+
         #endregion
     }
 }

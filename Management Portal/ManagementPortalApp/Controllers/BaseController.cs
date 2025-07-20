@@ -731,7 +731,19 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         #endregion
+        #region Reports
+        [HttpPost]
+        public IActionResult GetSupplierLedgers([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
 
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierLedgers", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+       
+        #endregion
     }
 
 }
