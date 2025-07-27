@@ -1842,6 +1842,46 @@ namespace ManagementPortalApi.Controllers
         #endregion
 
         #region Purchase
+
+
+        [HttpPost]
+        public IActionResult CheckBarcodeDuplication(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                nv.Add("barcode-varchar", p.Param1);
+
+                 dt = _DAL.GetData("sp_select_barcode", nv, _DAL.CSManagementPortalDatabase);
+
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+
+
         [HttpGet]
         public IActionResult GetMapCategory()
         {

@@ -42,5 +42,9 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
+        public IActionResult CompanyMaster()
+        {
+            return View();
+        }
     }
 }

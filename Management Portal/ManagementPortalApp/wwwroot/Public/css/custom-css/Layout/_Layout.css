@@ -1,4 +1,4 @@
-/*
+
 :root {
     --header-height: 3rem;
     --nav-width: 100px;
@@ -13,8 +13,8 @@
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-}*/
-:root {
+}
+/*:root {
     --header-height: 3rem;
     --nav-width: 100px;
     --primary-color: #3300FF;
@@ -30,7 +30,7 @@
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-}
+}*/
 /*#F26522 - P*/
 /*#808285 - S*/
 /*#444546 - N*/

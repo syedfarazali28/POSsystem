@@ -1,5 +1,6 @@
 ﻿var _html = `
     <div class="row mb-3">
+        <input type="hidden" id="PurchaseId" class="form-control">
         <div class="col-md-3">
             <label>Purchase Date</label>
             <small class="text-muted">*</small>
@@ -80,8 +81,19 @@
 
     
 `;
-
+var DataScreen = true;
 $(document).ready(function () {
+    $('#tabs').tabs({
+        activate: function (event, ui) {
+
+            if (ui.newPanel.attr("id") == "DataScreen") {
+                if (DataScreen) {
+                    Getproductsku();
+
+                }
+            }
+        }
+    });
     $('#Purchaseform form').append(_html);
     var today = new Date().toISOString().split('T')[0];
     document.getElementById('PurchaseDate').value = today;
@@ -596,7 +608,48 @@ $(document).on('change', '#SupplierID', function () {
         }
     });
 });
+$(document).on('change', '#SupplierID', function () {
+    var id = $('#SupplierID').val();
+    if (id == '') {
+        return;
+    }
+    var dt = {
+        Param1: id
+    }
 
+    var supplierModel = JSON.stringify(dt); // Send array directly
+
+    UTILITY.CheckSession((data_) => {
+
+        if (data_) {
+
+            new APICALL(GetGlobalURL('Base', 'GetSupplierBalance'), 'POST', supplierModel, true).FETCH((result, error) => {
+
+                if (result) {
+
+
+                    if (result.data != null) {
+
+                        $("#Balance").text(result.data[0].Balance);
+                    }
+
+                }
+
+                if (error) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+            });
+            HideLoader('CategoryMasterDiv');
+
+        }
+    });
+});
 
 
 $(document).on('click', '#ClearForm', function () {
@@ -717,10 +770,17 @@ $(document).on('click', '#SaveBtn', function () {
         UTILITY.CheckSession((data_) => {
             if (data_) {
                 new APICALL(GetGlobalURL('Base', 'SavePurchaseWithDetails'), 'POST', CategoryModel, true).FETCH((result, error) => {
-                    if (result && result.data != null) {
+             
+                    if (result.data == false) {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Retry Again...",
+                            text: "Purchase was not saved. Please create it again!",
+                        });
+                    }
+                    else if (result && result.data != null) {
                         Clear()
                     }
-
                     if (error) {
                         Swal.fire({
                             icon: 'error',
@@ -740,5 +800,35 @@ $(document).on('click', '#SaveBtn', function () {
 
 });
 
+$(document).on('blur', '.barcode', function () {
+    var barcode = $(this).val();
 
+    if (!barcode) return; // Skip if empty
 
+    var dt = {
+        Param1: barcode
+    };
+
+    var productskuModel = JSON.stringify(dt);
+
+    new APICALL(GetGlobalURL('Base', 'CheckBarcodeDuplication'), 'POST', productskuModel, true).FETCH((result, error) => {
+        if (result) {
+            if (result && result.data.length > 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Duplicate Barcode',
+                    text: 'This barcode already exists. Please enter a unique barcode.',
+                });
+                $(this).val('').focus(); // Clear and focus again
+            }
+        }
+
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error...',
+                text: error.data?.responseText || 'Something went wrong.',
+            });
+        }
+    });
+});

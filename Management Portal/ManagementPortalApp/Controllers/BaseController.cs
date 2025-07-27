@@ -714,6 +714,17 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
+        public IActionResult CheckBarcodeDuplication([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param9 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "CheckBarcodeDuplication", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
         public IActionResult SavePurchaseWithDetails([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();

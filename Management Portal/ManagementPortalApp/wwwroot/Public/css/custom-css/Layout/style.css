@@ -11,11 +11,12 @@
     --small-font-size: 0.8rem;
     --z-fixed: 100;
     --danger-btn: #fe6a49;
-}
-*/
+}*/
+
 #BackupBtn {
     width: 129px;
 }
+/*
 :root {
     --header-height: 3rem;
     --nav-width: 100px;
@@ -30,22 +31,23 @@
     --small-font-size: 0.8rem;
     --z-fixed: 100;
     --danger-btn: #1b1a1a;
-}
-/*:root {
+}*/
+
+:root {
     --header-height: 3rem;
     --nav-width: 100px;
     --primary-color: #007BFF;
-    --secondary-color: #1E2A38;*/ /*nav color*/
-    /*--third-color: #272528;
-    --fourth-color: #0056b3;*//* hovor color*/
-    /*--button-color: #007BFF;
-    --white-color: #FFF;*/ /*text color*/
-    /*--body-font: 'Nunito', sans-serif;
+    --secondary-color: #1E2A38; nav color
+    --third-color: #272528;
+    --fourth-color: #0056b3; hovor color
+    --button-color: #007BFF;
+    --white-color: #FFF; text color
+    --body-font: 'Nunito', sans-serif;
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-    --danger-btn: #1b1a1a;
-}*/
+    --danger-btn: red;
+}
 
 *,::before,::after {
     box-sizing: border-box;
