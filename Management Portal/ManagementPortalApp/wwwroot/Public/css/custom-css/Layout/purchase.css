@@ -1,3 +1,35 @@
 ﻿#purchaseTable th, #purchaseTable td, #purchaseTable td .select2 {
     width: 140px !important;
 }
+.phyimg {
+    width: 38%;
+    
+}
+#BillImagesrc {
+    width: 38%;
+    
+}
+.updatebutton {
+    margin-right: 10px;
+}
+
+.col-md-2.box {
+    width: 13%;
+}
+
+.highlighted {
+    display: inline-block;
+    --bs-bg-opacity: 1;
+    border-radius: 22px;
+    background-color: rgb(246 180 2) !important;
+    height: 22px !important;
+    
+}
+.highlighted2 {
+    display: inline-block;
+    --bs-bg-opacity: 1;
+    border-radius: 22px;
+    background-color: rgb(246 180 2) !important;
+    height: 22px !important;
+    padding: 1px 12px 1px 10px;
+}

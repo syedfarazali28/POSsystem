@@ -208,6 +208,84 @@ namespace ManagementPortalApi.Context
                 }
             }
         }
+
+        public DataSet GetDataSet(string SpName, NameValueCollection NV, string CNString)
+        {
+            string dbTyper = "";
+            using (SqlConnection con = new SqlConnection())
+            {
+                try
+                {
+                    con.ConnectionString = CNString;
+                    DataSet dt = new DataSet();
+                    if (con.State == ConnectionState.Open)
+                    {
+                        con.Open();
+                    }
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection = con;
+                    cmd.CommandText = SpName;
+                    cmd.CommandTimeout = 999999999;
+
+                    if (NV != null)
+                    {
+
+                        for (int i = 0; i < NV.Count; i++)
+                        {
+                            string[] arraySplit = NV.Keys[i].Split('-');
+
+                            if (arraySplit.Length > 2)
+                            {
+                                dbTyper = "SqlDbType." + arraySplit[1].ToString() + "," + arraySplit[2].ToString();
+
+                                if (NV[i].ToString() == "NULL")
+                                {
+                                    cmd.Parameters.AddWithValue(arraySplit[0].ToString(), dbTyper).Value = DBNull.Value;
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue(arraySplit[0].ToString(), dbTyper).Value = NV[i].ToString();
+                                }
+                            }
+                            else
+                            {
+                                dbTyper = "SqlDbType." + arraySplit[1].ToString();
+
+                                if (NV[i].ToString() == "NULL")
+                                {
+                                    cmd.Parameters.AddWithValue(arraySplit[0].ToString(), dbTyper).Value = DBNull.Value;
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue(arraySplit[0].ToString(), dbTyper).Value = NV[i].ToString();
+                                }
+                            }
+                        }
+                    }
+
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    da.Fill(dt);
+                    da.Dispose();
+
+                    return dt;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("{0} {1} {2}", SpName, "GetData", ex.Message);
+                    return null;
+                }
+                finally
+                {
+                    if (con.State == ConnectionState.Open)
+                    {
+                        con.Close();
+                    }
+                }
+            }
+        }
         public bool InsertData(string SpName, NameValueCollection nv, string CNString)
         {
             bool Result = true;

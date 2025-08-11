@@ -616,6 +616,12 @@ namespace ManagementPortalApp.Controllers
 
         #region productsku's
         [HttpGet]
+        public IActionResult GetMasterProductSkuData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetMasterProductSkuData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
         public IActionResult GetproductskuData()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetproductskuData", "Settings");
@@ -682,19 +688,25 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
-        public IActionResult GetSupplierBalance([FromBody] Parameters Data)
+        public IActionResult GetCompanyBalance([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
             var userid = userinfo.UserID.ToString();
             string jsonString = JsonConvert.SerializeObject(Data);
 
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierBalance", "Settings");
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyBalance", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpGet]
         public IActionResult GetInvoiceno()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetInvoiceno", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetPurchaseno()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetPurchaseno", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpGet]
@@ -735,6 +747,17 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientPost(jsonString, "SavePurchaseWithDetails", "Settings");
             return new HttpResponseMessageResult(response);
         }
+        [HttpPost]
+        public IActionResult UpdatePurchaseWithDetails([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param9 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "UpdatePurchaseWithDetails", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         [HttpGet]
         public IActionResult GetStockLocationTypeData()
         {
@@ -743,17 +766,41 @@ namespace ManagementPortalApp.Controllers
         }
         #endregion
         #region Reports
+      
+        [HttpGet]
+        public IActionResult GetPurchase()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetPurchase", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         [HttpPost]
-        public IActionResult GetSupplierLedgers([FromBody] Parameters Data)
+        public IActionResult GetPurchaseDatais([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
             var userid = userinfo.UserID.ToString();
             string jsonString = JsonConvert.SerializeObject(Data);
-
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierLedgers", "Settings");
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetPurchaseDatais", "Settings");
             return new HttpResponseMessageResult(response);
         }
-       
+        [HttpPost]
+        public IActionResult GetPurchaseWithDataisById([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetPurchaseWithDataisById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+
+        #region Company
+        [HttpGet]
+        public IActionResult GetCompanyActiveData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyActiveData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         #endregion
     }
 

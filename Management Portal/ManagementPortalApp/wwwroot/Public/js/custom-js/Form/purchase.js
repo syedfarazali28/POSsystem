@@ -1,292 +1,32 @@
-﻿var _html = `
-    <div class="row mb-3">
-        <input type="hidden" id="PurchaseId" class="form-control">
-        <div class="col-md-3">
-            <label>Purchase Date</label>
-            <small class="text-muted">*</small>
-            <input type="date" id="PurchaseDate" validate-required class="form-control" required>
-        </div>
-        <div class="col-md-3">
-            <label>Invoice Number <small class="text-muted">(Auto-generated)</small></label>
-            <input type="text" readonly validate-required id="InvoiceNumber" class="form-control" placeholder="" required>
-        </div>
-        <div class="col-md-3">
-            <label>Supplier</label>
-            <small class="text-muted">*</small>
-            <select id="SupplierID" validate-required class="form-control searchingenable" required>
-                <option value="">-- Select Supplier --</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label>Payment Mode</label>
-            <small class="text-muted">*</small>
-            <select id="PaymentModeID" validate-required class="form-control searchingenable">
-                <option value="">-- Select Payment Mode --</option>
-            </select>
-        </div>
-         <div class="col-md-3">
-            <label>Stock Location</label>
-            <small class="text-muted">*</small>
-            <select id="stocklocID" validate-required class="form-control searchingenable">
-                <option value="">-- Select Stock Location --</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <label>Upload Physical Bill Image</label>
-            <input type="file" id="BillImage" class="form-control" accept="image/*">
-        </div>
-    </div>
-
-    <div class="table-responsive">
-        <table class="table table-bordered" id="purchaseTable">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Product</th>
-                    <th>SKU</th>
-                    <th>Barcode</th>
-                    <th>Expiry Date</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Total</th>
-                    <th>Bonus</th>
-                    <th><button type="button" class="btn btn-sm btn-success" id="addRow"><i class="bx bx-plus"></i></button></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-12 text-end">
-            <h5>Total Amount: <span id="totalAmount">0</span></h5>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-12 text-end">
-            <h5 disable>Supplier Balance: <span id="Balance">0</span></h5>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <label>Remarks</label>
-            <textarea id="Remarks" class="form-control" rows="2" placeholder="Optional remarks"></textarea>
-        </div>
-    </div>
-
-    
-`;
-var DataScreen = true;
+﻿var DataScreen = true;
+var isEditingRow = false;
 $(document).ready(function () {
+
     $('#tabs').tabs({
         activate: function (event, ui) {
 
             if (ui.newPanel.attr("id") == "DataScreen") {
                 if (DataScreen) {
-                    Getproductsku();
 
+                    GetPurchase();
                 }
             }
         }
     });
-    $('#Purchaseform form').append(_html);
+    //$('#Purchaseform form').append(_html);
     var today = new Date().toISOString().split('T')[0];
     document.getElementById('PurchaseDate').value = today;
     GetInvoiceno();
-    GetSupplyActiveData();
+    GetCompanyActiveData();
     GetPaymentModeData();
     GetStockLocationTypeData();
-    updateDateTime(); // initial call
+    updateDateTime();
+    GetCategoryData();
+    GetactiveProductData();
+    GetactiveProductskuData();
     setInterval(updateDateTime, 1000); // update every second
 });
-function GetCategoryData(targetDropdown) {
-    ShowLoader('CategoryMasterDiv');
 
-    UTILITY.CheckSession((data_) => {
-        if (data_) {
-            new APICALL(GetGlobalURL('Base', 'GetMapCategory'), 'GET', '', true).FETCH((result, error) => {
-                if (result && result.data != null) {
-                    // Populate only the target dropdown
-                    targetDropdown.empty().append('<option value="">-- Select Category --</option>');
-                    $.each(result.data, function (i, option) {
-                        targetDropdown.append(
-                            '<option value="' + option.ID + '">' + option.CategoryName + '</option>'
-                        );
-                    });
-
-                    if ($.fn.select2 && targetDropdown.hasClass("select2-hidden-accessible")) {
-                        targetDropdown.select2('destroy');
-                    }
-
-                    targetDropdown.select2({
-                        placeholder: "-- Select Category --",
-                        allowClear: true,
-                        width: 'resolve',
-                        minimumResultsForSearch: 0
-                    });
-                }
-
-                if (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error...',
-                        text: error.data.responseText,
-                        footer: ''
-                    });
-                }
-
-                HideLoader('CategoryMasterDiv');
-            });
-        }
-    });
-}
-
-function updateDateTime() {
-    var now = new Date();
-    var options = {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    };
-    var formattedDate = now.toLocaleString('en-US', options);
-    $('#currentDateTime').text(formattedDate); // ✅ jQuery version
-}
-$(document).on('click', '#addRow', function () {
-    var val = $('#SupplierID').val().trim();
-    var currentFieldId = $('#SupplierID').attr("id") || "[No ID]";
-    if (val === "") {
-        Swal.fire("Supplier field is required.");
-        $("#" + currentFieldId).focus();
-        return false;
-    }
-
-    // Generate a unique row ID or index for radio name
-    var uniqueId = Date.now(); // You can also use a counter variable
-
-    var rowHtml = `
-    <tr>
-         <td>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input transaction-type" name="type_${uniqueId}" type="radio" value="Purchase" checked>
-                <label class="form-check-label">Purchase</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input transaction-type" name="type_${uniqueId}" type="radio" value="Return">
-                <label class="form-check-label">Return</label>
-            </div>
-        </td>
-
-        <td><select class="form-control category"></select></td>
-        <td><select class="form-control product"></select></td>
-        <td><select class="form-control sku"></select></td>
-        <td><input type="text" class="form-control barcode" placeholder="Scan or enter" /></td>
-        <td><input type="date" class="form-control expirydate" /></td>
-        <td><input type="number" class="form-control qty" min="1" value="1" /></td>
-        <td><input type="number" class="form-control price" min="0" value="0" /></td>
-        <td class="total">0.00</td>
-        <td><input type="checkbox" class="form-check-input isBonus" title="Bonus Product" /></td>
-        <td><button type="button" class="btn btn-sm btn-danger removeRow"><i class="bx bx-minus"></i></button></td>
-    </tr>`;
-
-    var $newRow = $(rowHtml);
-    $('#purchaseTable tbody').append($newRow);
-
-    var $categoryDropdown = $newRow.find('.category');
-    GetCategoryData($categoryDropdown);
-
-    $newRow.find('.product').select2({
-        placeholder: "-- Select Product--",
-        allowClear: true,
-        width: 'resolve',
-        minimumResultsForSearch: 0
-    });
-
-    $newRow.find('.sku').select2({
-        placeholder: "-- Select Productsku--",
-        allowClear: true,
-        width: 'resolve',
-        minimumResultsForSearch: 0
-    });
-
-    recalculateTotal();
-});
-
-$(document).on('click', '.removeRow', function () {
-    $(this).closest('tr').remove();
-    recalculateTotal();
-});
-
-$(document).on('input', '.qty, .price', function () {
-    var row = $(this).closest('tr');
-    var qty = parseFloat(row.find('.qty').val()) || 0;
-    var price = parseFloat(row.find('.price').val()) || 0;
-    row.find('.total').text((qty * price).toFixed(2));
-    recalculateTotal();
-});
-
-$(document).on('click', '.removeRow', function () {
-    $(this).closest('tr').remove();
-    recalculateTotal();
-});
-
-
-$(document).on('input change', '.qty, .price, .transaction-type, .isBonus', function () {
-    recalculateTotal();
-});
-function recalculateTotal() {
-    var total = 0;
-    $('#purchaseTable tbody tr').each(function () {
-        var row = $(this);
-        var qty = parseFloat(row.find('.qty').val()) || 0;
-        var price = parseFloat(row.find('.price').val()) || 0;
-        var isBonus = row.find('.isBonus').is(':checked');
-        var type = row.find('.transaction-type:checked').map(function () {
-            return $(this).val();
-        }).get();
-
-
-        var rowTotal = qty * price;
-
-        if (isBonus) {
-            rowTotal = 0;
-            row.find('.price').val(); // Optional force
-        }
-        if (type.includes("Return")) {
-            rowTotal = -rowTotal;
-        }
-
-        row.find('.total').text(rowTotal.toFixed(2));
-        total += rowTotal;
-    });
-
-    $('#totalAmount').text(total.toFixed(2));
-}
-
-function updateDateTime() {
-    var now = new Date();
-    var options = {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    };
-    var formattedDate = now.toLocaleString('en-US', options);
-    $('#currentDateTime').text(formattedDate);
-}
 function GetInvoiceno() {
 
 
@@ -321,33 +61,33 @@ function GetInvoiceno() {
         }
     });
 }
-function GetSupplyActiveData() {
+function GetCompanyActiveData() {
 
 
     UTILITY.CheckSession((data_) => {
 
         if (data_) {
 
-            new APICALL(GetGlobalURL('Base', 'GetSupplyActiveData'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetCompanyActiveData'), 'GET', '', true).FETCH((result, error) => {
 
                 if (result.data != null) {
 
 
-                    $('#SupplierID').empty().append('<option value="">-- Select Supplies --</option>');
+                    $('#CompanyID').empty().append('<option value="">-- Select Company --</option>');
                     $.each(result.data, function (i, option) {
-                        $('#SupplierID').append(
-                            '<option value="' + option.ID + '">' + option.SupplierName + '</option>'
+                        $('#CompanyID').append(
+                            '<option value="' + option.ID + '">' + option.CompanyName + '</option>'
                         );
                     });
 
-                    if ($.fn.select2 && $('#SupplierID').hasClass("select2-hidden-accessible")) {
-                        $('#SupplierID').select2('destroy');
+                    if ($.fn.select2 && $('#CompanyID').hasClass("select2-hidden-accessible")) {
+                        $('#CompanyID').select2('destroy');
                     }
 
                 }
 
-                $('#SupplierID').select2({
-                    placeholder: "-- Select Supplies --",
+                $('#CompanyID').select2({
+                    placeholder: "-- Select Company --",
                     allowClear: true,
                     width: 'resolve',
                     minimumResultsForSearch: 0
@@ -363,7 +103,7 @@ function GetSupplyActiveData() {
                     });
                 }
             });
-            HideLoader('SuppliersMasterDiv');
+            
 
         }
     });
@@ -459,20 +199,82 @@ function GetStockLocationTypeData() {
                     });
                 }
             });
-            
+
 
         }
     });
 }
-$(document).on('change', '.category', function () {
+function updateDateTime() {
+    var now = new Date();
+    var options = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    };
+    var formattedDate = now.toLocaleString('en-US', options);
+    $('#currentDateTime').text(formattedDate); // ✅ jQuery version
+}
+function GetCategoryData() {
+    ShowLoader2("purchase-row");
+    UTILITY.CheckSession((data_) => {
+        if (data_) {
+            new APICALL(GetGlobalURL('Base', 'GetMapCategory'), 'GET', '', true).FETCH((result, error) => {
+                if (result && result.data != null) {
+                    // Populate only the target dropdown
+                    $("#category").empty().append('<option value="">-- Select Category --</option>');
+                    $.each(result.data, function (i, option) {
+                        $("#category").append(
+                            '<option value="' + option.ID + '">' + option.CategoryName + '</option>'
+                        );
+                    });
+
+                    if ($.fn.select2 && $("#category").hasClass("select2-hidden-accessible")) {
+                        $("#category").select2('destroy');
+                    }
+
+                    $("#category").select2({
+                        placeholder: "-- Select Category --",
+                        allowClear: true,
+                        width: 'resolve',
+                        minimumResultsForSearch: 0
+                    });
+
+                }
+
+                if (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+
+                HideLoader('CategoryMasterDiv');
+            });
+        }
+    });
+
+}
+$(document).on('change', '#category', function () {
+    if (isEditingRow) return;
+    ShowLoader2("purchase-row");
     var categoryID = $(this).val();
-    var $row = $(this).closest('tr');
-    var $productDropdown = $row.find('.product');
-    GetProductByCategoryID(categoryID, $productDropdown);
+    GetProductByCategoryID(categoryID);
+
+    
 });
-function GetProductByCategoryID(categoryID, targetDropdown) {
+function GetProductByCategoryID(categoryID) {
+    var targetDropdown = $("#product");
     if (!categoryID) {
+
         targetDropdown.empty().append('<option value="">-- Select Product --</option>');
+        HideLoader2("purchase-row");
         return;
     }
 
@@ -501,6 +303,7 @@ function GetProductByCategoryID(categoryID, targetDropdown) {
                         width: 'resolve',
                         minimumResultsForSearch: 0
                     });
+                    HideLoader2("purchase-row");
                 }
 
                 if (error) {
@@ -511,19 +314,61 @@ function GetProductByCategoryID(categoryID, targetDropdown) {
                         footer: ''
                     });
                 }
+                HideLoader2("purchase-row");
             });
         }
     });
 }
-$(document).on('change', '.product', function () {
+function GetactiveProductData() {
+    ShowLoader2("purchase-row");
+    UTILITY.CheckSession((data_) => {
+        if (data_) {
+            new APICALL(GetGlobalURL('Base', 'GetactiveProductData'), 'GET', '', true).FETCH((result, error) => {
+                if (result && result.data != null) {
+                    // Populate only the target dropdown
+                    $("#product").empty().append('<option value="">-- Select Product --</option>');
+                    $.each(result.data, function (i, option) {
+                        $("#product").append(
+                            '<option value="' + option.ID + '">' + option.CategoryName + '</option>'
+                        );
+                    });
+
+                    if ($.fn.select2 && $("#product").hasClass("select2-hidden-accessible")) {
+                        $("#product").select2('destroy');
+                    }
+
+                    $("#product").select2({
+                        placeholder: "-- Select Product --",
+                        allowClear: true,
+                        width: 'resolve',
+                        minimumResultsForSearch: 0
+                    });
+                    HideLoader2("purchase-row");
+                }
+
+                if (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+                HideLoader2("purchase-row");
+            });
+        }
+    });
+}
+$(document).on('change', '#product', function () {
+    if (isEditingRow) return;
     var productID = $(this).val();
-    var $row = $(this).closest('tr');
-    var $skuDropdown = $row.find('.sku');
-    GetProductskuByProductID(productID, $skuDropdown);
+    GetProductskuByProductID(productID);
 });
-function GetProductskuByProductID(productID, targetDropdown) {
+function GetProductskuByProductID(productID) {
+    ShowLoader2("purchase-row");
     if (!productID) {
-        targetDropdown.empty().append('<option value="">-- Select Sku --</option>');
+        $("#productsku").empty().append('<option value="">-- Select Sku --</option>');
+        HideLoader2("purchase-row");
         return;
     }
 
@@ -531,27 +376,28 @@ function GetProductskuByProductID(productID, targetDropdown) {
     var dt = {
         Param1: productID
     }
-    var productModel = JSON.stringify(dt); // Send array directly
+    var productModel = JSON.stringify(dt);
 
     UTILITY.CheckSession((data_) => {
         if (data_) {
             new APICALL(GetGlobalURL('Base', 'GetProductskuByProductID'), 'POST', productModel, true).FETCH((result, error) => {
                 if (result && result.data != null) {
-                    targetDropdown.empty().append('<option value="">-- Select ProductSku --</option>');
+                    $("#productsku").empty().append('<option value="">-- Select ProductSku --</option>');
                     $.each(result.data, function (i, option) {
-                        targetDropdown.append('<option value="' + option.ID + '">' + option.ProductName + '</option>');
+                        $("#productsku").append('<option value="' + option.ID + '">' + option.ProductName + '</option>');
                     });
 
-                    if ($.fn.select2 && targetDropdown.hasClass("select2-hidden-accessible")) {
-                        targetDropdown.select2('destroy');
+                    if ($.fn.select2 && $("#productsku").hasClass("select2-hidden-accessible")) {
+                        $("#productsku").select2('destroy');
                     }
 
-                    targetDropdown.select2({
+                    $("#productsku").select2({
                         placeholder: "-- Select Product --",
                         allowClear: true,
                         width: 'resolve',
                         minimumResultsForSearch: 0
                     });
+                    HideLoader2("purchase-row");
                 }
 
                 if (error) {
@@ -562,39 +408,39 @@ function GetProductskuByProductID(productID, targetDropdown) {
                         footer: ''
                     });
                 }
+                HideLoader2("purchase-row");
             });
         }
     });
 }
-$(document).on('change', '#SupplierID', function () {
-    var id = $('#SupplierID').val();
-    if (id == '') {
-        return;
-    }
-    var dt = {
-        Param1: id
-    }
-
-    var supplierModel = JSON.stringify(dt); // Send array directly
-
+function GetactiveProductskuData() {
+    ShowLoader2("purchase-row");
     UTILITY.CheckSession((data_) => {
-
         if (data_) {
+            new APICALL(GetGlobalURL('Base', 'GetproductskuData'), 'GET', '', true).FETCH((result, error) => {
+                if (result && result.data != null) {
+                    // Populate only the target dropdown
+                    $("#productsku").empty().append('<option value="">-- Select Product Sku --</option>');
+                    $.each(result.data, function (i, option) {
+                        $("#productsku").append(
+                            '<option value="' + option.SkuID + '">' + option.SkuName + '</option>'
+                        );
+                    });
 
-            new APICALL(GetGlobalURL('Base', 'GetSupplierBalance'), 'POST', supplierModel, true).FETCH((result, error) => {
-
-                if (result) {
-
-
-                    if (result.data != null) {
-
-                        $("#Balance").text(result.data[0].Balance);
+                    if ($.fn.select2 && $("#productsku").hasClass("select2-hidden-accessible")) {
+                        $("#productsku").select2('destroy');
                     }
 
+                    $("#productsku").select2({
+                        placeholder: "-- Select Product Sku --",
+                        allowClear: true,
+                        width: 'resolve',
+                        minimumResultsForSearch: 0
+                    });
+                    HideLoader2("purchase-row");
                 }
 
                 if (error) {
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Error...',
@@ -602,80 +448,22 @@ $(document).on('change', '#SupplierID', function () {
                         footer: ''
                     });
                 }
+                HideLoader2("purchase-row");
             });
-            HideLoader('CategoryMasterDiv');
-
         }
     });
-});
-$(document).on('change', '#SupplierID', function () {
-    var id = $('#SupplierID').val();
-    if (id == '') {
-        return;
-    }
-    var dt = {
-        Param1: id
-    }
-
-    var supplierModel = JSON.stringify(dt); // Send array directly
-
-    UTILITY.CheckSession((data_) => {
-
-        if (data_) {
-
-            new APICALL(GetGlobalURL('Base', 'GetSupplierBalance'), 'POST', supplierModel, true).FETCH((result, error) => {
-
-                if (result) {
-
-
-                    if (result.data != null) {
-
-                        $("#Balance").text(result.data[0].Balance);
-                    }
-
-                }
-
-                if (error) {
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error...',
-                        text: error.data.responseText,
-                        footer: ''
-                    });
-                }
-            });
-            HideLoader('CategoryMasterDiv');
-
-        }
-    });
-});
-
-
-$(document).on('click', '#ClearForm', function () {
-    Clear();
-});
-function Clear() {
-    $('#Purchaseform form').html('');
-    $('#Purchaseform form').append(_html);
-    
-    recalculateTotal();
-    GetSupplyActiveData();
-    GetPaymentModeData();
-    GetInvoiceno();
-    GetStockLocationTypeData();
-    var today = new Date().toISOString().split('T')[0];
-    document.getElementById('PurchaseDate').value = today;
 }
 $(document).on('change', '.sku', function () {
+    if (isEditingRow) return;
     var skuID = $(this).val();
-    var $row = $(this).closest('tr');
-    var $price = $row.find('.price');
-    GetPriceBysku(skuID, $price);
+    GetPriceBysku(skuID);
 });
-
-function GetPriceBysku(skuID, targetDropdown) {
-
+function GetPriceBysku(skuID) {
+    ShowLoader2("purchase-row");
+    if (!skuID) {
+        HideLoader2("purchase-row");
+        return;
+    }
     var dt = {
         Param1: skuID
     }
@@ -685,8 +473,12 @@ function GetPriceBysku(skuID, targetDropdown) {
         if (data_) {
             new APICALL(GetGlobalURL('Base', 'GetPriceByskuID'), 'POST', CategoryModel, true).FETCH((result, error) => {
                 if (result && result.data != null) {
-                    targetDropdown.val(result.data[0].Amount);
-                    recalculateTotal();
+                    $('#price').val(result.data[0].Amount);
+                    var qty = parseFloat($('.qty').val()) || 0;
+                    var price = parseFloat($('.price').val()) || 0;
+                    $('#total').val((qty * price).toFixed(2));
+                    
+                    HideLoader2("purchase-row");
                 }
 
                 if (error) {
@@ -697,109 +489,120 @@ function GetPriceBysku(skuID, targetDropdown) {
                         footer: ''
                     });
                 }
+                HideLoader2("purchase-row");
             });
         }
     });
 }
-$(document).on('click', '#SaveBtn', function () {
-    var rowsData = [];
-
-    $('#purchaseTable tbody tr').each(function () {
-        var $row = $(this);
-
-        var transactionType = $row.find('.transaction-type:checked').val();
-        var categoryId = $row.find('.category').val();
-        var productId = $row.find('.product').val();
-        var skuId = $row.find('.sku').val();
-        var barcode = $row.find('.barcode').val().trim();
-        var expiryDate = $row.find('.expirydate').val();
-        var qty = parseFloat($row.find('.qty').val()) || 0;
-        var price = parseFloat($row.find('.price').val()) || 0;
-        var isBonus = $row.find('.isBonus').is(':checked') ? true : false;
-        var total = parseFloat($row.find('.total').text()) || 0;
-
-        rowsData.push({
-            param1: transactionType,
-            param2: categoryId,
-            param3: productId,
-            param4: skuId,
-            param5: barcode,
-            param6: expiryDate,
-            param7: qty,
-            param8: price,
-            param9: total,
-            param10: isBonus
-        });
-    });
-
-    var PurchaseDate = $('#PurchaseDate').val();
-    var InvoiceNumber = $('#InvoiceNumber').val();
-    var SupplierID = $('#SupplierID').val();
-    var stocklocID = $('#stocklocID').val();
-    var PaymentModeID = $('#PaymentModeID').val();
-    var Remarks = $('#Remarks').val();
-    var totalAmount = $('#totalAmount').text();
-    var file = $('#BillImage')[0].files[0];
-
-    // If file exists, read it as base64
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            prepareAndLog(event.target.result);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        prepareAndLog(""); // No file
+$(document).on("click", "#AddEntry", function () {
+    var CompanyID = $('#CompanyID').val();
+    if (CompanyID == null || CompanyID == undefined || CompanyID == "") {
+        alert("please select Company");
+        return;
     }
-    function prepareAndLog(base64String) {
-        var obj = {
-            param1: PurchaseDate,
-            param2: InvoiceNumber,
-            param3: SupplierID,
-            param4: PaymentModeID,
-            param5: base64String || "",
-            param6: totalAmount,
-            param7: Remarks,
-            param8: stocklocID,
-            List: rowsData
-        };
+    var type = $(".transaction-type:checked").val();
+    var category = $("#category").val();
+    var categoryText = $("#category option:selected").text();
 
-        
-        var CategoryModel = JSON.stringify(obj); // Send array directly
+    var product = $("#product").val();
+    var productText = $("#product option:selected").text();
 
-        UTILITY.CheckSession((data_) => {
-            if (data_) {
-                new APICALL(GetGlobalURL('Base', 'SavePurchaseWithDetails'), 'POST', CategoryModel, true).FETCH((result, error) => {
-             
-                    if (result.data == false) {
-                        Swal.fire({
-                            icon: "info",
-                            title: "Retry Again...",
-                            text: "Purchase was not saved. Please create it again!",
-                        });
-                    }
-                    else if (result && result.data != null) {
-                        Clear()
-                    }
-                    if (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error...',
-                            text: error.data.responseText,
-                            footer: ''
-                        });
-                    }
-                });
-            }
-        });
-      
+    var sku = $("#productsku").val();
+    var skuText = $("#productsku option:selected").text();
+
+    var barcode = $(".barcode").val();
+    var expiry = $(".expirydate").val();
+    var qty = $(".qty").val();
+    var price = $(".price").val();
+    var total = (parseFloat(qty) * parseFloat(price)).toFixed(2);
+    var isBonus = $(".isBonus").is(":checked") ? "Yes" : "No";
+
+    if (!product || !sku || qty <= 0 || !expiry ){
+        alert("Please select valid Product, SKU , expiry and Quantity.");
+        return;
     }
 
-   
+    var row = '<tr>' +
+        '<td>' + type + '</td>' +
+        '<td data-id="' + category + '">' + categoryText + '</td>' +
+        '<td data-id="' + product + '">' + productText + '</td>' +
+        '<td data-id="' + sku + '">' + skuText + '</td>' +
+        '<td>' + barcode + '</td>' +
+        '<td>' + expiry + '</td>' +
+        '<td>' + qty + '</td>' +
+        '<td>' + price + '</td>' +
+        '<td class="Total">' + total + '</td>' +
+        '<td class="isBonus">' + isBonus + '</td>' +
+        '<td>' +
+        '<button class="btn btn-sm btn-orange btn-block edit-row" type="button"><i class="bx bxs-edit"></i></button>' +
+        '</td>' +
+        '<td>' +
+        '<button class="btn btn-sm btn-gray btn-block delete-row" type="button"><i class="bx bxs-trash"></i></button>' +
+        '</td>' +
+        '</tr>';
 
 
+    $("#purchaseTable tbody").append(row);
+    recalculateTotal();
+    
 });
+$(document).on("click", ".delete-row", function () {
+    $(this).closest("tr").remove();
+    recalculateTotal();
+});
+$(document).on("click", ".edit-row", function () {
+    isEditingRow = true; // prevent change handlers from firing 
+    var row = $(this).closest("tr");
 
+    // Set back values into inputs
+    $(".transaction-type[value='" + row.find("td:eq(0)").text() + "']").prop("checked", true);
+    $("#category").val(row.find("td:eq(1)").data("id")).trigger("change");
+    $("#product").val(row.find("td:eq(2)").data("id")).trigger("change");
+    $("#productsku").val(row.find("td:eq(3)").data("id")).trigger("change");
+    $(".barcode").val(row.find("td:eq(4)").text());
+    $(".expirydate").val(row.find("td:eq(5)").text());
+    $(".qty").val(row.find("td:eq(6)").text());
+    $(".price").val(row.find("td:eq(7)").text());
+    $(".isBonus").prop("checked", row.find("td:eq(9)").text() === "Yes");
+
+    // Remove old row to replace on next add
+    row.remove();
+    recalculateTotal();
+    var qty = parseFloat($('.qty').val()) || 0;
+    var price = parseFloat($('.price').val()) || 0;
+    $('#total').val((qty * price).toFixed(2));
+    setTimeout(() => isEditingRow = false, 100);
+});
+$(document).on('input', '.qty, .price', function () {
+    
+    var qty = parseFloat($('.qty').val()) || 0;
+    var price = parseFloat($('.price').val()) || 0;
+    var total = qty * price;
+    $('#total').val(total.toFixed(2));
+    
+});
+function recalculateTotal() {
+    var sum = 0;
+    $("#purchaseTable tbody tr").each(function () {
+        var val = parseFloat($(this).find(".Total").text()) || 0;
+        sum += val;
+    });
+    $("#totalAmount").text(sum.toFixed(2));
+}
+function HideLoader2() {
+    $('.loader-wrapper').addClass('d-none');
+    $('.purchase-row').find('input, select, button').prop('disabled', false);
+}
+function ShowLoader2(targetClass) {
+    const $target = $('.' + targetClass);
+    const $loaderWrapper = $('.loader-wrapper');
+
+    // Show loader and position it
+    $loaderWrapper.removeClass('d-none');
+
+    // Optional: disable inputs while loading
+    $target.find('input, select, button').prop('disabled', true);
+}
 $(document).on('blur', '.barcode', function () {
     var barcode = $(this).val();
 
@@ -831,4 +634,487 @@ $(document).on('blur', '.barcode', function () {
             });
         }
     });
+});
+$(document).on("click", "#refresh", function () {
+
+
+    var len = 20;
+    var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var randomStr = "";
+    for (var i = 0; i < len; i++) {
+        var randIndex = Math.floor(Math.random() * charset.length);
+        randomStr += charset[randIndex];
+    }
+
+    var now = new Date();
+    var min = now.getMinutes().toString().padStart(2, '0');
+    var sec = now.getSeconds().toString().padStart(2, '0');
+
+    var barcode = randomStr + min + sec;
+
+    $('.barcode').val(barcode);
+});
+$(document).on("click", "#ClearForm", function () {
+    Clear();
+});
+function Clear() {
+    
+    $('#purchaseTable tbody').html('');
+    $('#category').val('').trigger('change');
+    $('#product').val('').trigger('change');
+    $('#productsku').val('').trigger('change');
+    $('.barcode').val('');
+    $('#price').val('');
+    $('#total').val('');
+    $('.qty').val(1);
+    $('.qty').val(1);
+    $('#PurchaseDate').val('');
+    $('#InvoiceNumber').val('');
+    $('#CompanyID').val('');
+    $('#stocklocID').val('');
+    $('#PaymentModeID').val('');
+    $('#Remarks').val('');
+    $('#totalAmount').text('');
+    $('#BillImage')[0].files[0] = Null;
+}
+function GetPurchase() {
+
+
+    UTILITY.CheckSession((data_) => {
+
+        if (data_) {
+
+            new APICALL(GetGlobalURL('Base', 'GetPurchase'), 'GET', '', true).FETCH((result, error) => {
+
+                if (result) {
+
+                    $('#purchase-master tbody').html('');
+                    if (result.data != null) {
+
+                        $.each(result.data, function (i, option) {
+                            var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block Editpurchase" data-value="' + option.PurchaseID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
+                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.PurchaseID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
+
+                            $('#purchase-master tbody').append(
+                                '<tr id="rowid-' + i + '">' +
+                                '<td>' + option.InvoiceNumber + '</td>' +
+                                '<td>' + option.PurchaseDate + '</td>' +
+                                '<td>' + option.CompanyName + '</td>' +
+                                '<td>' + option.TotalAmount + '</td>' +
+                                '<td>' + option.PaymentModeName + '</td>' +
+                                '<td>' + option.Remarks + '</td>' +
+                                '<td><img class="phyimg" src="' + option.Base64Image + '" /></td>' +
+                                '<td>' + option.CreatedDate + '</td>' +
+                                '<td><button class="btn btn-sm btn-orange btn-block detailspurchase" data-value="' + option.PurchaseID + '" type="button"><i class="bx bx-detail"></i></button></td>' +
+
+                                UpdateBtn +
+                                DeleteBtn +
+                                '</tr>'
+                            );
+                        });
+                        $('.Editpurchase').on('click', function () {
+                            Editpurchase(this.attributes["data-value"].value);
+                        });
+
+                        $('.Deletepurchase').on('click', function () {
+                            //Deletecategory(this.attributes["data-value"].value);
+                        });
+
+                    }
+
+                }
+            });
+
+
+        }
+    });
+}
+$(document).on('click', '#SaveBtn', function () {
+    var rowsData = [];
+
+    $('#purchaseTable tbody tr').each(function () {
+        var $row = $(this);
+
+        var transactionType = $row.find('td:eq(0)').text().trim(); // "Purchase"
+        var categoryId = $row.find('td:eq(1)').data('id');         // from data-id
+        var productId = $row.find('td:eq(2)').data('id');
+        var skuId = $row.find('td:eq(3)').data('id');
+        var barcode = $row.find('td:eq(4)').text().trim();
+        var expiryDate = $row.find('td:eq(5)').text().trim();
+        var qty = parseFloat($row.find('td:eq(6)').text()) || 0;
+        var price = parseFloat($row.find('td:eq(7)').text()) || 0;
+        var total = parseFloat($row.find('td:eq(8)').text()) || 0;
+        var isBonus = $row.find('td:eq(9)').text().trim().toLowerCase() === "yes";
+
+        rowsData.push({
+            param1: transactionType,
+            param2: categoryId,
+            param3: productId,
+            param4: skuId,
+            param5: barcode,
+            param6: expiryDate,
+            param7: qty,
+            param8: price,
+            param9: total,
+            param10: isBonus
+        });
+    });
+
+    var PurchaseDate = $('#PurchaseDate').val();
+    var InvoiceNumber = $('#InvoiceNumber').val();
+    var CompanyID = $('#CompanyID').val();
+    var stocklocID = $('#stocklocID').val();
+    var PaymentModeID = $('#PaymentModeID').val();
+    var Remarks = $('#Remarks').val();
+    var totalAmount = $('#totalAmount').text();
+    var file = $('#BillImage')[0].files[0];
+
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            prepareAndLog(event.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        prepareAndLog(""); // No file
+    }
+
+    function prepareAndLog(base64String) {
+        var obj = {
+            param1: PurchaseDate,
+            param2: InvoiceNumber,
+            param3: CompanyID,
+            param4: PaymentModeID,
+            param5: base64String || "",
+            param6: totalAmount,
+            param7: Remarks,
+            param8: stocklocID,
+            List: rowsData
+        };
+
+        var CategoryModel = JSON.stringify(obj);
+
+        UTILITY.CheckSession((data_) => {
+            if (data_) {
+                new APICALL(GetGlobalURL('Base', 'SavePurchaseWithDetails'), 'POST', CategoryModel, true).FETCH((result, error) => {
+                    if (result.data == false) {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Retry Again...",
+                            text: "Purchase was not saved. Please create it again!",
+                        });
+                    }
+                    else if (result && result.data != null) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success...",
+                            text: "Purchase saved successfully!",
+                        });
+                      
+                        Clear()
+                    }
+                    if (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error...',
+                            text: error.data.responseText,
+                            footer: ''
+                        });
+                    }
+                });
+            }
+        });
+    }
+});
+function Editpurchase(id) {
+    var purchaseId = id;
+
+    UTILITY.CheckSession((data_) => {
+        if (data_) {
+            var dt = { Param1: purchaseId }
+            var productModel = JSON.stringify(dt);
+
+            new APICALL(GetGlobalURL('Base', 'GetPurchaseWithDataisById'), 'POST', productModel, true)
+                .FETCH((result, error) => {
+
+                    if (result) {
+                        // Purchase header data
+                        if (result.data.Table.length > 0) {
+                            var PurchaseDate = new Date(result.data.Table[0].PurchaseDate);
+                            $("#PurchaseDate").val(UTILITY.toLocaleDateString(PurchaseDate));
+                            $("#PurchaseId").val(result.data.Table[0].PurchaseID);
+                            $("#InvoiceNumber").val(result.data.Table[0].InvoiceNumber);
+                            $("#Remarks").val(result.data.Table[0].Remarks);
+                            $("#CompanyID").val(result.data.Table[0].CompanyID).trigger("change");
+                            $("#PaymentModeID").val(result.data.Table[0].PaymentModeID).trigger("change");
+                            $("#stocklocID").val(result.data.Table[0].LocationID).trigger("change");
+                            $("#BillImagesrc").attr("src", result.data.Table[0].Base64Image);
+
+                            // Tab switch
+                            var index = $("a[href='#FormScreen']").closest("li").index();
+                            $("#tabs").tabs("option", "active", index);
+                            $(':focus').blur();
+                            $("#tabs").tabs("option", "active", 0);
+
+                            // Buttons
+                            $("#UpdateBtn").removeClass("d-none");
+                            $("#SaveBtn").addClass("d-none");
+                        }
+
+                        // Purchase detail rows
+                        if (result.data.Table1.length > 0) {
+                            $('#purchaseTable tbody').html('');
+
+                            result.data.Table1.forEach(function (item) {
+                                var type = "Purchase"; // agar API se type nahi aa raha to fixed
+                                var category = item.CategoryID;
+                                var categoryText = item.CategoryName;
+
+                                var product = item.ProductID;
+                                var productText = item.ProductName;
+
+                                var sku = item.ProductSkuID;
+                                var skuText = item.ProductName1;
+
+                                var barcode = item.Barcode;
+                                var expiry = UTILITY.toLocaleDateString(new Date(item.ExpiryDate));
+                                var qty = item.Quantity;
+                                var price = item.UnitPrice;
+                                var total = parseFloat(item.Total).toFixed(2);
+                                var isBonus = (item.IsBonus === "true" || item.IsBonus === true) ? "Yes" : "No";
+
+                                var row = '<tr>' +
+                                    '<td>' + type + '</td>' +
+                                    '<td data-id="' + category + '">' + categoryText + '</td>' +
+                                    '<td data-id="' + product + '">' + productText + '</td>' +
+                                    '<td data-id="' + sku + '">' + skuText + '</td>' +
+                                    '<td>' + barcode + '</td>' +
+                                    '<td>' + expiry + '</td>' +
+                                    '<td>' + qty + '</td>' +
+                                    '<td>' + price + '</td>' +
+                                    '<td class="Total">' + total + '</td>' +
+                                    '<td class="isBonus">' + isBonus + '</td>' +
+                                    '<td>' +
+                                    '<button class="btn btn-sm btn-orange btn-block edit-row" type="button"><i class="bx bxs-edit"></i></button>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<button class="btn btn-sm btn-gray btn-block delete-row" type="button"><i class="bx bxs-trash"></i></button>' +
+                                    '</td>' +
+                                    '</tr>';
+
+                                $("#purchaseTable tbody").append(row);
+                            });
+
+                            recalculateTotal();
+                        }
+                       
+                    }
+                });
+        }
+    });
+}
+
+$(document).on('change', '#CompanyID', function () {
+    var id = $('#CompanyID').val();
+    if (id == '') {
+        return;
+    }
+    var dt = {
+        Param1: id
+    }
+
+    var supplierModel = JSON.stringify(dt); // Send array directly
+
+    UTILITY.CheckSession((data_) => {
+
+        if (data_) {
+
+            new APICALL(GetGlobalURL('Base', 'GetCompanyBalance'), 'POST', supplierModel, true).FETCH((result, error) => {
+
+                if (result) {
+
+
+                    if (result.data != null) {
+
+                        $("#Balance").text(result.data[0].Balance);
+                    }
+
+                }
+
+                if (error) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+            });
+            HideLoader('CategoryMasterDiv');
+
+        }
+    });
+});
+
+$(document).on("click", ".detailspurchase", function () {
+    var purchaseId = $(this).data("value");
+
+    UTILITY.CheckSession((data_) => {
+
+        if (data_) {
+            var dt = {
+                Param1: purchaseId
+            }
+            var productModel = JSON.stringify(dt); // Send array directly
+            new APICALL(GetGlobalURL('Base', 'GetPurchaseDatais'), 'POST', productModel, true).FETCH((result, error) => {
+
+                if (result) {
+
+                    $('#purchasedatails-master tbody').html('');
+                    if (result.data != null) {
+
+                        $.each(result.data, function (i, option) {
+                            var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block Editpurchase" data-value="' + option.ID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
+                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.ID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
+
+                            $('#purchasedatails-master tbody').append(
+                                '<tr id="rowid-' + i + '">' +
+                                '<td>' + option.SKU + '</td>' +
+                                '<td>' + option.Barcode + '</td>' +
+                                '<td>' + option.ExpiryDate + '</td>' +
+                                '<td>' + option.IsBonus + '</td>' +
+                                '<td>' + option.Quantity + '</td>' +
+                                '<td>' + option.UnitPrice + '</td>' +
+                                '<td>' + option.Total + '</td>' +
+                                '</tr>'
+                            );
+                        });
+
+
+
+                        $('.Editpurchase').on('click', function () {
+                            //Editcategory(this.attributes["data-value"].value);
+                        });
+
+                        $('.Deletepurchase').on('click', function () {
+                            //Deletecategory(this.attributes["data-value"].value);
+                        });
+
+                        // Modal show karo
+                        $("#ModalActivepurchasedetails").modal("show");
+
+                    }
+
+                }
+            });
+
+
+        }
+    });
+
+});
+$("#CloseModalBtn").click(function () {
+    $("#ModalActivepurchasedetails").modal("hide");
+});
+
+$(document).on('click', '#UpdateBtn', function () {
+    var rowsData = [];
+
+    $('#purchaseTable tbody tr').each(function () {
+        var $row = $(this);
+
+        var transactionType = $row.find('td:eq(0)').text().trim(); // "Purchase"
+        var categoryId = $row.find('td:eq(1)').data('id');         // from data-id
+        var productId = $row.find('td:eq(2)').data('id');
+        var skuId = $row.find('td:eq(3)').data('id');
+        var barcode = $row.find('td:eq(4)').text().trim();
+        var expiryDate = $row.find('td:eq(5)').text().trim();
+        var qty = parseFloat($row.find('td:eq(6)').text()) || 0;
+        var price = parseFloat($row.find('td:eq(7)').text()) || 0;
+        var total = parseFloat($row.find('td:eq(8)').text()) || 0;
+        var isBonus = $row.find('td:eq(9)').text().trim().toLowerCase() === "yes";
+
+        rowsData.push({
+            param1: transactionType,
+            param2: categoryId,
+            param3: productId,
+            param4: skuId,
+            param5: barcode,
+            param6: expiryDate,
+            param7: qty,
+            param8: price,
+            param9: total,
+            param10: isBonus
+        });
+    });
+
+    var PurchaseDate = $('#PurchaseDate').val();
+    var InvoiceNumber = $('#InvoiceNumber').val();
+    var CompanyID = $('#CompanyID').val();
+    var stocklocID = $('#stocklocID').val();
+    var PaymentModeID = $('#PaymentModeID').val();
+    var Remarks = $('#Remarks').val();
+    var purchaseId = $("#PurchaseId").val()
+    var totalAmount = $('#totalAmount').text();
+    var file = $('#BillImage')[0].files[0];
+
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            prepareAndLog(event.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        var src = $("#BillImagesrc").attr("src");
+        prepareAndLog(src); // No file
+    }
+
+    function prepareAndLog(base64String) {
+        var obj = {
+            param1: PurchaseDate,
+            param2: InvoiceNumber,
+            param3: CompanyID,
+            param4: PaymentModeID,
+            param5: base64String || "",
+            param6: totalAmount,
+            param7: Remarks,
+            param8: stocklocID,
+            param10: purchaseId,
+            List: rowsData
+        };
+
+        var CategoryModel = JSON.stringify(obj);
+
+        UTILITY.CheckSession((data_) => {
+            if (data_) {
+                new APICALL(GetGlobalURL('Base', 'UpdatePurchaseWithDetails'), 'POST', CategoryModel, true).FETCH((result, error) => {
+                    if (result.data == false) {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Retry Again...",
+                            text: "Purchase was not saved. Please create it again!",
+                        });
+                    }
+                    else if (result && result.data != null) {
+                        
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success...",
+                            text: "Purchase Updated successfully!",
+                        });
+                        Clear();
+                    }
+                    if (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error...',
+                            text: error.data.responseText,
+                            footer: ''
+                        });
+                    }
+                });
+            }
+        });
+    }
 });

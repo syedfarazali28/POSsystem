@@ -874,11 +874,11 @@ namespace ManagementPortalApi.Controllers
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ldapsettings2");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_cratedatabsebackup");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ldapsettings2");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_cratedatabsebackup");
                 }
             }
             catch (Exception ex)
@@ -909,11 +909,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_formsmaster", null, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_formsmaster");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_formsmaster");
                 }
             }
             catch (Exception ex)
@@ -1039,11 +1039,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_activecategory", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_activecategory");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_activecategory");
                 }
             }
             catch (Exception ex)
@@ -1100,11 +1100,11 @@ namespace ManagementPortalApi.Controllers
                 result = _DAL.GetData("sp_delete_Category", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Category");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Category");
                 }
             }
             catch (Exception ex)
@@ -1163,11 +1163,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_activeProduct", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_activeProduct");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_activeProduct");
                 }
             }
             catch (Exception ex)
@@ -1228,11 +1228,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_productbyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_productbyid");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_productbyid");
                 }
             }
             catch (Exception ex)
@@ -1290,11 +1290,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_Supplierbyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Supplierbyid");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Supplierbyid");
                 }
             }
             catch (Exception ex)
@@ -1320,11 +1320,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_Supplier", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Supplier");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Supplier");
                 }
             }
             catch (Exception ex)
@@ -1349,11 +1349,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_ActiveSupplier", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ActiveSupplier");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ActiveSupplier");
                 }
             }
             catch (Exception ex)
@@ -1413,11 +1413,11 @@ namespace ManagementPortalApi.Controllers
                 result = _DAL.GetData("sp_delete_Supplier", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Supplier");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Supplier");
                 }
             }
             catch (Exception ex)
@@ -1445,11 +1445,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_distributorbyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_distributorbyid");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_distributorbyid");
                 }
             }
             catch (Exception ex)
@@ -1474,11 +1474,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_distributor", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_distributor");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_distributor");
                 }
             }
             catch (Exception ex)
@@ -1538,11 +1538,11 @@ namespace ManagementPortalApi.Controllers
                 result = _DAL.GetData("sp_delete_distributor", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_distributor");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_distributor");
                 }
             }
             catch (Exception ex)
@@ -1571,11 +1571,40 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_ProductSkubyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ProductSkubyid");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ProductSkubyid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetMasterProductSkuData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_MasterProductSku", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_MasterProductSku");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_MasterProductSku");
                 }
             }
             catch (Exception ex)
@@ -1600,11 +1629,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_ProductSku", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ProductSku");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ProductSku");
                 }
             }
             catch (Exception ex)
@@ -1697,11 +1726,11 @@ namespace ManagementPortalApi.Controllers
                 result = _DAL.GetData("sp_delete_productsku", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_productsku");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_productsku");
                 }
             }
             catch (Exception ex)
@@ -1729,11 +1758,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_salesperson", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_salesperson");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_salesperson");
                 }
             }
             catch (Exception ex)
@@ -1758,11 +1787,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_salespersonbyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_salespersonbyid");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_salespersonbyid");
                 }
             }
             catch (Exception ex)
@@ -1823,11 +1852,11 @@ namespace ManagementPortalApi.Controllers
                 result = _DAL.GetData("sp_delete_salesperson", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_salesperson");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_salesperson");
                 }
             }
             catch (Exception ex)
@@ -1863,11 +1892,11 @@ namespace ManagementPortalApi.Controllers
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_barcode");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_barcode");
                 }
 
             }
@@ -1895,11 +1924,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_mapcategory", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_mapcategory");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_category");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_mapcategory");
                 }
             }
             catch (Exception ex)
@@ -1910,6 +1939,87 @@ namespace ManagementPortalApi.Controllers
             }
 
             return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult UpdatePurchaseWithDetails(Parameters p)
+        {
+            var result = false;
+            try
+            {
+
+                DataTable purchaseDetailTable = new DataTable();
+
+                purchaseDetailTable.Columns.Add("ProductID", typeof(int));         
+                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));      
+                purchaseDetailTable.Columns.Add("Quantity", typeof(int));          
+                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));     
+                purchaseDetailTable.Columns.Add("Total", typeof(decimal));         
+                purchaseDetailTable.Columns.Add("Barcode", typeof(string));        
+                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));   
+                purchaseDetailTable.Columns.Add("IsBonus", typeof(string));
+                purchaseDetailTable.Columns.Add("TransactionType", typeof(string));
+
+                foreach (var item in p.List)
+                {
+                    purchaseDetailTable.Rows.Add(
+                    item.Param3,   
+                    item.Param4,   
+                    item.Param7,   
+                    item.Param8,   
+                    item.Param9,   
+                    item.Param5,   
+                    item.Param6,   
+                    item.Param10,
+                    item.Param1      // 👈 NEW: 'Purchase' or 'Return'
+                    );
+                }
+
+
+
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Clear();
+                nvc.Add("PurchaseID-Int", p.Param10);
+                nvc.Add("PurchaseDate-DATE", p.Param1);
+                nvc.Add("InvoiceNumber-VARCHAR", p.Param2);
+                nvc.Add("Base64-VARCHAR", p.Param5);
+                nvc.Add("CompanyID-INT", p.Param3);
+                nvc.Add("TotalAmount-DECIMAL", p.Param6);
+                nvc.Add("PaymentModeID-INT", p.Param4);
+                nvc.Add("Remarks-VARCHAR", p.Param7);
+                nvc.Add("CreatedBy-INT", p.Param9);
+                nvc.Add("LocationID-INT", p.Param8);
+                
+                
+
+
+
+
+                DataSet ds = new DataSet();
+                ds.Tables.Add(purchaseDetailTable);
+
+                string[] typeParams = { "@PurchaseDetails" };
+
+                result = _DAL.InsertDataWithType("sp_update_purchase", nvc, typeParams, ds, _DAL.CSManagementPortalDatabase);
+
+
+
+                if (result)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_update_purchase");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_update_purchase");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
         }
         [HttpPost]
         public IActionResult SavePurchaseWithDetails(Parameters p)
@@ -1950,13 +2060,14 @@ namespace ManagementPortalApi.Controllers
                 NameValueCollection nvc = new NameValueCollection();
                 nvc.Add("PurchaseDate-VarChar", p.Param1);
                 nvc.Add("InvoiceNumber-VarChar", p.Param2);
-                nvc.Add("SupplierID-Int", p.Param3);
+                nvc.Add("CompanyID-Int", p.Param3);
                 nvc.Add("TotalAmount-Decimal", p.Param6);
                 nvc.Add("PaymentModeID-Int", p.Param4);
                 nvc.Add("Base64-VARCHAR", p.Param5);
                 nvc.Add("Remarks-VarChar", p.Param7);
                 nvc.Add("LocationID-Int", p.Param8);
                 nvc.Add("CreatedBy-Int", p.Param9);
+                
 
 
 
@@ -1972,11 +2083,11 @@ namespace ManagementPortalApi.Controllers
 
                 if (result)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_insert_purchase");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_insert_purchase");
                 }
             }
             catch (Exception ex)
@@ -2001,11 +2112,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_ProductByCategoryID", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ProductByCategoryID");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ProductByCategoryID");
                 }
             }
             catch (Exception ex)
@@ -2030,11 +2141,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_ProductskuByProductID", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ProductskuByProductID");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ProductskuByProductID");
                 }
             }
             catch (Exception ex)
@@ -2047,7 +2158,7 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
         [HttpPost]
-        public IActionResult GetSupplierBalance(Parameters p)
+        public IActionResult GetCompanyBalance(Parameters p)
         {
             DataTable dt = new DataTable();
             try
@@ -2056,14 +2167,14 @@ namespace ManagementPortalApi.Controllers
                 nv.Clear();
                 nv.Add("ID-INT", p.Param1);
 
-                dt = _DAL.GetData("sp_select_supplierpaymentrealateinfo", nv, _DAL.CSManagementPortalDatabase);
+                dt = _DAL.GetData("sp_select_Companypaymentrealateinfo", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Companypaymentrealateinfo");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Companypaymentrealateinfo");
                 }
             }
             catch (Exception ex)
@@ -2088,11 +2199,40 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_invoiceno", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_invoiceno");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_invoiceno");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetPurchaseno()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_purchaseno", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_invoiceno");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_invoiceno");
                 }
             }
             catch (Exception ex)
@@ -2146,11 +2286,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_PaymentModeData", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_PaymentModeData");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_Product");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_PaymentModeData");
                 }
             }
             catch (Exception ex)
@@ -2175,11 +2315,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_PriceByskuID", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_PriceByskuID");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_categorybyid");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_PriceByskuID");
                 }
             }
             catch (Exception ex)
@@ -2192,25 +2332,26 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
     
-        [HttpPost]
-        public IActionResult GetSupplierLedgers(Parameters p)
+    
+
+        [HttpGet]
+        public IActionResult GetPurchase()
         {
             DataTable dt = new DataTable();
             try
             {
+                
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
-                nv.Add("sdate-DateTime", p.Param1);
-                nv.Add("edate-DateTime", p.Param2);
-                nv.Add("SupplierID-INT", p.Param3);
-                dt = _DAL.GetData("sp_select_suppliersedgers", nv, _DAL.CSManagementPortalDatabase);
+                var spname = "sp_select_purchase";
+                dt = _DAL.GetData(spname, nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_suppliersedgers");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + spname);
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_suppliersedgers");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + spname);
                 }
             }
             catch (Exception ex)
@@ -2223,7 +2364,228 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
 
+        [HttpPost]
+        public IActionResult GetPurchaseDatais(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
 
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("PurchaseID-INT", p.Param1);
+                var spname = "sp_select_purchasedatailbyid";
+                dt = _DAL.GetData(spname, nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + spname);
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + spname);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult GetPurchaseWithDataisById(Parameters p)
+        {
+            DataSet dt = new DataSet();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("PurchaseID-INT", p.Param1);
+                var spname = "sp_select_purchasewithdatailbyid";
+                dt = _DAL.GetDataSet(spname, nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Tables.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + spname);
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + spname);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        #endregion
+
+        #region Company
+        [HttpGet]
+        public IActionResult GetCompanyActiveData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_ActiveCompany", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ActiveSupplier");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_ActiveSupplier");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult GetCompanyDataByid(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Id-INT", p.Param1);
+
+                dt = _DAL.GetData("sp_select_companybyid", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_companybyid");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_companybyid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public IActionResult GetCompanyData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_companies", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_companies");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_companies");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult SavecompanyData(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("CompanyID-INT", p.Param1 == null ? "0" : p.Param1);
+                nv.Add("CompanyName-VARCHAR", p.Param2);
+                nv.Add("ContactPerson-VARCHAR", p.Param3);
+                nv.Add("PhoneNumber-VARCHAR", p.Param4);
+                nv.Add("Email-VARCHAR", p.Param5);
+                nv.Add("Website-VARCHAR", p.Param6);
+                nv.Add("Address-VARCHAR", p.Param7);
+                nv.Add("City-VARCHAR", p.Param8);
+                nv.Add("Country-VARCHAR", p.Param9);
+                nv.Add("Logo-VARCHAR", p.Param10);
+                nv.Add("GSTNumber-VARCHAR", p.Param11);
+                nv.Add("NTNNumber-VARCHAR", p.Param12);
+                nv.Add("IsActive-bit", (p.Param13 == "true" ? "1" : "0"));
+                var isInserted = _DAL.InsertData("sp_insert_company", nv, _DAL.CSManagementPortalDatabase);
+                if (!isInserted)
+                {
+                    return BadRequest("Failed to Updated Product.");
+                }
+
+                return Ok("Product Updated successfully.");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult DeleteCompanyDataByid(Parameters p)
+        {
+            var result = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("CompanyID-INT", p.Param1);
+
+                result = _DAL.GetData("sp_delete_company", nv, _DAL.CSManagementPortalDatabase);
+                if (result.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_Supplier");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_Supplier");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
         #endregion
     }
 }

@@ -545,7 +545,7 @@ function Getproductsku() {
 
         if (data_) {
 
-            new APICALL(GetGlobalURL('Base', 'GetProductSkuData'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetMasterProductSkuData'), 'GET', '', true).FETCH((result, error) => {
 
                 if (result) {
 

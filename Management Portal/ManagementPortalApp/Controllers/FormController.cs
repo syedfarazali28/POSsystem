@@ -46,5 +46,10 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
+
+        public IActionResult Sales()
+        {
+            return View();
+        }
     }
 }
