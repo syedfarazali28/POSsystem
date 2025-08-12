@@ -2528,24 +2528,25 @@ namespace ManagementPortalApi.Controllers
                 nv.Clear();
                 nv.Add("CompanyID-INT", p.Param1 == null ? "0" : p.Param1);
                 nv.Add("CompanyName-VARCHAR", p.Param2);
-                nv.Add("ContactPerson-VARCHAR", p.Param3);
-                nv.Add("PhoneNumber-VARCHAR", p.Param4);
-                nv.Add("Email-VARCHAR", p.Param5);
-                nv.Add("Website-VARCHAR", p.Param6);
-                nv.Add("Address-VARCHAR", p.Param7);
-                nv.Add("City-VARCHAR", p.Param8);
-                nv.Add("Country-VARCHAR", p.Param9);
-                nv.Add("Logo-VARCHAR", p.Param10);
-                nv.Add("GSTNumber-VARCHAR", p.Param11);
-                nv.Add("NTNNumber-VARCHAR", p.Param12);
-                nv.Add("IsActive-bit", (p.Param13 == "true" ? "1" : "0"));
+                nv.Add("RegistrationNumber-VARCHAR", p.Param3);
+                nv.Add("ContactPerson-VARCHAR", p.Param4);
+                nv.Add("PhoneNumber-VARCHAR", p.Param5);
+                nv.Add("Email-VARCHAR", p.Param6);
+                nv.Add("Website-VARCHAR", p.Param7);
+                nv.Add("Address-VARCHAR", p.Param8);
+                nv.Add("City-VARCHAR", p.Param9);
+                nv.Add("Country-VARCHAR", p.Param10);
+                nv.Add("Logo-VARCHAR", p.Param11);
+                nv.Add("GSTNumber-VARCHAR", p.Param12);
+                nv.Add("NTNNumber-VARCHAR", p.Param13);
+                nv.Add("IsActive-bit", (p.Param14 == "true" ? "1" : "0"));
                 var isInserted = _DAL.InsertData("sp_insert_company", nv, _DAL.CSManagementPortalDatabase);
                 if (!isInserted)
                 {
                     return BadRequest("Failed to Updated Product.");
                 }
 
-                return Ok("Product Updated successfully.");
+                return Ok("Company Save successfully.");
 
             }
             catch (Exception ex)

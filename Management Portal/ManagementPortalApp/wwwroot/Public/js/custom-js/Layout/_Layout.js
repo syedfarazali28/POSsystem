@@ -388,3 +388,10 @@ $(document).on("click", "#BackupBtn", function () {
 
 });
 
+
+function fileToBase64(file, callback) {
+    let reader = new FileReader();
+    reader.onload = e => callback(e.target.result.split(",")[1]);
+    reader.onerror = () => callback("");
+    reader.readAsDataURL(file);
+}

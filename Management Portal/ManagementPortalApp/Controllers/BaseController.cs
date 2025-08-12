@@ -795,10 +795,26 @@ namespace ManagementPortalApp.Controllers
 
 
         #region Company
+        [HttpPost]
+        public IActionResult SaveCompanyData([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SavecompanyData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         [HttpGet]
         public IActionResult GetCompanyActiveData()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyActiveData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetCompanyData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyData", "Settings");
             return new HttpResponseMessageResult(response);
         }
         #endregion
