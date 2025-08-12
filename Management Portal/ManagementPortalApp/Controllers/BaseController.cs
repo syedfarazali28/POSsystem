@@ -817,6 +817,16 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyData", "Settings");
             return new HttpResponseMessageResult(response);
         }
+        [HttpPost]
+        public IActionResult GetCompanyDataById([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyDataById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         #endregion
     }
 

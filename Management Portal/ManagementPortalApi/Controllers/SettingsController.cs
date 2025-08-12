@@ -2464,7 +2464,7 @@ namespace ManagementPortalApi.Controllers
             {
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
-                nv.Add("Id-INT", p.Param1);
+                nv.Add("CompanyID-INT", p.Param1);
 
                 dt = _DAL.GetData("sp_select_companybyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)

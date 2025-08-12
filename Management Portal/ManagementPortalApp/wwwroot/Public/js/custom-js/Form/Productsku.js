@@ -755,6 +755,18 @@ function DatascreenClear() {
     $('#updateis-active').prop('checked', true);
     $('#updatepreviewImage').attr('src', '');
     $('#updatepreviewImage').hide();
-}
+   
 
+}
+$(document).on('click', '#CloseBtn', function () {
+
+    $('#updateproductskuid').val('');
+    $('#updateProduct').val('').trigger('change');
+    $('#updateproductsku').val('');
+    $('#updateAmount').val('');
+    $('#updateis-active').prop('checked', true);
+    $('#updatepreviewImage').attr('src', '');
+    $('#updatepreviewImage').hide();
+    $('#UpdateDiv').hide();
+});
 //#endregion
