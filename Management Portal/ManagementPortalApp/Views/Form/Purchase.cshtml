@@ -86,24 +86,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <!-- Type -->
-                                <div class="col-md-6">
-                                    <span class="highlighted">
-
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input transaction-type" type="radio" name="type" value="Purchase" checked>
-                                            <label class="form-check-label">Purchase</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input transaction-type" type="radio" name="type" value="Return">
-                                            <label class="form-check-label">Return</label>
-                                        </div>
-                                    </span>
-                                </div>
+                             
 
                                 <!-- Bonus -->
-                                <div class="col-md-6 text-end float-end">
+                                <div class="col-md-12 text-end float-end">
                                     <span class="highlighted2">
                                         <input type="checkbox" class="form-check-input isBonus" id="bonusCheckbox" title="Bonus Product">
                                         <label class="form-label">Bonus</label>
@@ -194,7 +180,7 @@
                                     <table class="table table-bordered" id="purchaseTable">
                                         <thead>
                                             <tr>
-                                                <th>Type</th>
+                                                
                                                 <th>Category</th>
                                                 <th>Product</th>
                                                 <th>SKU</th>
@@ -285,10 +271,10 @@
                                                 {
                                                     <th>Edit</th>
                                                 }
-                                                @if (_allowdelete)
+                                               @*  @if (_allowdelete)
                                                 {
                                                     <th>Delete</th>
-                                                }
+                                                } *@
 
                                             </tr>
                                         </thead>

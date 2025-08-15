@@ -34,7 +34,7 @@ function GetInvoiceno() {
 
         if (data_) {
 
-            new APICALL(GetGlobalURL('Base', 'GetInvoiceno'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetPurchaseno'), 'GET', '', true).FETCH((result, error) => {
 
                 if (result) {
 
@@ -500,7 +500,7 @@ $(document).on("click", "#AddEntry", function () {
         alert("please select Company");
         return;
     }
-    var type = $(".transaction-type:checked").val();
+    
     var category = $("#category").val();
     var categoryText = $("#category option:selected").text();
 
@@ -523,7 +523,7 @@ $(document).on("click", "#AddEntry", function () {
     }
 
     var row = '<tr>' +
-        '<td>' + type + '</td>' +
+        
         '<td data-id="' + category + '">' + categoryText + '</td>' +
         '<td data-id="' + product + '">' + productText + '</td>' +
         '<td data-id="' + sku + '">' + skuText + '</td>' +
@@ -544,8 +544,21 @@ $(document).on("click", "#AddEntry", function () {
 
     $("#purchaseTable tbody").append(row);
     recalculateTotal();
+    clearshortform();
     
 });
+function clearshortform() {
+    $("#category").val("").trigger("change");
+    $("#product").val("").trigger("change");
+    $("#productsku").val("").trigger("change");
+    $(".barcode").val("");
+    $(".expirydate").val("");
+    $(".qty").val("1");
+    $(".price").val("");
+    $(".total").val("0.00");
+    $(".isBonus").prop("checked", false);
+
+}
 $(document).on("click", ".delete-row", function () {
     $(this).closest("tr").remove();
     recalculateTotal();
@@ -555,15 +568,15 @@ $(document).on("click", ".edit-row", function () {
     var row = $(this).closest("tr");
 
     // Set back values into inputs
-    $(".transaction-type[value='" + row.find("td:eq(0)").text() + "']").prop("checked", true);
-    $("#category").val(row.find("td:eq(1)").data("id")).trigger("change");
-    $("#product").val(row.find("td:eq(2)").data("id")).trigger("change");
-    $("#productsku").val(row.find("td:eq(3)").data("id")).trigger("change");
-    $(".barcode").val(row.find("td:eq(4)").text());
-    $(".expirydate").val(row.find("td:eq(5)").text());
-    $(".qty").val(row.find("td:eq(6)").text());
-    $(".price").val(row.find("td:eq(7)").text());
-    $(".isBonus").prop("checked", row.find("td:eq(9)").text() === "Yes");
+    
+    $("#category").val(row.find("td:eq(0)").data("id")).trigger("change");
+    $("#product").val(row.find("td:eq(1)").data("id")).trigger("change");
+    $("#productsku").val(row.find("td:eq(2)").data("id")).trigger("change");
+    $(".barcode").val(row.find("td:eq(3)").text());
+    $(".expirydate").val(row.find("td:eq(4)").text());
+    $(".qty").val(row.find("td:eq(5)").text());
+    $(".price").val(row.find("td:eq(6)").text());
+    $(".isBonus").prop("checked", row.find("td:eq(7)").text() === "Yes");
 
     // Remove old row to replace on next add
     row.remove();
@@ -584,11 +597,15 @@ $(document).on('input', '.qty, .price', function () {
 function recalculateTotal() {
     var sum = 0;
     $("#purchaseTable tbody tr").each(function () {
-        var val = parseFloat($(this).find(".Total").text()) || 0;
-        sum += val;
+        var isBonus = $(this).find(".isBonus").text().trim().toLowerCase();
+        if (isBonus === "no") { // Only include non-bonus items
+            var val = parseFloat($(this).find(".Total").text()) || 0;
+            sum += val;
+        }
     });
     $("#totalAmount").text(sum.toFixed(2));
 }
+
 function HideLoader2() {
     $('.loader-wrapper').addClass('d-none');
     $('.purchase-row').find('input, select, button').prop('disabled', false);
@@ -675,7 +692,11 @@ function Clear() {
     $('#PaymentModeID').val('');
     $('#Remarks').val('');
     $('#totalAmount').text('');
-    $('#BillImage')[0].files[0] = Null;
+    $('#BillImage').val('');
+    GetInvoiceno();
+    $("#SaveBtn").removeClass("d-none");
+    $("#UpdateBtn").addClass("d-none");
+    $("#BillImagesrc").attr("src","");
 }
 function GetPurchase() {
 
@@ -693,11 +714,11 @@ function GetPurchase() {
 
                         $.each(result.data, function (i, option) {
                             var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block Editpurchase" data-value="' + option.PurchaseID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
-                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.PurchaseID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
+                            //var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.PurchaseID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
 
                             $('#purchase-master tbody').append(
                                 '<tr id="rowid-' + i + '">' +
-                                '<td>' + option.InvoiceNumber + '</td>' +
+                                '<td>' + option.PO + '</td>' +
                                 '<td>' + option.PurchaseDate + '</td>' +
                                 '<td>' + option.CompanyName + '</td>' +
                                 '<td>' + option.TotalAmount + '</td>' +
@@ -708,7 +729,7 @@ function GetPurchase() {
                                 '<td><button class="btn btn-sm btn-orange btn-block detailspurchase" data-value="' + option.PurchaseID + '" type="button"><i class="bx bx-detail"></i></button></td>' +
 
                                 UpdateBtn +
-                                DeleteBtn +
+                                //DeleteBtn +
                                 '</tr>'
                             );
                         });
@@ -735,28 +756,26 @@ $(document).on('click', '#SaveBtn', function () {
     $('#purchaseTable tbody tr').each(function () {
         var $row = $(this);
 
-        var transactionType = $row.find('td:eq(0)').text().trim(); // "Purchase"
-        var categoryId = $row.find('td:eq(1)').data('id');         // from data-id
-        var productId = $row.find('td:eq(2)').data('id');
-        var skuId = $row.find('td:eq(3)').data('id');
-        var barcode = $row.find('td:eq(4)').text().trim();
-        var expiryDate = $row.find('td:eq(5)').text().trim();
-        var qty = parseFloat($row.find('td:eq(6)').text()) || 0;
-        var price = parseFloat($row.find('td:eq(7)').text()) || 0;
-        var total = parseFloat($row.find('td:eq(8)').text()) || 0;
-        var isBonus = $row.find('td:eq(9)').text().trim().toLowerCase() === "yes";
+        
+        var categoryId = $row.find('td:eq(0)').data('id');         // from data-id
+        var productId = $row.find('td:eq(1)').data('id');
+        var skuId = $row.find('td:eq(2)').data('id');
+        var barcode = $row.find('td:eq(3)').text().trim();
+        var expiryDate = $row.find('td:eq(4)').text().trim();
+        var qty = parseFloat($row.find('td:eq(5)').text()) || 0;
+        var price = parseFloat($row.find('td:eq(6)').text()) || 0;
+        var total = parseFloat($row.find('td:eq(7)').text()) || 0;
+        var isBonus = $row.find('td:eq(8)').text().trim().toLowerCase() === "yes";
 
         rowsData.push({
-            param1: transactionType,
-            param2: categoryId,
-            param3: productId,
-            param4: skuId,
-            param5: barcode,
-            param6: expiryDate,
-            param7: qty,
-            param8: price,
-            param9: total,
-            param10: isBonus
+            param2: productId,
+            param3: skuId,
+            param4: qty,
+            param5: price,
+            param6: total,
+            param7: barcode,
+            param8: expiryDate,
+            param9: isBonus
         });
     });
 
@@ -843,7 +862,7 @@ function Editpurchase(id) {
                             var PurchaseDate = new Date(result.data.Table[0].PurchaseDate);
                             $("#PurchaseDate").val(UTILITY.toLocaleDateString(PurchaseDate));
                             $("#PurchaseId").val(result.data.Table[0].PurchaseID);
-                            $("#InvoiceNumber").val(result.data.Table[0].InvoiceNumber);
+                            $("#InvoiceNumber").val(result.data.Table[0].PO);
                             $("#Remarks").val(result.data.Table[0].Remarks);
                             $("#CompanyID").val(result.data.Table[0].CompanyID).trigger("change");
                             $("#PaymentModeID").val(result.data.Table[0].PaymentModeID).trigger("change");
@@ -866,7 +885,7 @@ function Editpurchase(id) {
                             $('#purchaseTable tbody').html('');
 
                             result.data.Table1.forEach(function (item) {
-                                var type = "Purchase"; // agar API se type nahi aa raha to fixed
+                                
                                 var category = item.CategoryID;
                                 var categoryText = item.CategoryName;
 
@@ -874,7 +893,7 @@ function Editpurchase(id) {
                                 var productText = item.ProductName;
 
                                 var sku = item.ProductSkuID;
-                                var skuText = item.ProductName1;
+                                var skuText = item.SKUName;
 
                                 var barcode = item.Barcode;
                                 var expiry = UTILITY.toLocaleDateString(new Date(item.ExpiryDate));
@@ -884,7 +903,7 @@ function Editpurchase(id) {
                                 var isBonus = (item.IsBonus === "true" || item.IsBonus === true) ? "Yes" : "No";
 
                                 var row = '<tr>' +
-                                    '<td>' + type + '</td>' +
+                                    
                                     '<td data-id="' + category + '">' + categoryText + '</td>' +
                                     '<td data-id="' + product + '">' + productText + '</td>' +
                                     '<td data-id="' + sku + '">' + skuText + '</td>' +
@@ -976,7 +995,7 @@ $(document).on("click", ".detailspurchase", function () {
 
                         $.each(result.data, function (i, option) {
                             var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block Editpurchase" data-value="' + option.ID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
-                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.ID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
+                            //var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block Deletepurchase"  data-value="' + option.ID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
 
                             $('#purchasedatails-master tbody').append(
                                 '<tr id="rowid-' + i + '">' +
@@ -1024,28 +1043,15 @@ $(document).on('click', '#UpdateBtn', function () {
     $('#purchaseTable tbody tr').each(function () {
         var $row = $(this);
 
-        var transactionType = $row.find('td:eq(0)').text().trim(); // "Purchase"
-        var categoryId = $row.find('td:eq(1)').data('id');         // from data-id
-        var productId = $row.find('td:eq(2)').data('id');
-        var skuId = $row.find('td:eq(3)').data('id');
-        var barcode = $row.find('td:eq(4)').text().trim();
-        var expiryDate = $row.find('td:eq(5)').text().trim();
-        var qty = parseFloat($row.find('td:eq(6)').text()) || 0;
-        var price = parseFloat($row.find('td:eq(7)').text()) || 0;
-        var total = parseFloat($row.find('td:eq(8)').text()) || 0;
-        var isBonus = $row.find('td:eq(9)').text().trim().toLowerCase() === "yes";
-
         rowsData.push({
-            param1: transactionType,
-            param2: categoryId,
-            param3: productId,
-            param4: skuId,
-            param5: barcode,
-            param6: expiryDate,
-            param7: qty,
-            param8: price,
-            param9: total,
-            param10: isBonus
+            param2: $row.find('td:eq(1)').data('id'),   // ProductID
+            param3: $row.find('td:eq(2)').data('id'),   // SKUId
+            param4: parseFloat($row.find('td:eq(5)').text()) || 0, // Qty
+            param5: parseFloat($row.find('td:eq(6)').text()) || 0, // Price
+            param6: parseFloat($row.find('td:eq(7)').text()) || 0, // Total
+            param7: $row.find('td:eq(3)').text().trim(), // Barcode
+            param8: $row.find('td:eq(4)').text().trim(), // ExpiryDate
+            param9: $row.find('td:eq(8)').text().trim().toLowerCase() === "yes" // IsBonus
         });
     });
 
@@ -1055,22 +1061,11 @@ $(document).on('click', '#UpdateBtn', function () {
     var stocklocID = $('#stocklocID').val();
     var PaymentModeID = $('#PaymentModeID').val();
     var Remarks = $('#Remarks').val();
-    var purchaseId = $("#PurchaseId").val()
+    var purchaseId = $("#PurchaseId").val();
     var totalAmount = $('#totalAmount').text();
     var file = $('#BillImage')[0].files[0];
 
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            prepareAndLog(event.target.result);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        var src = $("#BillImagesrc").attr("src");
-        prepareAndLog(src); // No file
-    }
-
-    function prepareAndLog(base64String) {
+    function prepareAndSend(base64String) {
         var obj = {
             param1: PurchaseDate,
             param2: InvoiceNumber,
@@ -1084,37 +1079,47 @@ $(document).on('click', '#UpdateBtn', function () {
             List: rowsData
         };
 
-        var CategoryModel = JSON.stringify(obj);
+        var payload = JSON.stringify(obj);
 
         UTILITY.CheckSession((data_) => {
             if (data_) {
-                new APICALL(GetGlobalURL('Base', 'UpdatePurchaseWithDetails'), 'POST', CategoryModel, true).FETCH((result, error) => {
-                    if (result.data == false) {
-                        Swal.fire({
-                            icon: "info",
-                            title: "Retry Again...",
-                            text: "Purchase was not saved. Please create it again!",
-                        });
-                    }
-                    else if (result && result.data != null) {
-                        
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success...",
-                            text: "Purchase Updated successfully!",
-                        });
-                        Clear();
-                    }
-                    if (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error...',
-                            text: error.data.responseText,
-                            footer: ''
-                        });
-                    }
-                });
+                new APICALL(GetGlobalURL('Base', 'UpdatePurchaseWithDetails'), 'POST', payload, true)
+                    .FETCH((result, error) => {
+                        if (result && result.data) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success...",
+                                text: "Purchase Updated successfully!",
+                            });
+                            Clear();
+                        } else {
+                            Swal.fire({
+                                icon: "info",
+                                title: "Retry Again...",
+                                text: "Purchase was not updated. Please try again!",
+                            });
+                        }
+
+                        if (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error...',
+                                text: error.data.responseText,
+                            });
+                        }
+                    });
             }
         });
+    }
+
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            prepareAndSend(event.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Use existing image if no new file is selected
+        prepareAndSend($("#BillImagesrc").attr("src"));
     }
 });

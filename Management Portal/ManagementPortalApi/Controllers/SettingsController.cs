@@ -1887,7 +1887,7 @@ namespace ManagementPortalApi.Controllers
 
                 nv.Add("barcode-varchar", p.Param1);
 
-                 dt = _DAL.GetData("sp_select_barcode", nv, _DAL.CSManagementPortalDatabase);
+                dt = _DAL.GetData("sp_select_barcode", nv, _DAL.CSManagementPortalDatabase);
 
 
                 if (dt != null && dt.Rows.Count > 0)
@@ -1946,53 +1946,42 @@ namespace ManagementPortalApi.Controllers
             var result = false;
             try
             {
-
                 DataTable purchaseDetailTable = new DataTable();
 
-                purchaseDetailTable.Columns.Add("ProductID", typeof(int));         
-                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));      
-                purchaseDetailTable.Columns.Add("Quantity", typeof(int));          
-                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));     
-                purchaseDetailTable.Columns.Add("Total", typeof(decimal));         
-                purchaseDetailTable.Columns.Add("Barcode", typeof(string));        
-                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));   
+                purchaseDetailTable.Columns.Add("ProductID", typeof(int));
+                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));
+                purchaseDetailTable.Columns.Add("Quantity", typeof(int));
+                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Total", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Barcode", typeof(string));
+                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
                 purchaseDetailTable.Columns.Add("IsBonus", typeof(string));
-                purchaseDetailTable.Columns.Add("TransactionType", typeof(string));
 
                 foreach (var item in p.List)
                 {
                     purchaseDetailTable.Rows.Add(
-                    item.Param3,   
-                    item.Param4,   
-                    item.Param7,   
-                    item.Param8,   
-                    item.Param9,   
-                    item.Param5,   
-                    item.Param6,   
-                    item.Param10,
-                    item.Param1      // 👈 NEW: 'Purchase' or 'Return'
+                        item.Param2,                     // ProductID
+                        item.Param3,                     // ProductSkuID
+                        item.Param4,                     // Quantity
+                        item.Param5,                     // UnitPrice
+                        item.Param6,                     // Total
+                        item.Param7,                     // Barcode
+                        Convert.ToDateTime(item.Param8), // ExpiryDate
+                        item.Param9       // IsBonus as string
                     );
                 }
 
-
-
                 NameValueCollection nvc = new NameValueCollection();
-                nvc.Clear();
-                nvc.Add("PurchaseID-Int", p.Param10);
-                nvc.Add("PurchaseDate-DATE", p.Param1);
-                nvc.Add("InvoiceNumber-VARCHAR", p.Param2);
+                nvc.Add("PurchaseID-Int", p.Param10);    // PurchaseID
+                nvc.Add("PurchaseDate-VARCHAR", p.Param1);
+                nvc.Add("PO-VARCHAR", p.Param2);
+                nvc.Add("CompanyID-Int", p.Param3);
+                nvc.Add("TotalAmount-Decimal", p.Param6);
+                nvc.Add("PaymentModeID-Int", p.Param4);
                 nvc.Add("Base64-VARCHAR", p.Param5);
-                nvc.Add("CompanyID-INT", p.Param3);
-                nvc.Add("TotalAmount-DECIMAL", p.Param6);
-                nvc.Add("PaymentModeID-INT", p.Param4);
-                nvc.Add("Remarks-VARCHAR", p.Param7);
-                nvc.Add("CreatedBy-INT", p.Param9);
-                nvc.Add("LocationID-INT", p.Param8);
-                
-                
-
-
-
+                nvc.Add("Remarks-VarChar", p.Param7);
+                nvc.Add("LocationID-Int", p.Param8);
+                nvc.Add("CreatedBy-Int", p.Param9);
 
                 DataSet ds = new DataSet();
                 ds.Tables.Add(purchaseDetailTable);
@@ -2000,8 +1989,6 @@ namespace ManagementPortalApi.Controllers
                 string[] typeParams = { "@PurchaseDetails" };
 
                 result = _DAL.InsertDataWithType("sp_update_purchase", nvc, typeParams, ds, _DAL.CSManagementPortalDatabase);
-
-
 
                 if (result)
                 {
@@ -2021,6 +2008,7 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(result);
         }
+
         [HttpPost]
         public IActionResult SavePurchaseWithDetails(Parameters p)
         {
@@ -2030,36 +2018,35 @@ namespace ManagementPortalApi.Controllers
 
                 DataTable purchaseDetailTable = new DataTable();
 
-                purchaseDetailTable.Columns.Add("ProductID", typeof(int));         
-                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));      
-                purchaseDetailTable.Columns.Add("Quantity", typeof(int));          
-                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));     
-                purchaseDetailTable.Columns.Add("Total", typeof(decimal));         
-                purchaseDetailTable.Columns.Add("Barcode", typeof(string));        
-                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));   
+                purchaseDetailTable.Columns.Add("ProductID", typeof(int));
+                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));
+                purchaseDetailTable.Columns.Add("Quantity", typeof(int));
+                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Total", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Barcode", typeof(string));
+                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
                 purchaseDetailTable.Columns.Add("IsBonus", typeof(string));
-                purchaseDetailTable.Columns.Add("TransactionType", typeof(string));
+
 
                 foreach (var item in p.List)
                 {
                     purchaseDetailTable.Rows.Add(
-                    item.Param3,   
-                    item.Param4,   
-                    item.Param7,   
-                    item.Param8,   
-                    item.Param9,   
-                    item.Param5,   
-                    item.Param6,   
-                    item.Param10,
-                    item.Param1      // 👈 NEW: 'Purchase' or 'Return'
+                        item.Param2, // ProductID
+                        item.Param3, // ProductSkuID
+                        item.Param4, // Quantity
+                        item.Param5, // UnitPrice
+                        item.Param6, // Total
+                        item.Param7, // Barcode
+                        item.Param8, // ExpiryDate
+                        item.Param9  // IsBonus
                     );
                 }
 
 
 
                 NameValueCollection nvc = new NameValueCollection();
-                nvc.Add("PurchaseDate-VarChar", p.Param1);
-                nvc.Add("InvoiceNumber-VarChar", p.Param2);
+                nvc.Add("PurchaseDate-VARCHAR", p.Param1);
+                nvc.Add("PO-VARCHAR", p.Param2);
                 nvc.Add("CompanyID-Int", p.Param3);
                 nvc.Add("TotalAmount-Decimal", p.Param6);
                 nvc.Add("PaymentModeID-Int", p.Param4);
@@ -2067,7 +2054,7 @@ namespace ManagementPortalApi.Controllers
                 nvc.Add("Remarks-VarChar", p.Param7);
                 nvc.Add("LocationID-Int", p.Param8);
                 nvc.Add("CreatedBy-Int", p.Param9);
-                
+
 
 
 
@@ -2099,6 +2086,75 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        public IActionResult SavePurchaseReturnWithDetails(Parameters p)
+        {
+            var result = false;
+            try
+            {
+                // ✅ Create Purchase Return Detail Table
+                DataTable purchaseReturnDetailTable = new DataTable();
+                purchaseReturnDetailTable.Columns.Add("ProductID", typeof(int));
+                purchaseReturnDetailTable.Columns.Add("ProductSkuID", typeof(int));
+                purchaseReturnDetailTable.Columns.Add("Quantity", typeof(int));
+                purchaseReturnDetailTable.Columns.Add("UnitPrice", typeof(decimal));
+                purchaseReturnDetailTable.Columns.Add("Total", typeof(decimal));
+                purchaseReturnDetailTable.Columns.Add("Barcode", typeof(string));
+                purchaseReturnDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
+                purchaseReturnDetailTable.Columns.Add("IsBonus", typeof(bool));
+
+                // ✅ Add rows from request list
+                foreach (var item in p.List)
+                {
+                    purchaseReturnDetailTable.Rows.Add(
+                        item.Param3,   // ProductID
+                        item.Param4,   // ProductSkuID
+                        item.Param7,   // Quantity
+                        item.Param8,   // UnitPrice
+                        item.Param9,   // Total
+                        item.Param5,   // Barcode
+                        string.IsNullOrEmpty(item.Param6) ? (object)DBNull.Value : Convert.ToDateTime(item.Param6), // ExpiryDate
+                        item.Param10 == "0" // IsBonus
+                    );
+                }
+
+                // ✅ Prepare parameters for sp_insert_purchase_return
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Add("PurchaseDate-DateTime", p.Param1);  // Return Date
+                nvc.Add("CompanyID-Int", p.Param2);          // Supplier/Company ID
+                nvc.Add("PaymentModeID-Int", p.Param11);     // Payment mode (use new Param index)
+                nvc.Add("TotalAmount-Decimal", p.Param12);   // Total amount if any
+                nvc.Add("Remarks-VarChar", p.Param4);        // Remarks
+                nvc.Add("CreatedBy-Int", p.Param5);          // User ID
+                nvc.Add("LocationID-Int", p.Param6);         // Location ID
+
+                // ✅ Create dataset to send table valued param
+                DataSet ds = new DataSet();
+                ds.Tables.Add(purchaseReturnDetailTable);
+                ds.Tables[0].TableName = "PurchaseReturnDetails";
+
+                string[] typeParams = { "@PurchaseReturnDetails" };
+
+                // ✅ Call SP
+                result = _DAL.InsertDataWithType("sp_insert_purchase_return", nvc, typeParams, ds, _DAL.CSManagementPortalDatabase);
+
+                // ✅ Logging
+                SystemActivityLog(
+                    result ? ActivityLog.ActivityID_Get : ActivityLog.ActivityID_Get,
+                    (result ? ActivityLog.ActivityDetails_Get : ActivityLog.ActivityDetails_Get2) + "sp_insert_purchase_return"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
+
+
         [HttpPost]
         public IActionResult GetProductByCategoryID(Parameters p)
         {
@@ -2331,8 +2387,8 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(dt);
         }
-    
-    
+
+
 
         [HttpGet]
         public IActionResult GetPurchase()
@@ -2340,7 +2396,7 @@ namespace ManagementPortalApi.Controllers
             DataTable dt = new DataTable();
             try
             {
-                
+
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
                 var spname = "sp_select_purchase";
