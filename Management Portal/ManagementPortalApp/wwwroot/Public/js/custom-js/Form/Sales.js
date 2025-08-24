@@ -15,7 +15,7 @@ $(document).ready(function () {
     });
     //$('#Purchaseform form').append(_html);
     var today = new Date().toISOString().split('T')[0];
-    document.getElementById('PurchaseDate').value = today;
+    document.getElementById('SaleDate').value = today;
     GetInvoiceno();
     GetCustomerActiveData();
     GetPaymentModeData();
@@ -135,6 +135,54 @@ function GetPaymentModeData() {
 
                 $('#PaymentModeID').select2({
                     placeholder: "-- Select Payment Mode --",
+                    allowClear: true,
+                    width: 'resolve',
+                    minimumResultsForSearch: 0
+                });
+
+                if (error) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+            });
+            HideLoader('SuppliersMasterDiv');
+
+        }
+    });
+}
+
+function GetStatusData() {
+
+
+    UTILITY.CheckSession((data_) => {
+
+        if (data_) {
+
+            new APICALL(GetGlobalURL('Base', 'GetStatusData'), 'GET', '', true).FETCH((result, error) => {
+
+                if (result.data != null) {
+
+
+                    $('#StatusID').empty().append('<option value="">-- Select Status --</option>');
+                    $.each(result.data, function (i, option) {
+                        $('#StatusID').append(
+                            '<option value="' + option.ID + '">' + option.Status + '</option>'
+                        );
+                    });
+
+                    if ($.fn.select2 && $('#StatusID').hasClass("select2-hidden-accessible")) {
+                        $('#StatusID').select2('destroy');
+                    }
+
+                }
+
+                $('#StatusID').select2({
+                    placeholder: "-- Select Status --",
                     allowClear: true,
                     width: 'resolve',
                     minimumResultsForSearch: 0

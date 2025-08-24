@@ -5,7 +5,7 @@
 }
 
 @section TopCss {
-    <link href="~/public/css/custom-css/layout/purchase.css" rel="stylesheet" />
+    <link href="~/public/css/custom-css/layout/purchasereturn.css" rel="stylesheet" />
     <link href="~/Public/css/custom-css/Settings/UserMaster.css" rel="stylesheet" />
 }
 
@@ -26,16 +26,19 @@
 }
 <div id="tabs">
     <ul>
-        <li><a href="#FormScreen">New Purchase Entry</a></li>
+        <li><a href="#FormScreen">Purchase Return</a></li>
         <li><a href="#DataScreen">Purchase Data</a></li>
+        
+  
     </ul>
+    
     <div id="FormScreen">
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex">
-                        <h4 class="mb-0">Purchase Entry</h4>
+                        <h4 class="mb-0">Purchase Return Entry</h4>
                         <span class="ms-auto" id="currentDateTime"></span>
                     </div>
                     <div id="Purchaseform" class="card-body">
@@ -48,8 +51,8 @@
                                     <input type="date" id="PurchaseDate" validate-required class="form-control" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <label>Invoice Number <small class="text-muted">(Auto-generated)</small></label>
-                                    <input type="text" readonly validate-required id="InvoiceNumber" class="form-control" placeholder="" required>
+                                    <label>Purchase Number</label>
+                                    <input type="text" value="PO-" validate-required id="InvoiceNumber" class="form-control" placeholder="" required>
                                 </div>
                                 <div class="col-md-3">
                                     <label>Company</label>
@@ -86,115 +89,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <!-- Type -->
-                                <div class="col-md-6">
-                                    <span class="highlighted">
-
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input transaction-type" type="radio" name="type" value="Purchase" checked>
-                                            <label class="form-check-label">Purchase</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input transaction-type" type="radio" name="type" value="Return">
-                                            <label class="form-check-label">Return</label>
-                                        </div>
-                                    </span>
-                                </div>
-
-                                <!-- Bonus -->
-                                <div class="col-md-6 text-end float-end">
-                                    <span class="highlighted2">
-                                        <input type="checkbox" class="form-check-input isBonus" id="bonusCheckbox" title="Bonus Product">
-                                        <label class="form-label">Bonus</label>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="container position-relative">
-                                <!-- Loader -->
-                                <div class="div-loader position-absolute w-100 text-center" style="top: 0; z-index: 999;">
-                                    <div class="loader-wrapper d-none">
-                                        <span class="loader spinner-border text-primary" role="status"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-2 p-2 border rounded text-center purchase-row">
-                                    <div class="row">
-                                        <!-- Category -->
-                                        <div class="col-md-3 box">
-                                            <label class="d-block mt-1">Category</label>
-                                            <select id="category" class="form-control category" title="Select Category"></select>
-                                        </div>
-
-                                        <!-- Product -->
-                                        <div class="col-md-3 box">
-                                            <label class="d-block mt-1">Product</label>
-                                            <select id="product" class="form-control product" title="Select Product"></select>
-                                        </div>
-
-                                        <!-- SKU -->
-                                        <div class="col-md-3 box">
-                                            <label class="d-block mt-1">SKU</label>
-                                            <select id="productsku" class="form-control sku" title="Select SKU"></select>
-                                        </div>
-
-                                        <!-- Barcode -->
-                                        <div class="col-md-3">
-                                            <label class="d-block mt-1">
-                                                Barcode
-                                                <small class="text-muted"> (Auto-generated =>)</small>
-                                                <button type="button" id="refresh" class="btn btn-sm btn-outline-secondary ms-1 p-1" title="Generate Barcode">
-                                                    <i class='bx bx-refresh'></i>
-                                                </button>
-                                            </label>
-                                            <input type="text" class="form-control barcode" placeholder="Scan or enter barcode" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <!-- Expiry Date -->
-                                        <div class="col-md-3">
-                                            <label class="d-block mt-1">Expiry Date</label>
-                                            <input type="date" class="form-control expirydate" />
-                                        </div>
-
-                                        <!-- Quantity -->
-                                        <div class="col-md-3">
-                                            <label class="d-block mt-1">Qty</label>
-                                            <input type="number" class="form-control qty" min="1" value="1" title="Quantity" />
-                                        </div>
-
-                                        <!-- Unit Price -->
-                                        <div class="col-md-3">
-                                            <label class="d-block mt-1">Unit Price</label>
-                                            <input type="number" id="price" class="form-control price" min="0" value="0" title="Unit Price" />
-                                        </div>
-
-                                        <!-- Total -->
-                                        <div class="col-md-3">
-                                            <label class="d-block mt-1">Total</label>
-                                            <input id="total" class="form-control  bg-light text-end total" type="text" readonly name="name" value="0.00" />
-                                        </div>
-
-                                        <!-- Bonus -->
-
-                                        <div class="row mt-3">
-                                            <div class="col-12">
-                                                <button type="button" id="AddEntry" class="btn btn-sm btn-success  float-end">Add Entry</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="row">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="purchaseTable">
                                         <thead>
                                             <tr>
-                                                <th>Type</th>
+
                                                 <th>Category</th>
                                                 <th>Product</th>
                                                 <th>SKU</th>
@@ -204,7 +103,6 @@
                                                 <th>Unit Price</th>
                                                 <th>Total</th>
                                                 <th>Bonus</th>
-                                                <th>Edit</th>
                                                 <th>Delete</th>
 
                                             </tr>
@@ -234,7 +132,7 @@
                                     <textarea id="Remarks" class="form-control" rows="2" placeholder="Optional remarks"></textarea>
                                 </div>
                             </div>
-                        </form>
+                        </form> 
                         <div class="row mt-3">
 
                             <div class="col-12 d-flex justify-content-end">
@@ -285,10 +183,10 @@
                                                 {
                                                     <th>Edit</th>
                                                 }
-                                                @if (_allowdelete)
+                                                @*  @if (_allowdelete)
                                                 {
-                                                    <th>Delete</th>
-                                                }
+                                                <th>Delete</th>
+                                                } *@
 
                                             </tr>
                                         </thead>

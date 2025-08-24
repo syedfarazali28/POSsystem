@@ -2092,57 +2092,67 @@ namespace ManagementPortalApi.Controllers
             var result = false;
             try
             {
-                // ✅ Create Purchase Return Detail Table
-                DataTable purchaseReturnDetailTable = new DataTable();
-                purchaseReturnDetailTable.Columns.Add("ProductID", typeof(int));
-                purchaseReturnDetailTable.Columns.Add("ProductSkuID", typeof(int));
-                purchaseReturnDetailTable.Columns.Add("Quantity", typeof(int));
-                purchaseReturnDetailTable.Columns.Add("UnitPrice", typeof(decimal));
-                purchaseReturnDetailTable.Columns.Add("Total", typeof(decimal));
-                purchaseReturnDetailTable.Columns.Add("Barcode", typeof(string));
-                purchaseReturnDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
-                purchaseReturnDetailTable.Columns.Add("IsBonus", typeof(bool));
 
-                // ✅ Add rows from request list
+                DataTable purchaseDetailTable = new DataTable();
+
+                purchaseDetailTable.Columns.Add("ProductID", typeof(int));
+                purchaseDetailTable.Columns.Add("ProductSkuID", typeof(int));
+                purchaseDetailTable.Columns.Add("Quantity", typeof(int));
+                purchaseDetailTable.Columns.Add("UnitPrice", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Total", typeof(decimal));
+                purchaseDetailTable.Columns.Add("Barcode", typeof(string));
+                purchaseDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));
+                purchaseDetailTable.Columns.Add("IsBonus", typeof(string));
+
+
                 foreach (var item in p.List)
                 {
-                    purchaseReturnDetailTable.Rows.Add(
-                        item.Param3,   // ProductID
-                        item.Param4,   // ProductSkuID
-                        item.Param7,   // Quantity
-                        item.Param8,   // UnitPrice
-                        item.Param9,   // Total
-                        item.Param5,   // Barcode
-                        string.IsNullOrEmpty(item.Param6) ? (object)DBNull.Value : Convert.ToDateTime(item.Param6), // ExpiryDate
-                        item.Param10 == "0" // IsBonus
+                    purchaseDetailTable.Rows.Add(
+                        item.Param2, // ProductID
+                        item.Param3, // ProductSkuID
+                        item.Param4, // Quantity
+                        item.Param5, // UnitPrice
+                        item.Param6, // Total
+                        item.Param7, // Barcode
+                        item.Param8, // ExpiryDate
+                        item.Param9  // IsBonus
                     );
                 }
 
-                // ✅ Prepare parameters for sp_insert_purchase_return
-                NameValueCollection nvc = new NameValueCollection();
-                nvc.Add("PurchaseDate-DateTime", p.Param1);  // Return Date
-                nvc.Add("CompanyID-Int", p.Param2);          // Supplier/Company ID
-                nvc.Add("PaymentModeID-Int", p.Param11);     // Payment mode (use new Param index)
-                nvc.Add("TotalAmount-Decimal", p.Param12);   // Total amount if any
-                nvc.Add("Remarks-VarChar", p.Param4);        // Remarks
-                nvc.Add("CreatedBy-Int", p.Param5);          // User ID
-                nvc.Add("LocationID-Int", p.Param6);         // Location ID
 
-                // ✅ Create dataset to send table valued param
+
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Add("PurchaseDate-VARCHAR", p.Param1);
+                nvc.Add("PO-VARCHAR", p.Param2);
+                nvc.Add("CompanyID-Int", p.Param3);
+                nvc.Add("TotalAmount-Decimal", p.Param6);
+                nvc.Add("PaymentModeID-Int", p.Param4);
+                nvc.Add("Base64-VARCHAR", p.Param5);
+                nvc.Add("Remarks-VarChar", p.Param7);
+                nvc.Add("LocationID-Int", p.Param8);
+                nvc.Add("CreatedBy-Int", p.Param9);
+
+
+
+
+
                 DataSet ds = new DataSet();
-                ds.Tables.Add(purchaseReturnDetailTable);
-                ds.Tables[0].TableName = "PurchaseReturnDetails";
+                ds.Tables.Add(purchaseDetailTable);
 
                 string[] typeParams = { "@PurchaseReturnDetails" };
 
-                // ✅ Call SP
                 result = _DAL.InsertDataWithType("sp_insert_purchase_return", nvc, typeParams, ds, _DAL.CSManagementPortalDatabase);
 
-                // ✅ Logging
-                SystemActivityLog(
-                    result ? ActivityLog.ActivityID_Get : ActivityLog.ActivityID_Get,
-                    (result ? ActivityLog.ActivityDetails_Get : ActivityLog.ActivityDetails_Get2) + "sp_insert_purchase_return"
-                );
+
+
+                if (result)
+                    {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_insert_purchase_return");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_insert_purchase_return");
+                }
             }
             catch (Exception ex)
             {
@@ -2560,6 +2570,35 @@ namespace ManagementPortalApi.Controllers
                 else
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_companies");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        } 
+        [HttpGet]
+        public IActionResult GetLegerEntry()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_general_entries", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_LegerEntry");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_LegerEntry");
                 }
             }
             catch (Exception ex)

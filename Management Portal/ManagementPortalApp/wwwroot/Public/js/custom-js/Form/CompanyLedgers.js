@@ -1,12 +1,12 @@
 ﻿var _html = `
     <div class="row mb-3">
         <div class="col-md-3">
-            <label>Purchase Date</label>
+            <label>Start Date</label>
             <small class="text-muted">*</small>
             <input type="date" id="SPurchaseDate" validate-required class="form-control" required>
         </div>
         <div class="col-md-3">
-            <label>Purchase Date</label>
+            <label>End Date</label>
             <small class="text-muted">*</small>
             <input type="date" id="EPurchaseDate" validate-required class="form-control" required>
         </div>
@@ -25,10 +25,19 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered" id="purchaseTable">
-         
-            <tbody></tbody>
-        </table>
+     <table class="table table-bordered table-striped table-hover" id="LedgerEntry">
+    <thead class="table-primary text-center">
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Explanation</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
     </div>
 `;
 
@@ -40,11 +49,61 @@ $(document).ready(function () {
     
     GetSupplyActiveData();
     
-    
+    GetLegerEntry();
     
     updateDateTime(); // initial call
     setInterval(updateDateTime, 1000); // update every second
 });
+function GetLegerEntry() {
+    UTILITY.CheckSession((data_) => {
+        if (data_) {
+            new APICALL(GetGlobalURL('Base', 'GetLegerEntry'), 'GET', '', true).FETCH((result, error) => {
+                if (result.data != null && result.data.length > 0) {
+
+                    var rows = '';
+                    result.data.forEach((item, index) => {
+
+                        // Balance color
+                        let balanceClass = parseFloat(item.Balance) >= 0 ? "text-success fw-bold" : "text-danger fw-bold";
+
+                        // Debit / Credit color
+                        let debit = item.Debit > 0 ? `<span class="text-success fw-bold">${item.Debit.toFixed(2)}</span>` : "";
+                        let credit = item.Credit > 0 ? `<span class="text-danger fw-bold">${item.Credit.toFixed(2)}</span>` : "";
+
+                        rows += `
+                            <tr>
+                                <td class="text-center">${item.VoucherDate.split('T')[0]}</td>
+                                <td class="text-center">${item.CompanyName}</td>
+                                <td>
+                                    <div><b>${item.Particulars}</b></div>
+                                    <small class="text-muted">${item.Remarks ?? ''}</small>
+                                </td>
+                                <td class="text-end">${debit}</td>
+                                <td class="text-end">${credit}</td>
+                                <td class="text-end ${balanceClass}">${item.Balance.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    $('#LedgerEntry tbody').html(rows);
+                }
+
+                if (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: error.data.responseText,
+                        footer: ''
+                    });
+                }
+            });
+        }
+    });
+}
+
+
+
+
 function updateDateTime() {
     var now = new Date();
     var options = {

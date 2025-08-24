@@ -38,7 +38,11 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
-        public IActionResult SupplierLedgers()
+        public IActionResult PurchaseReturn()
+        {
+            return View();
+        }
+        public IActionResult CompanyLedgers()
         {
             return View();
         }

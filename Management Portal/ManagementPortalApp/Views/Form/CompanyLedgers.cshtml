@@ -1,6 +1,6 @@
 ﻿@inject ManagementPortalApp.Models.Session.Sessions Sessions_
 @{
-    ViewBag.Title = "Category";
+    ViewBag.Title = "CompanyLedgers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -28,7 +28,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex">
-                <h4 class="mb-0">Purchase Entry</h4>
+                <h4 class="mb-0">Company Ledger</h4>
                 <span class="ms-auto" id="currentDateTime"></span>
             </div>
             <div id="Purchaseform" class="card-body">
@@ -40,7 +40,7 @@
 </div>
 
 @section BottomJS {
-    <script src="~/public/js/custom-js/Form/supplierledgers.js"></script>
+    <script src="~/public/js/custom-js/Form/CompanyLedgers.js"></script>
 
 }
 

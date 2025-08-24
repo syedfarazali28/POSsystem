@@ -748,6 +748,17 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
+        public IActionResult SavePurchaseReturnWithDetails([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param9 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SavePurchaseReturnWithDetails", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
         public IActionResult UpdatePurchaseWithDetails([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
@@ -825,6 +836,12 @@ namespace ManagementPortalApp.Controllers
             string jsonString = JsonConvert.SerializeObject(Data);
 
             HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyDataById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetLegerEntry()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetLegerEntry", "Settings");
             return new HttpResponseMessageResult(response);
         }
         #endregion
