@@ -1,0 +1,46 @@
+﻿@inject ManagementPortalApp.Models.Session.Sessions Sessions_
+@{
+    ViewBag.Title = "Opening Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section TopCss {
+    <link href="~/public/css/custom-css/layout/purchase.css" rel="stylesheet" />
+    <link href="~/Public/css/custom-css/Settings/UserMaster.css" rel="stylesheet" />
+}
+
+@{
+
+    System.Security.Claims.ClaimsPrincipal claimsPrincipal = Context.User;
+    var UniqueKey = (from c in claimsPrincipal.Claims where c.Type == "Guid" select c.Value).FirstOrDefault();
+    var UserID = (from c in claimsPrincipal.Claims where c.Type == "UserID" select c.Value).FirstOrDefault();
+
+    ManagementPortalApp.Models.Session.SessionItems sessionItems = Sessions_.GetSession(UniqueKey, UserID);
+
+    List<ManagementPortalApp.Models.Authentication.RolesMapping> rolesMapping = sessionItems.rolesMapping;
+
+    var FilterForm = rolesMapping.FirstOrDefault(x => x.FormName == Context.Request.RouteValues["controller"] + "/" + Context.Request.RouteValues["action"]);
+    bool _allowinsert = FilterForm.AllowInsert;
+    bool _allowupdate = FilterForm.AllowUpdate;
+    bool _allowdelete = FilterForm.AllowDelete;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <h4 class="mb-0">Opening Stock</h4>
+                <span class="ms-auto" id="currentDateTime"></span>
+            </div>
+            <div id="Purchaseform" class="card-body">
+                <form id="purchaseForm" method="post" autocomplete="off" enctype="multipart/form-data">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section BottomJS {
+    <script src="~/public/js/custom-js/Form/OpeningStock.js"></script>
+
+}
+

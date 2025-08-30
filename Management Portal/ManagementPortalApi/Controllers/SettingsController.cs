@@ -2682,6 +2682,43 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(result);
         }
+
+
+        [HttpPost]
+        public IActionResult SaveStockOpeningBalance(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Date-Date", p.Param1);
+                nv.Add("CategoryID-INT", p.Param2);
+                nv.Add("ProductID-INT", p.Param3);
+                nv.Add("ProductSku-INT", p.Param4);
+                nv.Add("Qty-INT", p.Param5);
+                nv.Add("Price-FLOAT", p.Param6);
+                nv.Add("Total-FLOAT", p.Param7);
+
+                dt = _DAL.GetData("sp_insert_StockOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_companybyid");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_companybyid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
         #endregion
     }
 }

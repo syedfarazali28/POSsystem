@@ -769,4 +769,5 @@ $(document).on('click', '#CloseBtn', function () {
     $('#updatepreviewImage').hide();
     $('#UpdateDiv').hide();
 });
+
 //#endregion

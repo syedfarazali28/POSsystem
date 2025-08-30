@@ -54,6 +54,10 @@ namespace ManagementPortalApp.Controllers
         public IActionResult Sales()
         {
             return View();
+        }  
+        public IActionResult OpeningStock()
+        {
+            return View();
         }
     }
 }

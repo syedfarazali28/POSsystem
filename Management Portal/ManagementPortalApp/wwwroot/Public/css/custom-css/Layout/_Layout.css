@@ -1,4 +1,4 @@
-
+/*
 :root {
     --header-height: 3rem;
     --nav-width: 100px;
@@ -13,8 +13,8 @@
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-}
-/*:root {
+}*/
+:root {
     --header-height: 3rem;
     --nav-width: 100px;
     --primary-color: #3300FF;
@@ -30,7 +30,7 @@
     --normal-font-size: 1rem;
     --small-font-size: 0.8rem;
     --z-fixed: 100;
-}*/
+}
 /*#F26522 - P*/
 /*#808285 - S*/
 /*#444546 - N*/
@@ -90,6 +90,19 @@ a {
 
 .header_img img {
     width: 40px;
+}
+
+.l-navbar {
+    position: fixed;
+    top: calc(var(--header-height) + 1rem);
+    left: -30%;
+    width: var(--nav-width);
+    width: calc(var(--nav-width) + 156px);
+    height: 100vh;
+    background-color: var(--primary-color);
+    /*padding: .5rem 1rem 0 0;*/
+    transition: .5s;
+    z-index: 1;
 }
 
 .nav {
@@ -236,6 +249,11 @@ a {
     padding:1rem;
 }
 
+.nav_list .navbar-collapse {
+    margin-top: 0px;
+    padding: 0;
+    /*border: 1px solid var(--secondary-color);*/
+}
 
 .nav-item{
     padding:0.25em 1em;
@@ -303,6 +321,36 @@ a {
 
 .main-content{
     padding: 20px 0px;
+}
+
+.l-navbar.show .nav_link {
+    display: block;
+    font-size: var(--small-font-size);
+    padding: 0.5rem;
+    text-align:center;
+}
+
+.l-navbar.show .bx {
+    display: block;
+    text-align:center;
+}
+
+.l-navbar.show .nav {
+    display: block;    
+}
+
+.l-navbar.show .subnav {
+    height: 80%;
+}
+
+.l-navbar.show .submenu {
+    margin-left: 0;
+    padding-left:0;
+}
+
+.l-navbar.show .navbar-collapse.show {
+    width: inherit;
+    padding:0;
 }
 
 .navbar-collapse .navbar-nav{
