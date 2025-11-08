@@ -59,5 +59,9 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
+        public IActionResult OpeningCompanyBills()
+        {
+            return View();
+        }
     }
 }

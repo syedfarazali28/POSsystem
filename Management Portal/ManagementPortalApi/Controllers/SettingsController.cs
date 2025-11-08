@@ -29,7 +29,7 @@ namespace ManagementPortalApi.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-
+        string UserID = "";
         private readonly DataAccessLayer _DAL;
         private readonly SendEmail _sendemail;
         private readonly ILogger<SettingsController> _logger;
@@ -55,7 +55,7 @@ namespace ManagementPortalApi.Controllers
             string HostName = Dns.GetHostName();
             IPHostEntry HostIPs = Dns.GetHostEntry(HostName);
             string IPAddress = HostIPs.AddressList[0].ToString();
-            string UserID = (from c in claimsPrincipal.Claims where c.Type == "UserID" select c.Value).FirstOrDefault();
+            UserID = (from c in claimsPrincipal.Claims where c.Type == "UserID" select c.Value).FirstOrDefault();
             var routeData = HttpContext.Request.RouteValues;
             string controllerName = routeData["controller"].ToString();
             string actionName = routeData["action"].ToString();
@@ -1873,6 +1873,7 @@ namespace ManagementPortalApi.Controllers
         #region Purchase
 
 
+       
         [HttpPost]
         public IActionResult CheckBarcodeDuplication(Parameters p)
         {
@@ -2594,11 +2595,11 @@ namespace ManagementPortalApi.Controllers
                 dt = _DAL.GetData("sp_select_general_entries", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_LegerEntry");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_general_entries");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_LegerEntry");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_general_entries");
                 }
             }
             catch (Exception ex)
@@ -2609,7 +2610,8 @@ namespace ManagementPortalApi.Controllers
             }
 
             return Ok(dt);
-        }
+        } 
+     
         [HttpPost]
         public IActionResult SavecompanyData(Parameters p)
         {
@@ -2635,11 +2637,17 @@ namespace ManagementPortalApi.Controllers
                 nv.Add("GSTNumber-VARCHAR", p.Param12);
                 nv.Add("NTNNumber-VARCHAR", p.Param13);
                 nv.Add("IsActive-bit", (p.Param14 == "true" ? "1" : "0"));
-                var isInserted = _DAL.InsertData("sp_insert_company", nv, _DAL.CSManagementPortalDatabase);
-                if (!isInserted)
+                var isInserted = _DAL.GetData("sp_insert_company", nv, _DAL.CSManagementPortalDatabase);
+                if (isInserted != null && isInserted.Rows.Count > 0)
                 {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_companybyid");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_companybyid");
                     return BadRequest("Failed to Updated Product.");
                 }
+             
 
                 return Ok("Company Save successfully.");
 
@@ -2684,6 +2692,41 @@ namespace ManagementPortalApi.Controllers
         }
 
 
+     
+      
+        #endregion
+
+        #region StockOpening
+        [HttpGet]
+        public IActionResult GetStockOpeningBalance()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_StockOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_StockOpeningBalance");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_StockOpeningBalance");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+
         [HttpPost]
         public IActionResult SaveStockOpeningBalance(Parameters p)
         {
@@ -2699,6 +2742,7 @@ namespace ManagementPortalApi.Controllers
                 nv.Add("Qty-INT", p.Param5);
                 nv.Add("Price-FLOAT", p.Param6);
                 nv.Add("Total-FLOAT", p.Param7);
+                nv.Add("Userid-INT", p.Param8);
 
                 dt = _DAL.GetData("sp_insert_StockOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
@@ -2720,5 +2764,72 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
         #endregion
+
+        #region CompanyOpeningBalance
+        [HttpPost]
+        public IActionResult SaveCompanyOpeningBalance(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Date-Datetime", p.Param1);
+                nv.Add("CompanyID-INT", p.Param2);
+                nv.Add("Description-VARCHAR", p.Param3);
+                nv.Add("OpeningAmount-DECIMAL", p.Param4);
+                nv.Add("CreatedBy-INT", p.Param5);
+
+                dt = _DAL.GetData("sp_insert_CompanyOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_insert_CompanyOpeningBalance");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_insert_CompanyOpeningBalance");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetOpeningBalanceCompanyBills()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_CompanyOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_CompanyOpeningBalance");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_CompanyOpeningBalance");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        #endregion
+
+
     }
 }

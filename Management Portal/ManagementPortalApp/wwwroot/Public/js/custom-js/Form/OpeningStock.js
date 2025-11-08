@@ -48,31 +48,61 @@
     
     </div>
 
-    <div class="table-responsive">
-     <table class="table table-bordered table-striped table-hover" id="LedgerEntry">
-    <thead class="table-primary text-center">
-        <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Explanation</th>
-            <th>Debit</th>
-            <th>Credit</th>
-            <th>Balance</th>
-        </tr>
+   <div class="table-responsive">
+  <table class="table table-striped table-bordered" id="stockTable">
+    <thead >
+      <tr>
+        <th style="width: 50px;">#</th>
+        <th>Product Name</th>
+        <th class="text-end">Opening Qty</th>
+        <th>Date</th>
+        <th class="text-end">Debit Amount</th>
+        <th class="text-end">Credit Amount</th>
+        <th>Narration</th>
+        <th>Voucher Type</th>
+      </tr>
     </thead>
     <tbody></tbody>
-</table>
-    </div>
+    <tfoot>
+      <tr>
+        <th colspan="4" class="text-dark">Total:</th>
+        <th id="totalDebit" class="text-dark"></th>
+        <th id="totalCredit" class="text-dark"></th>
+        <th colspan="2"></th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+
 `;
+function ClearStockOpeningBalance() {
+
+    // Clear input fields
+    $("#Date").val("");
+    $(".qty").val("1");
+    $(".price").val("1");
+    $(".Total").val("1");
+
+    // Reset dropdowns
+    $("#Categorydata").val("").trigger("change"); // Reset the value
+    $("#ProductID").val("").trigger("change"); // Reset the value
+    $("#productsku").val("").trigger("change"); // Reset the value
+
+    // Remove validation border (if you're using it)
+    $("[validate-required]").removeClass("input-error");
+
+}
 
 $(document).ready(function () {
-    $('#Purchaseform form').append(_html);
+    //$('#Purchaseform form').append(_html);
     GetCategoryData();
+    GetStockOpeningBalance();
     updateDateTime(); // initial call
     setInterval(updateDateTime, 1000); // update every second
 });
 function GetCategoryData() {
-    
+
     UTILITY.CheckSession((data_) => {
         if (data_) {
             new APICALL(GetGlobalURL('Base', 'GetMapCategory'), 'GET', '', true).FETCH((result, error) => {
@@ -95,7 +125,7 @@ function GetCategoryData() {
                         width: 'resolve',
                         minimumResultsForSearch: 0
                     });
-                   
+
                 }
 
                 if (error) {
@@ -107,7 +137,7 @@ function GetCategoryData() {
                     });
                 }
 
-                
+
             });
         }
     });
@@ -132,32 +162,23 @@ $(document).on('click', '#SaveBtn', function () {
 
     // Get form values
     var Dates = $('#Date').val();
-    var CategoryID = $('#Categorydata').val();
+    var Category = $('#Categorydata').val();
     var ProductID = $('#ProductID').val();
-    var ProductSku = $('#productsku').val();
-    var Qty = $('.qty').val();
-    var Price = $('.price').val();
+    var productsku = $('#productsku').val();
+    var qty = $('.qty').val();
+    var price = $('.price').val();
     var Total = $('.Total').val();
-
-    // Validation check
-    if (!Dates || !CategoryID || !ProductID || !ProductSku || !Qty || !Price) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Validation Error',
-            text: 'Please fill all required fields.',
-        });
-        return;
-    }
-
+    
     // Prepare object for API
     var obj = {
         param1: Dates,
-        param2: CategoryID,
+        param2: Category,
         param3: ProductID,
-        param4: ProductSku,
-        param5: Qty,
-        param6: Price,
+        param4: productsku,
+        param5: qty,
+        param6: price,
         param7: Total
+        
     };
 
     var SaveModel = JSON.stringify(obj);
@@ -167,21 +188,16 @@ $(document).on('click', '#SaveBtn', function () {
         if (data_) {
             new APICALL(GetGlobalURL('Base', 'SaveStockOpeningBalance'), 'POST', SaveModel, true).FETCH((result, error) => {
                 if (result && result.data != null) {
+                    GetStockOpeningBalance();
                     Swal.fire({
                         icon: 'success',
                         title: 'Saved',
                         text: 'Opening balance added successfully.'
                     });
-
+                   
                     // Reset fields after save
-                    $('#Date').val('');
-                    $('#Categorydata').val('');
-                    $('#ProductID').val('');
-                    $('#productsku').val('');
-                    $('.qty').val(1);
-                    $('.price').val(1);
-                    $('.Total').val(1);
-                    
+                    ClearStockOpeningBalance();
+
                 }
 
                 if (error) {
@@ -210,7 +226,7 @@ function GetProductByCategoryID(categoryID) {
     if (!categoryID) {
 
         targetDropdown.empty().append('<option value="">-- Select Product --</option>');
-        
+
         return;
     }
 
@@ -239,7 +255,7 @@ function GetProductByCategoryID(categoryID) {
                         width: 'resolve',
                         minimumResultsForSearch: 0
                     });
-                  
+
                 }
 
                 if (error) {
@@ -250,7 +266,7 @@ function GetProductByCategoryID(categoryID) {
                         footer: ''
                     });
                 }
-                
+
             });
         }
     });
@@ -260,10 +276,10 @@ $(document).on('change', '#ProductID', function () {
     GetProductskuByProductID(productID);
 });
 function GetProductskuByProductID(productID) {
-    
+
     if (!productID) {
         $("#productsku").empty().append('<option value="">-- Select Sku --</option>');
-        HideLoader2("purchase-row");
+        
         return;
     }
 
@@ -292,7 +308,7 @@ function GetProductskuByProductID(productID) {
                         width: 'resolve',
                         minimumResultsForSearch: 0
                     });
-                   
+
                 }
 
                 if (error) {
@@ -303,7 +319,7 @@ function GetProductskuByProductID(productID) {
                         footer: ''
                     });
                 }
-                
+
             });
         }
     });
@@ -315,3 +331,76 @@ $(document).on('keyup', '.qty, .price', function () {
     var total = qty * price;
     $(".Total").val(total);
 });
+
+
+function GetStockOpeningBalance() {
+    UTILITY.CheckSession((data_) => {
+        if (data_) {
+            new APICALL(GetGlobalURL('Base', 'GetStockOpeningBalance'), 'GET', '', true)
+                .FETCH((result, error) => {
+                    if (result && result.data) {
+                        var tbody = $("#stockTable tbody");
+                        tbody.empty();
+
+                        var totalDebit = 0, totalCredit = 0;
+
+                        $.each(result.data, function (i, row) {
+                            // Safe parsing
+                            var qty = row.OpeningQty || 0;
+                            var debitAmount = row.DebitAmount || 0;
+                            var creditAmount = row.CreditAmount || 0;
+
+                            // Format date (dd/MM/yyyy)
+                            var date = row.OpeningDate ? new Date(row.OpeningDate) : null;
+                            var formattedDate = date ? date.toLocaleDateString("en-GB") : "";
+
+                            // Format numbers with commas
+                            var debit = debitAmount.toLocaleString("en-US", { minimumFractionDigits: 2 });
+                            var credit = creditAmount.toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+                            // Running totals
+                            totalDebit += debitAmount;
+                            totalCredit += creditAmount;
+
+                            // Append row
+                            tbody.append(`
+                                <tr>
+                                    <td>${i + 1}</td>
+                                    <td>${row.ProductName || ''}</td>
+                                    <td class="text-end">${qty}</td>
+                                    <td>${formattedDate}</td>
+                                    <td class="text-end text-danger">${debit}</td>
+                                    <td class="text-end text-success">${credit}</td>
+                                    <td>${row.Narration || ''}</td>
+                                    <td>${row.VoucherType || ''}</td>
+                                </tr>
+                            `);
+                        });
+
+                        // Set totals
+                        $("#totalDebit").text(totalDebit.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+                        $("#totalCredit").text(totalCredit.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+
+                    } else {
+                        $("#stockTable tbody").html(`
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">No records found</td>
+                            </tr>
+                        `);
+                        $("#totalDebit").text("0.00");
+                        $("#totalCredit").text("0.00");
+                    }
+
+                    // Handle API error
+                    if (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error...',
+                            text: error.data?.responseText || 'Something went wrong',
+                        });
+                    }
+                });
+        }
+    });
+}
+

@@ -136,7 +136,7 @@ namespace ManagementPortalApp.Controllers
 
                 if (changePassword.newpassword != changePassword.oldpassword && changePassword.newpassword == changePassword.confirmpassword)
                 {
-                    List<PasswordHistory> ChkPassResult = _sessions.CheckUserPassword(UserID);
+                        List<PasswordHistory> ChkPassResult = _sessions.CheckUserPassword(UserID);
                     int VerifyOldPassword = ChkPassResult.Where(x => _dataencryptor.VerifyPassword(changePassword.confirmpassword, x.UserPassword)).Count();
 
                     if (VerifyOldPassword == 0)

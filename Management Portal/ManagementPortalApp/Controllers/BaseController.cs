@@ -776,6 +776,7 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         #endregion
+
         #region Reports
       
         [HttpGet]
@@ -803,7 +804,6 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
         #endregion
-
 
         #region Company
         [HttpPost]
@@ -838,22 +838,54 @@ namespace ManagementPortalApp.Controllers
             HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyDataById", "Settings");
             return new HttpResponseMessageResult(response);
         }
-        [HttpPost]
-        public IActionResult SaveStockOpeningBalance([FromBody] Parameters Data)
-        {
-            UserInfo userinfo = GetUserInformation();
-            var userid = userinfo.UserID.ToString();
-            string jsonString = JsonConvert.SerializeObject(Data);
-
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveStockOpeningBalance", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
         [HttpGet]
         public IActionResult GetLegerEntry()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetLegerEntry", "Settings");
             return new HttpResponseMessageResult(response);
         }
+        #endregion
+
+        #region StockOpeningBalance
+        [HttpPost]
+        public IActionResult SaveStockOpeningBalance([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param8 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveStockOpeningBalance", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetStockOpeningBalance()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetStockOpeningBalance", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region CompanyOpeningBalance
+
+        [HttpPost]
+        public IActionResult SaveCompanyOpeningBalance([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param5 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+     
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveCompanyOpeningBalance", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetOpeningBalanceCompanyBills()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetOpeningBalanceCompanyBills", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
         #endregion
     }
 

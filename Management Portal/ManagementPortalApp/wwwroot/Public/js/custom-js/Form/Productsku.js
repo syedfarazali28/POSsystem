@@ -240,8 +240,8 @@ function RenderTable() {
     for (var i = 0; i < dataArray.length; i++) {
         row += "<tr>";
         row += "<td class='d-none'>" + dataArray[i].param2 + "</td>";
-        row += "<td>" + dataArray[i].param4 + "</td>";
         row += "<td>" + dataArray[i].param3 + "</td>";
+        row += "<td>" + dataArray[i].param4 + "</td>";
         row += "<td><img src='" + dataArray[i].param5 + "' width='50' height='50'/></td>";
         row += "<td>" + dataArray[i].param6 + "</td>";
         row += dataArray[i].param7 ? '<td><input type="checkbox" disabled checked></td>' : '<td><input type="checkbox" disabled></td>';
