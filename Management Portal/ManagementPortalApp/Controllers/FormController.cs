@@ -20,7 +20,7 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
-        public IActionResult DistributorMaster()
+        public IActionResult CustomerMaster()
         {
             return View();
         }
@@ -60,6 +60,10 @@ namespace ManagementPortalApp.Controllers
             return View();
         }
         public IActionResult OpeningCompanyBills()
+        {
+            return View();
+        }    
+        public IActionResult OpeningCustomerBills()
         {
             return View();
         }

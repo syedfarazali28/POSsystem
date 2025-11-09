@@ -528,41 +528,41 @@ namespace ManagementPortalApp.Controllers
         }
         #endregion
 
-        #region Distributor's
+        #region CustomerData's
         [HttpGet]
-        public IActionResult GetDistributorData()
+        public IActionResult GetCustomerData()
         {
-            HttpResponseMessage response = UseHttpClientGet(null, "GetDistributorData", "Settings");
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCustomerData", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
-        public IActionResult SaveDistributorData([FromBody] Parameters Data)
+        public IActionResult SaveCustomerData([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
             var userid = userinfo.UserID.ToString();
             string jsonString = JsonConvert.SerializeObject(Data);
 
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveDistributorData", "Settings");
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveCustomerData", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
-        public IActionResult GetDistributorDataByid([FromBody] Parameters Data)
+        public IActionResult GetCustomerDataByid([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
             var userid = userinfo.UserID.ToString();
             string jsonString = JsonConvert.SerializeObject(Data);
 
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetDistributorDataByid", "Settings");
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCustomerDataByid", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
-        public IActionResult DeleteDistributorDataByid([FromBody] Parameters Data)
+        public IActionResult DeleteCustomerDataByid([FromBody] Parameters Data)
         {
             UserInfo userinfo = GetUserInformation();
             var userid = userinfo.UserID.ToString();
             string jsonString = JsonConvert.SerializeObject(Data);
 
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteDistributorDataByid", "Settings");
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteCustomerDataByid", "Settings");
             return new HttpResponseMessageResult(response);
         }
         #endregion

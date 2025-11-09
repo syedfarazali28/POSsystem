@@ -1431,9 +1431,9 @@ namespace ManagementPortalApi.Controllers
         }
         #endregion
 
-        #region Distributor Data
+        #region Customer Data
         [HttpPost]
-        public IActionResult GetDistributorDataByid(Parameters p)
+        public IActionResult GetCustomerDataByid(Parameters p)
         {
             DataTable dt = new DataTable();
             try
@@ -1442,7 +1442,7 @@ namespace ManagementPortalApi.Controllers
                 nv.Clear();
                 nv.Add("Id-INT", p.Param1);
 
-                dt = _DAL.GetData("sp_select_distributorbyid", nv, _DAL.CSManagementPortalDatabase);
+                dt = _DAL.GetData("sp_select_customerbyid", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_distributorbyid");
@@ -1462,7 +1462,7 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
         [HttpGet]
-        public IActionResult GetDistributorData()
+        public IActionResult GetCustomerData()
         {
             DataTable dt = new DataTable();
             try
@@ -1471,7 +1471,7 @@ namespace ManagementPortalApi.Controllers
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
 
-                dt = _DAL.GetData("sp_select_distributor", nv, _DAL.CSManagementPortalDatabase);
+                dt = _DAL.GetData("sp_select_customer", nv, _DAL.CSManagementPortalDatabase);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_distributor");
@@ -1491,7 +1491,7 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
         [HttpPost]
-        public IActionResult SaveDistributorData(Parameters p)
+        public IActionResult SaveCustomerData(Parameters p)
         {
             DataTable dt = new DataTable();
             try
@@ -1502,12 +1502,12 @@ namespace ManagementPortalApi.Controllers
                 NameValueCollection? nv = new NameValueCollection();
                 nv.Clear();
                 nv.Add("ID-INT", p.Param1 == null ? "0" : p.Param1);
-                nv.Add("DistributorName-VARCHAR", p.Param2);
+                nv.Add("customerName-VARCHAR", p.Param2);
                 nv.Add("Address-VARCHAR", p.Param3);
                 nv.Add("ContactNumber-VARCHAR", p.Param4);
                 nv.Add("Email-VARCHAR", p.Param5);
                 nv.Add("IsActive-INT", (p.Param6 == "true" ? "1" : "0"));
-                var isInserted = _DAL.InsertData("sp_insert_distributor", nv, _DAL.CSManagementPortalDatabase);
+                var isInserted = _DAL.InsertData("sp_insert_customer", nv, _DAL.CSManagementPortalDatabase);
                 if (!isInserted)
                 {
                     return BadRequest("Failed to Updated Product.");
@@ -1526,7 +1526,7 @@ namespace ManagementPortalApi.Controllers
             return Ok(dt);
         }
         [HttpPost]
-        public IActionResult DeleteDistributorDataByid(Parameters p)
+        public IActionResult DeleteCustomerDataByid(Parameters p)
         {
             var result = new DataTable();
             try
@@ -1535,14 +1535,14 @@ namespace ManagementPortalApi.Controllers
                 nv.Clear();
                 nv.Add("ID-INT", p.Param1);
 
-                result = _DAL.GetData("sp_delete_distributor", nv, _DAL.CSManagementPortalDatabase);
+                result = _DAL.GetData("sp_delete_customers", nv, _DAL.CSManagementPortalDatabase);
                 if (result.Rows.Count > 0)
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_distributor");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_delete_customer");
                 }
                 else
                 {
-                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_distributor");
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_delete_customer");
                 }
             }
             catch (Exception ex)

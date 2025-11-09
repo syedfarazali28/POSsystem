@@ -2,23 +2,23 @@
             <tr>
                 <td class="d-none">
               
-                    <input type="text" class="form-control Distributor-name" id="Distributorid" name="Distributor" autocomplete="off" required>
+                    <input type="text" class="form-control Customer-name" id="Customerid" name="Customer" autocomplete="off" required>
                 </td>
                 <td>
-                    <label>Distributor Name</label>
-                    <input type="text" validate-required class="form-control Distributor-name" id="Distributor" name="Distributor" autocomplete="off" required>
+                    <label>Customer Name</label>
+                    <input type="text" validate-required class="form-control Customer-name" id="Customer" name="Customer" autocomplete="off" required>
                 </td>     
                 <td>
                     <label>Address</label>
-                    <input type="text" validate-required class="form-control Distributor-name" id="Address" name="Distributor" autocomplete="off" required>
+                    <input type="text" validate-required class="form-control Customer-name" id="Address" name="Customer" autocomplete="off" required>
                 </td>    
                 <td>
                     <label>ContactNumber</label>
-                    <input type="text" class="form-control Distributor-name" validate-phone id="ContactNumber" name="Distributor" autocomplete="off" required>
+                    <input type="text" class="form-control Customer-name" validate-phone id="ContactNumber" name="Customer" autocomplete="off" required>
                 </td>    
                 <td>
                     <label>Email</label>
-                    <input type="text" class="form-control Distributor-name" id="Email" validate-email name="Distributor" autocomplete="off" required>
+                    <input type="text" class="form-control Customer-name" id="Email" validate-email name="Customer" autocomplete="off" required>
                 </td>    
                 <td>
                     <label>Active</label>
@@ -39,7 +39,7 @@
 $(document).ready(function () {
     $("#inputtable tbody").html('');
     $("#inputtable tbody").append(html);
-    GetDistributorData();
+    GetCustomerData();
 });
 
 
@@ -50,8 +50,8 @@ $(document).on('click', '.removebtn', function () {
 });
 
 $(document).on("click", "#SaveBtn", function () {
-    var Distributorid = $("#Distributorid").val();
-    var Distributor = $("#Distributor").val();
+    var Customerid = $("#Customerid").val();
+    var Customer = $("#Customer").val();
     var Address = $("#Address").val();
     var ContactNumber = $("#ContactNumber").val();
     var Email = $("#Email").val();
@@ -59,13 +59,13 @@ $(document).on("click", "#SaveBtn", function () {
 
     var dt = {
 
-        Param2: Distributor,
+        Param2: Customer,
         Param3: Address,
         Param4: ContactNumber,
         Param5: Email,
         Param6: isActive
     }
-    var DistributorModel = JSON.stringify(dt); // Send array directly
+    var CustomerModel = JSON.stringify(dt); // Send array directly
     Swal.fire({
         title: 'Do you want to save the changes?',
         showDenyButton: true,
@@ -74,16 +74,16 @@ $(document).on("click", "#SaveBtn", function () {
         denyButtonText: 'Cancel',
     }).then((result) => {
         if (result.isConfirmed) {
-            new APICALL(GetGlobalURL('Base', 'SaveDistributorData'), 'POST', DistributorModel, true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'SaveCustomerData'), 'POST', CustomerModel, true).FETCH((result, error) => {
 
                 if (result) {
                     Swal.fire({
                         icon: "success",
                         title: "Success...",
-                        text: "Distributor saved successfully!",
+                        text: "Customer saved successfully!",
                     });
                     Clear();
-                    GetDistributorData();
+                    GetCustomerData();
                 }
 
                 if (error) {
@@ -99,8 +99,8 @@ $(document).on("click", "#SaveBtn", function () {
 });
 
 $(document).on('click', '#UpdateBtn', function () {
-    var Distributorid = $("#Distributorid").val();
-    var Distributor = $("#Distributor").val();
+    var Customerid = $("#Customerid").val();
+    var Customer = $("#Customer").val();
     var Address = $("#Address").val();
     var ContactNumber = $("#ContactNumber").val();
     var Email = $("#Email").val();
@@ -108,24 +108,24 @@ $(document).on('click', '#UpdateBtn', function () {
 
     var dt = {
 
-        Param1: Distributorid,
-        Param2: Distributor,
+        Param1: Customerid,
+        Param2: Customer,
         Param3: Address,
         Param4: ContactNumber,
         Param5: Email,
         Param6: isActive
     }
-    var DistributorModel = JSON.stringify(dt); // Send array directly
-    new APICALL(GetGlobalURL('Base', 'SaveDistributorData'), 'POST', DistributorModel, true).FETCH((result, error) => {
+    var CustomerModel = JSON.stringify(dt); // Send array directly
+    new APICALL(GetGlobalURL('Base', 'SaveCustomerData'), 'POST', CustomerModel, true).FETCH((result, error) => {
 
         if (result) {
             Swal.fire({
                 icon: "success",
                 title: "Success...",
-                text: "Distributor saved successfully!",
+                text: "Customer saved successfully!",
             });
             Clear();
-            GetDistributorData();
+            GetCustomerData();
         }
 
         if (error) {
@@ -153,28 +153,28 @@ function Clear() {
         $('.updatebutton').toggleClass('d-none');
     }
 }
-function GetDistributorData() {
-    ShowLoader('DistributorMasterDiv');
+function GetCustomerData() {
+    ShowLoader('CustomerMasterDiv');
 
     UTILITY.CheckSession((data_) => {
 
         if (data_) {
 
-            new APICALL(GetGlobalURL('Base', 'GetDistributorData'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetCustomerData'), 'GET', '', true).FETCH((result, error) => {
 
                 if (result) {
 
-                    $('#Distributor-master tbody').html('');
+                    $('#Customer-master tbody').html('');
                     if (result.data != null) {
                         
                         $.each(result.data, function (i, option) {
                             var ActiveCell = option.IsActive == true ? '<td><input type="checkbox" class="role-active checkboxsize" disabled checked="checked"></td>' : '<td><input type="checkbox" class="role-active checkboxsize" disabled></td>'
-                            var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block EditDistributor" data-value="' + option.ID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
-                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block DeleteDistributor"  data-value="' + option.ID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
+                            var UpdateBtn = (data_[0].AllowUpdate == true) ? '<td><button class="btn btn-sm btn-orange btn-block EditCustomer" data-value="' + option.ID + '" type="button"><i class="bx bxs-edit"></i></button></td>' : '';
+                            var DeleteBtn = (data_[0].AllowDelete == true) ? '<td><button class="btn btn-sm btn-gray btn-block DeleteCustomer"  data-value="' + option.ID + '" type="button"><i class="bx bxs-trash"></i></button></td>' : '';
 
-                            $('#Distributor-master tbody').append(
+                            $('#Customer-master tbody').append(
                                 '<tr id="rowid-' + i + '">' +
-                                '<td>' + option.DistributorName + '</td>' +
+                                '<td>' + option.CustomerName + '</td>' +
                                 '<td>' + option.Address + '</td>' +
                                 '<td>' + option.ContactNumber + '</td>' +
                                 '<td>' + option.Email + '</td>' +
@@ -184,12 +184,12 @@ function GetDistributorData() {
                                 '</tr>'
                             );
                         });
-                        $('.EditDistributor').on('click', function () {
-                            EditDistributor(this.attributes["data-value"].value);
+                        $('.EditCustomer').on('click', function () {
+                            EditCustomer(this.attributes["data-value"].value);
                         });
 
-                        $('.DeleteDistributor').on('click', function () {
-                            DeleteDistributor(this.attributes["data-value"].value);
+                        $('.DeleteCustomer').on('click', function () {
+                            DeleteCustomer(this.attributes["data-value"].value);
                         });
 
                     }
@@ -206,30 +206,30 @@ function GetDistributorData() {
                     });
                 }
             });
-            HideLoader('DistributorMasterDiv');
+            HideLoader('CustomerMasterDiv');
 
         }
     });
 }
 
-function EditDistributor(Id) {
+function EditCustomer(Id) {
     var dt = {
         Param1: Id
     }
-    var DistributorModel = JSON.stringify(dt); // Send array directly
-    new APICALL(GetGlobalURL('Base', 'GetDistributorDataByid'), 'POST', DistributorModel, true).FETCH((result, error) => {
+    var CustomerModel = JSON.stringify(dt); // Send array directly
+    new APICALL(GetGlobalURL('Base', 'GetCustomerDataByid'), 'POST', CustomerModel, true).FETCH((result, error) => {
 
         if (result) {
 
             if (result.data.length > 0) {
 
-                var DistributorName = result.data[0].DistributorName;
+                var CustomerName = result.data[0].CustomerName;
                 var Address = result.data[0].Address;
                 var ContactNumber = result.data[0].ContactNumber;
                 var Email = result.data[0].Email;
                 var IsActive = result.data[0].IsActive;
-                $('#Distributorid').val(Id);
-                $('#Distributor').val(DistributorName);
+                $('#Customerid').val(Id);
+                $('#Customer').val(CustomerName);
                 $("#Address").val(Address);
                 $("#ContactNumber").val(ContactNumber);
                 $("#Email").val(Email);
@@ -255,7 +255,7 @@ function EditDistributor(Id) {
         }
     });
 }
-function DeleteDistributor(Id) {
+function DeleteCustomer(Id) {
 
     Swal.fire({
         title: 'Do you want to save the changes?',
@@ -268,8 +268,8 @@ function DeleteDistributor(Id) {
             var dt = {
                 Param1: Id
             }
-            var DistributorModel = JSON.stringify(dt); // Send array directly
-            new APICALL(GetGlobalURL('Base', 'DeleteDistributorDataByid'), 'POST', DistributorModel, true).FETCH((result, error) => {
+            var CustomerModel = JSON.stringify(dt); // Send array directly
+            new APICALL(GetGlobalURL('Base', 'DeleteCustomerDataByid'), 'POST', CustomerModel, true).FETCH((result, error) => {
 
                 if (result) {
                     if (result.data && result.data.length > 0) {
@@ -285,14 +285,14 @@ function DeleteDistributor(Id) {
                         Swal.fire({
                             icon: "success",
                             title: "Success...",
-                            text: "Distributor Delete successfully!",
+                            text: "Customer Delete successfully!",
                         });
 
                         if ($('.savebutton').hasClass('d-none')) {
                             $('.savebutton').toggleClass('d-none');
                             $('.updatebutton').toggleClass('d-none');
                         }
-                        GetDistributorData();
+                        GetCustomerData();
                     }
                 }
                 if (error) {
