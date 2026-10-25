@@ -82,7 +82,11 @@ builder.Services.AddCors(o =>
     o.AddPolicy("_AllowedWebAPI", policy =>
     {
         policy
-            .WithOrigins(Environment.GetEnvironmentVariable("AM_VIEWURL"))
+            .WithOrigins(
+                Environment.GetEnvironmentVariable("AM_VIEWURL"),
+                "http://localhost:4200",
+                "https://localhost:4200"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -90,7 +94,10 @@ builder.Services.AddCors(o =>
 });
 
 var app = builder.Build();
-
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // Visual Studio/Browser par full stack trace dikhayega
+}
 // Middleware
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1"));

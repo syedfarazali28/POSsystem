@@ -75,7 +75,7 @@ function GetCompanyActiveData() {
                 $('#CompanyID').select2({
                     placeholder: "-- Select Company --",
                     allowClear: true,
-                    width: 'resolve',
+                    width: '100%',
                     minimumResultsForSearch: 0
                 });
                 $("#CompanyID").prop("disabled", true);
@@ -124,7 +124,7 @@ function GetPaymentModeData() {
                 $('#PaymentModeID').select2({
                     placeholder: "-- Select Payment Mode --",
                     allowClear: true,
-                    width: 'resolve',
+                    width: '100%',
                     minimumResultsForSearch: 0
                 });
 
@@ -171,7 +171,7 @@ function GetStockLocationTypeData() {
                 $('#stocklocID').select2({
                     placeholder: "-- Select Stock Location --",
                     allowClear: true,
-                    width: 'resolve',
+                    width: '100%',
                     minimumResultsForSearch: 0
                 });
                 if ($('#stocklocID option[value="1"]').length > 0) {

@@ -147,7 +147,7 @@ function GetSupplyActiveData() {
                 $('#SupplierID').select2({
                     placeholder: "-- Select Supplies --",
                     allowClear: true,
-                    width: 'resolve',
+                    width: '100%',
                     minimumResultsForSearch: 0
                 });
 
@@ -187,17 +187,57 @@ $(document).on('click', '#SaveBtn', function () {
         UTILITY.CheckSession((data_) => {
             if (data_) {
                 new APICALL(GetGlobalURL('Base', 'GetSupplierLedgers'), 'POST', CategoryModel, true).FETCH((result, error) => {
-                    if (result && result.data != null) {
-                        Clear()
+                    if (result && result.data != null && result.data.length > 0) {
+                        var rows = '';
+                        var totalDebit = 0, totalCredit = 0;
+
+                        result.data.forEach((item) => {
+                            var balanceClass = parseFloat(item.Balance) >= 0 ? 'text-success fw-bold' : 'text-danger fw-bold';
+                            var debit = item.Debit > 0 ? `<span class="text-success fw-bold">${item.Debit.toFixed(2)}</span>` : '';
+                            var credit = item.Credit > 0 ? `<span class="text-danger fw-bold">${item.Credit.toFixed(2)}</span>` : '';
+                            totalDebit += item.Debit || 0;
+                            totalCredit += item.Credit || 0;
+
+                            rows += `
+                                <tr>
+                                    <td class="text-center">${item.VoucherDate ? item.VoucherDate.split('T')[0] : ''}</td>
+                                    <td>${item.CompanyName || ''}</td>
+                                    <td>
+                                        <div><b>${item.Particulars || ''}</b></div>
+                                        <small class="text-muted">${item.Remarks || ''}</small>
+                                    </td>
+                                    <td class="text-end">${debit}</td>
+                                    <td class="text-end">${credit}</td>
+                                    <td class="text-end ${balanceClass}">${(item.Balance || 0).toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+
+                        $('#LedgerEntry tbody').html(rows);
+
+                        // Add totals row
+                        if ($('#LedgerTotals').length === 0) {
+                            $('#LedgerEntry').append(`
+                                <tfoot id="LedgerTotals">
+                                    <tr class="fw-bold">
+                                        <td colspan="3" class="text-end">Total:</td>
+                                        <td class="text-end text-success">${totalDebit.toFixed(2)}</td>
+                                        <td class="text-end text-danger">${totalCredit.toFixed(2)}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            `);
+                        } else {
+                            $('#LedgerTotals td:nth-child(2)').text(totalDebit.toFixed(2));
+                            $('#LedgerTotals td:nth-child(3)').text(totalCredit.toFixed(2));
+                        }
+
+                    } else {
+                        $('#LedgerEntry tbody').html('<tr><td colspan="6" class="text-center text-muted">No records found for selected criteria</td></tr>');
                     }
 
                     if (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error...',
-                            text: error.data.responseText,
-                            footer: ''
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error...', text: error.data.responseText });
                     }
                 });
             }

@@ -67,5 +67,20 @@ namespace ManagementPortalApp.Controllers
         {
             return View();
         }
+
+        public IActionResult SupplierPayment()
+        {
+            return View();
+        }
+
+        public IActionResult CustomerReceipt()
+        {
+            return View();
+        }
+
+        public IActionResult CustomerLedger()
+        {
+            return View();
+        }
     }
 }

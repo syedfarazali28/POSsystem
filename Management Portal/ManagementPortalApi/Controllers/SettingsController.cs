@@ -1490,6 +1490,35 @@ namespace ManagementPortalApi.Controllers
 
             return Ok(dt);
         }
+        [HttpGet]
+        public IActionResult GetCustomerActiveData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_activecustomer", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_distributor");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_distributor");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
         [HttpPost]
         public IActionResult SaveCustomerData(Parameters p)
         {
@@ -2830,6 +2859,501 @@ namespace ManagementPortalApi.Controllers
         }
         #endregion
 
+        #region Sale
+        [HttpGet]
+        public IActionResult GetStatusData()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
 
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_statusdata", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_statusdata");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_statusdata");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpGet]
+        public IActionResult GetStatusDataForEdit()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+
+                dt = _DAL.GetData("sp_select_statusdataforedit", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_statusdata");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_statusdata");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult GetProductSkubybarcode(Parameters Param)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("Barcode-varchar", Param.Param1);
+
+
+                dt = _DAL.GetData("sp_select_productskubybarcode", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_productskubybarcode");
+                }
+                else
+                {
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_productskubybarcode");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dt);
+        }
+        [HttpPost]
+        public IActionResult SaveSaleWithDetails([FromBody] Parameters p)
+        {
+            bool result = false;
+
+            try
+            {
+                // 1. Create DataTable to store sale details
+                DataTable saleDetailTable = new DataTable();
+                saleDetailTable.Columns.Add("ProductSkuID", typeof(int));      // param1: skuId
+                saleDetailTable.Columns.Add("Barcode", typeof(string));        // param2: barcode
+                saleDetailTable.Columns.Add("ExpiryDate", typeof(DateTime));   // param3: expiryDate
+                saleDetailTable.Columns.Add("Quantity", typeof(decimal));      // param4: qty
+                saleDetailTable.Columns.Add("DeliveredQty", typeof(decimal));  // param5: dqty
+                saleDetailTable.Columns.Add("RemainingQty", typeof(decimal));  // param6: remainingQty
+                saleDetailTable.Columns.Add("Price", typeof(decimal));         // param7: price
+                saleDetailTable.Columns.Add("Total", typeof(decimal));         // param8: total
+                saleDetailTable.Columns.Add("IsBonus", typeof(bool));          // param9: isBonus
+
+                // 2. Populate table from JS List
+                foreach (var item in p.List)
+                {
+                    saleDetailTable.Rows.Add(
+                        item.Param1, // skuId
+                        item.Param2, // barcode
+                        string.IsNullOrEmpty(item.Param3) ? DBNull.Value : DateTime.Parse(item.Param3), // expiryDate
+                        item.Param4, // qty
+                        item.Param5, // dqty
+                        item.Param6, // remainingQty
+                        item.Param7, // price
+                        item.Param8, // total
+                        item.Param9  // isBonus
+                    );
+                }
+
+                // 3. Additional parameters from JS
+                NameValueCollection nvc = new NameValueCollection();
+                nvc.Add("SaleDate-VARCHAR", p.Param1);         // SaleDate
+                nvc.Add("InvoiceNumber-VARCHAR", p.Param9);          // CustomerID
+                nvc.Add("CustomerID-Int", p.Param2);          // CustomerID
+                nvc.Add("TotalAmount-DECIMAL", p.Param4 ?? "0"); // optional: total amount
+                nvc.Add("DiscountAmount-DECIMAL", p.Param7 ?? "0"); // optional: remaining amount
+                nvc.Add("TaxAmount-DECIMAL", p.Param7 ?? "0"); // optional: remaining amount
+                nvc.Add("NetAmount-DECIMAL", p.Param7 ?? "0"); // optional: remaining amount
+                nvc.Add("PaymentMethod-INT", p.Param5 ?? "0"); // optional: payment amount
+                nvc.Add("PaymentAmount-DECIMAL", p.Param5 ?? "0"); // optional: payment amount
+                nvc.Add("Notes-VARCHAR", p.Param3);      // File base64
+                nvc.Add("CreatedBy-INT", p.Param3);      // File base64
+                nvc.Add("LocationID-INT", p.Param3);
+                // 4. Add DataTable to DataSet
+                DataSet ds = new DataSet();
+                ds.Tables.Add(saleDetailTable);
+
+                string[] typeParams = { "@SaleDetails" };
+
+                // 5. Call DAL to insert data
+                result = _DAL.InsertDataWithType(
+                    "sp_insert_sale",
+                    nvc,
+                    typeParams,
+                    ds,
+                    _DAL.CSManagementPortalDatabase
+                );
+
+                // 6. Log activity
+                if (result)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + " sp_insert_sale");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + " sp_insert_sale");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{Controller} {Method} {Message}", "FormsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region CustomerOpeningBalance
+        [HttpPost]
+        public IActionResult SaveCustomerOpeningBalance(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("OpeningDate-VARCHAR", p.Param1);
+                nv.Add("CustomerID-INT", p.Param2);
+                nv.Add("Narration-VARCHAR", p.Param3);
+                nv.Add("Amount-DECIMAL", p.Param4);
+                nv.Add("CreatedBy-INT", p.Param5);
+                dt = _DAL.GetData("sp_insert_CustomerOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert + "sp_insert_CustomerOpeningBalance");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert2 + "sp_insert_CustomerOpeningBalance");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public IActionResult GetOpeningBalanceCustomerBills()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                dt = _DAL.GetData("sp_select_CustomerOpeningBalance", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_CustomerOpeningBalance");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_CustomerOpeningBalance");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+        #endregion
+
+        #region SupplierLedger
+        [HttpPost]
+        public IActionResult GetSupplierLedgers(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("DateFrom-VARCHAR", p.Param1);
+                nv.Add("DateTo-VARCHAR", p.Param2);
+                nv.Add("SupplierID-INT", string.IsNullOrEmpty(p.Param3) ? "0" : p.Param3);
+                dt = _DAL.GetData("sp_select_SupplierLedger", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_SupplierLedger");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_SupplierLedger");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+        #endregion
+
+        #region CustomerLedger
+        [HttpPost]
+        public IActionResult GetCustomerLedgers(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("DateFrom-VARCHAR", p.Param1);
+                nv.Add("DateTo-VARCHAR", p.Param2);
+                nv.Add("CustomerID-INT", string.IsNullOrEmpty(p.Param3) ? "0" : p.Param3);
+                dt = _DAL.GetData("sp_select_CustomerLedger", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_CustomerLedger");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_CustomerLedger");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                SystemActivityLog(ActivityLog.ActivityID_Error, MethodBase.GetCurrentMethod().Name + " " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+        #endregion
+
+        #region SupplierPayment
+        [HttpGet]
+        public IActionResult GetPaymentVoucherNo()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt = _DAL.GetData("sp_select_PaymentVoucherNo", null, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_PaymentVoucherNo");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public IActionResult GetSupplierPayments()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt = _DAL.GetData("sp_select_SupplierPayment", null, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_SupplierPayment");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_SupplierPayment");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult GetSupplierPaymentById(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("PaymentID-INT", p.Param1);
+                dt = _DAL.GetData("sp_select_SupplierPaymentById", nv, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_SupplierPaymentById");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult SaveSupplierPayment(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("VoucherNo-VARCHAR", p.Param1);
+                nv.Add("SupplierID-INT", p.Param2);
+                nv.Add("PaymentDate-VARCHAR", p.Param3);
+                nv.Add("Amount-DECIMAL", p.Param4);
+                nv.Add("PaymentModeID-INT", p.Param5);
+                nv.Add("Remarks-VARCHAR", p.Param6);
+                nv.Add("CreatedBy-INT", p.Param7);
+                dt = _DAL.GetData("sp_insert_SupplierPayment", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert + "sp_insert_SupplierPayment");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert2 + "sp_insert_SupplierPayment");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteSupplierPayment(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("PaymentID-INT", p.Param1);
+                dt = _DAL.GetData("sp_delete_SupplierPayment", nv, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Delete, ActivityLog.ActivityDetails_Delete + "sp_delete_SupplierPayment");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+        #endregion
+
+        #region CustomerReceipt
+        [HttpGet]
+        public IActionResult GetReceiptVoucherNo()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt = _DAL.GetData("sp_select_ReceiptVoucherNo", null, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_ReceiptVoucherNo");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public IActionResult GetCustomerReceipts()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt = _DAL.GetData("sp_select_CustomerReceipt", null, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_CustomerReceipt");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get2 + "sp_select_CustomerReceipt");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult GetCustomerReceiptById(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("ReceiptID-INT", p.Param1);
+                dt = _DAL.GetData("sp_select_CustomerReceiptById", nv, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Get, ActivityLog.ActivityDetails_Get + "sp_select_CustomerReceiptById");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult SaveCustomerReceipt(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("VoucherNo-VARCHAR", p.Param1);
+                nv.Add("CustomerID-INT", p.Param2);
+                nv.Add("ReceiptDate-VARCHAR", p.Param3);
+                nv.Add("Amount-DECIMAL", p.Param4);
+                nv.Add("PaymentModeID-INT", p.Param5);
+                nv.Add("Remarks-VARCHAR", p.Param6);
+                nv.Add("CreatedBy-INT", p.Param7);
+                dt = _DAL.GetData("sp_insert_CustomerReceipt", nv, _DAL.CSManagementPortalDatabase);
+                if (dt != null && dt.Rows.Count > 0)
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert + "sp_insert_CustomerReceipt");
+                else
+                    SystemActivityLog(ActivityLog.ActivityID_Insert, ActivityLog.ActivityDetails_Insert2 + "sp_insert_CustomerReceipt");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCustomerReceipt(Parameters p)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                NameValueCollection? nv = new NameValueCollection();
+                nv.Clear();
+                nv.Add("ReceiptID-INT", p.Param1);
+                dt = _DAL.GetData("sp_delete_CustomerReceipt", nv, _DAL.CSManagementPortalDatabase);
+                SystemActivityLog(ActivityLog.ActivityID_Delete, ActivityLog.ActivityDetails_Delete + "sp_delete_CustomerReceipt");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{0} {1} {2}", "SettingsController", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            return Ok(dt);
+        }
+        #endregion
     }
 }

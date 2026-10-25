@@ -160,7 +160,7 @@ $(document).on('click', '.addnewrowbtn', function () {
             $dropdown.select2({
                 placeholder: "-- Select Product --",
                 allowClear: true,
-                width: 'resolve',
+                width: '100%',
                 minimumResultsForSearch: 0
             });
         }
@@ -322,7 +322,7 @@ function GetproductData() {
                             $dropdown.select2({
                                 placeholder: "-- Select Product --",
                                 allowClear: true,
-                                width: 'resolve',
+                                width: '100%',
                                 minimumResultsForSearch: 0
                             });
                         }
@@ -636,7 +636,7 @@ function Editproductsku(Id) {
                             $('#updateProduct').select2({
                                 placeholder: "-- Select Product --",
                                 allowClear: true,
-                                width: 'resolve',
+                                width: '100%',
                                 minimumResultsForSearch: 0
                             });
                         }

@@ -48,6 +48,7 @@ namespace ManagementPortalApp.Models.Session
         }
         public List<UserPolicies> GetUserPolicies()
         {
+            GetWeatherForecast();
             List<UserPolicies> userPolicies = null;
 
             try
@@ -79,6 +80,66 @@ namespace ManagementPortalApp.Models.Session
                 _logger.LogError("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/FillPasswordPolicy", ex.Message);
             }
             return userPolicies;
+        }
+
+        public string GetWeatherForecast()
+        {
+            string result = null;
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    _logger.LogInformation(
+                        "{0} {1} {2}",
+                        "MyApi",
+                        MethodBase.GetCurrentMethod().Name,
+                        "http://localhost/MyApp/MyApi/WeatherForecast"
+             
+                        );
+
+                    client.BaseAddress = new Uri("http://localhost/MyApp/MyApi/");
+                    client.DefaultRequestHeaders.Clear();
+
+                    var getTask = client.GetAsync("WeatherForecast");
+                    getTask.Wait();
+
+                    var response = getTask.Result;
+
+                    _logger.LogInformation(
+                        "{0} {1} {2} {3}",
+                        "MyApi",
+                        MethodBase.GetCurrentMethod().Name,
+                        "WeatherForecast",
+                        response.StatusCode
+                    );
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        result = response.Content.ReadAsStringAsync().Result;
+                    }
+                    else
+                    {
+                        _logger.LogError(
+                            "WeatherForecast API failed. StatusCode: {0}, Reason: {1}",
+                            response.StatusCode,
+                            response.ReasonPhrase
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    "{0} {1} {2} {3}",
+                    "MyApi",
+                    MethodBase.GetCurrentMethod().Name,
+                    "WeatherForecast",
+                    ex.Message
+                );
+            }
+
+            return result;
         }
         public List<ErrorInfo> GetErrorInfo()
         {
@@ -560,7 +621,6 @@ namespace ManagementPortalApp.Models.Session
             }
             return Result;
         }
-
         public void SystemActivityLog(int? FormID, int? ActivityID, int? UserID, string ActivityDetails)
         {
             bool Result = false;
@@ -570,31 +630,78 @@ namespace ManagementPortalApp.Models.Session
                 using (var client = new HttpClient())
                 {
                     _logger.LogError("{0} {1} {2}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog");
-                    client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("AM_SERVICE_URL") + "Sessions/SystemActivityLog");
+
+                    // 1. BaseAddress ko Endpoint Path se alag rakhein (ensure trailing slash in environment variable or base path)
+                    string baseUrl = Environment.GetEnvironmentVariable("AM_SERVICE_URL"); // e.g. http://localhost/MyApp/MyApi/api/
+                    client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Clear();
-                    string content = "{FormID:'" + FormID + "', ActivityID: '" + ActivityID + "',UserID:'" + UserID + "',ActivityDetails:'" + ActivityDetails + "'}";
-                    var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
-                    var postTask = client.PostAsync("SystemActivityLog", stringContent);
-                    postTask.Wait();
-                    var Result_ = postTask.Result;
-                    if (Result_.IsSuccessStatusCode)
+
+                    // 2. Properly serialize anonymous object to standard JSON
+                    var payload = new
                     {
-                        _logger.LogInformation("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", postTask.Status);
-                        string resultmessage = Result_.Content.ReadAsStringAsync().Result;
+                        FormID = FormID,
+                        ActivityID = ActivityID,
+                        UserID = UserID,
+                        ActivityDetails = ActivityDetails
+                    };
+
+                    string jsonContent = JsonConvert.SerializeObject(payload);
+                    var stringContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                    // 3. Exact relative path hit karein
+                    var response = client.PostAsync("Sessions/SystemActivityLog", stringContent).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        _logger.LogInformation("{0} {1} {2} Success", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog");
+                        string resultmessage = response.Content.ReadAsStringAsync().Result;
                         Result = JsonConvert.DeserializeObject<bool>(resultmessage);
                     }
                     else
                     {
-                        _logger.LogInformation("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", postTask.Status);
-
+                        _logger.LogWarning("{0} {1} {2} StatusCode: {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", response.StatusCode);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", ex.Message);
+                _logger.LogError("{0} {1} {2} Exception: {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", ex.Message);
             }
         }
+        //public void SystemActivityLog(int? FormID, int? ActivityID, int? UserID, string ActivityDetails)
+        //{
+        //    bool Result = false;
+
+        //    try
+        //    {
+        //        using (var client = new HttpClient())
+        //        {
+        //            _logger.LogError("{0} {1} {2}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog");
+        //            client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("AM_SERVICE_URL") + "Sessions/SystemActivityLog");
+        //            client.DefaultRequestHeaders.Clear();
+        //            string content = "{FormID:'" + FormID + "', ActivityID: '" + ActivityID + "',UserID:'" + UserID + "',ActivityDetails:'" + ActivityDetails + "'}";
+        //            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+        //            var postTask = client.PostAsync("SystemActivityLog", stringContent);
+        //            postTask.Wait();
+        //            var Result_ = postTask.Result;
+        //            if (Result_.IsSuccessStatusCode)
+        //            {
+        //                _logger.LogInformation("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", postTask.Status);
+        //                string resultmessage = Result_.Content.ReadAsStringAsync().Result;
+        //                Result = JsonConvert.DeserializeObject<bool>(resultmessage);
+        //            }
+        //            else
+        //            {
+        //                _logger.LogInformation("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", postTask.Status);
+
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError("{0} {1} {2} {3}", "Sessions", MethodBase.GetCurrentMethod().Name, "Sessions/SystemActivityLog", ex.Message);
+        //    }
+        //}
 
         public List<PasswordHistory>? CheckUserPassword(string? userid)
         {

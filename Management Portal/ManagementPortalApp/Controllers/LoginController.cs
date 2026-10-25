@@ -256,12 +256,12 @@ namespace ManagementPortalApp.Controllers
                 try
                 {
 
-                    _logger.LogInformation("{0} UserID:{1} {2} {3}", "Login/"+ MethodBase.GetCurrentMethod().Name, UserID, ActivityLog.Details_View, "UserLogin");
+                    _logger.LogInformation("{0} UserID:{1} {2} {3}", "Login/" + MethodBase.GetCurrentMethod().Name, UserID, ActivityLog.Details_View, "UserLogin");
 
                     SessionItems session = _sessions.GetSession(UniqueKey, UserID);
                     return Redirect(session.userInfo.DefaultFormName);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogCritical("Login/" + MethodBase.GetCurrentMethod().Name + ex.Message);
                 }
@@ -367,7 +367,7 @@ namespace ManagementPortalApp.Controllers
                                             _sessions.ResetUserAttemptCount(loginInfo.LoginName);
                                             _sessions.SystemActivityLog(0, ActivityLog.ID_Login, userInfos[0].UserID, ActivityLog.Details_Login);
                                             _logger.LogInformation("{0} {1} {2} {3}", "Login/"+ MethodBase.GetCurrentMethod().Name, userInfos[0].UserID, "User Logged In From Login To " + userInfos[0].DefaultFormName, "UserLogin");
-                                            string Clientid = _sessions.GetClientid(userInfos[0].UserID.ToString());
+                                            //string Clientid = _sessions.GetClientid(userInfos[0].UserID.ToString());
 
                                             return Redirect(formname);
 

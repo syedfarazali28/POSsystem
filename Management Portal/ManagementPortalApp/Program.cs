@@ -18,6 +18,18 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNewto
 builder.Services.AddScoped<Sessions>();
 builder.Services.AddScoped<CookieAuthentication>();
 builder.Services.AddScoped<AuthenticationAccess>();
+
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("_AllowAngular", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200", "https://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 builder.Services.AddSingleton<SendEmail>();
 builder.Services.AddSingleton<DataEncryptor>();
 builder.Services.AddSingleton<CommonMethods>();
@@ -65,6 +77,8 @@ app.UseAuthentication();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("_AllowAngular");
 
 app.UseSession();
 
@@ -117,6 +131,10 @@ app.MapControllerRoute(
     pattern: "{controller=Login}/{action=UserLogin}/{id?}"
 );
 
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // Visual Studio/Browser par full stack trace dikhayega
+}
 
 //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
 

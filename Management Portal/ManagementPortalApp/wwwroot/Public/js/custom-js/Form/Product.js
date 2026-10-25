@@ -232,7 +232,7 @@ function GetCategoryData() {
                     $('.searchingenable').select2({
                         placeholder: "-- Select Category --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
                 }

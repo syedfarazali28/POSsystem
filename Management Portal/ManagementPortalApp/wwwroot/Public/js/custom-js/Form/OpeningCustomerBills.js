@@ -10,7 +10,7 @@ function GetCustomerData() {
 
     UTILITY.CheckSession((data_) => {
         if (data_) {
-            new APICALL(GetGlobalURL('Base', 'GetCustomerData'), 'GET', '', true).FETCH((result, error) => {
+            new APICALL(GetGlobalURL('Base', 'GetCustomerActiveData'), 'GET', '', true).FETCH((result, error) => {
                 if (result && result.data.length >0) {
                     // Populate only the target dropdown
                     $("#Customerdata").empty().append('<option value="">-- Select Customer --</option>');
@@ -27,7 +27,7 @@ function GetCustomerData() {
                     $("#Customerdata").select2({
                         placeholder: "-- Select Customer --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 

@@ -27,7 +27,7 @@ function GetCompanyData() {
                     $("#Companydata").select2({
                         placeholder: "-- Select Company --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
@@ -172,15 +172,8 @@ $(document).on('click', '#SaveBtn', function () {
                         text: 'Opening balance added successfully.'
                     });
 
-                    // Reset fields after save
-                    $('#Date').val('');
-                    $('#Categorydata').val('');
-                    $('#ProductID').val('');
-                    $('#productsku').val('');
-                    $('.qty').val(1);
-                    $('.price').val(1);
-                    $('.Total').val(1);
-
+                    $('#purchaseForm')[0].reset();
+                    OpeningCompanyBills();
                 }
 
                 if (error) {

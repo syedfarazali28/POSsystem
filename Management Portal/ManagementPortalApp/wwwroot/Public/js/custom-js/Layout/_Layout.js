@@ -395,3 +395,5 @@ function fileToBase64(file, callback) {
     reader.onerror = () => callback("");
     reader.readAsDataURL(file);
 }
+
+

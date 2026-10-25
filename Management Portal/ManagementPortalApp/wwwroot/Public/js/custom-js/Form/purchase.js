@@ -89,7 +89,7 @@
                     $('#CompanyID').select2({
                         placeholder: "-- Select Company --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
@@ -136,7 +136,7 @@
                     $('#PaymentModeID').select2({
                         placeholder: "-- Select Payment Mode --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
@@ -183,7 +183,7 @@
                     $('#stocklocID').select2({
                         placeholder: "-- Select Stock Location --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
                     if ($('#stocklocID option[value="1"]').length > 0) {
@@ -240,7 +240,7 @@
                         $("#category").select2({
                             placeholder: "-- Select Category --",
                             allowClear: true,
-                            width: 'resolve',
+                            width: '100%',
                             minimumResultsForSearch: 0
                         });
                         if (id) {
@@ -302,7 +302,7 @@ function GetProductByCategoryID(categoryID, id = null) {
                         targetDropdown.select2({
                             placeholder: "-- Select Product --",
                             allowClear: true,
-                            width: 'resolve',
+                            width: '100%',
                             minimumResultsForSearch: 0
                         });
                         HideLoader2("purchase-row");
@@ -346,7 +346,7 @@ function GetProductByCategoryID(categoryID, id = null) {
                         $("#product").select2({
                             placeholder: "-- Select Product --",
                             allowClear: true,
-                            width: 'resolve',
+                            width: '100%',
                             minimumResultsForSearch: 0
                         });
 
@@ -402,7 +402,7 @@ function GetProductByCategoryID(categoryID, id = null) {
                         $("#productsku").select2({
                             placeholder: "-- Select Product --",
                             allowClear: true,
-                            width: 'resolve',
+                            width: '100%',
                             minimumResultsForSearch: 0
                         });
                         if (id) {
@@ -445,7 +445,7 @@ function GetProductByCategoryID(categoryID, id = null) {
                         $("#productsku").select2({
                             placeholder: "-- Select Product Sku --",
                             allowClear: true,
-                            width: 'resolve',
+                            width: '100%',
                             minimumResultsForSearch: 0
                         });
                      

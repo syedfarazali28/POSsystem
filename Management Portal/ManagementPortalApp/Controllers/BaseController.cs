@@ -98,6 +98,17 @@ namespace ManagementPortalApp.Controllers
             return tlistFiltered;
         }
 
+        [HttpGet]
+        public IActionResult GetSessionForAngular()
+        {
+            SessionItems session = GetSessionItems(HttpContext);
+            return Ok(new
+            {
+                userInfo = session.userInfo,
+                rolesMapping = session.rolesMapping
+            });
+        }
+
         #region HttpClient GET
         private HttpResponseMessage UseHttpClientGet(string? QueryString, string ApiName, string ControllerName)
         {
@@ -374,8 +385,37 @@ namespace ManagementPortalApp.Controllers
 
 
         #region masterform
+        #region Company
+        [HttpPost]
+        public IActionResult SaveCompanyData([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
 
-       
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SavecompanyData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+ 
+        [HttpGet]
+        public IActionResult GetCompanyData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetCompanyDataById([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyDataById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        #endregion
+
         #region Category
         [HttpPost]
         public IActionResult SaveCategoryData([FromBody] Parameters Data)
@@ -443,12 +483,7 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
 
-        [HttpGet]
-        public IActionResult GetactiveProductData()
-        {
-            HttpResponseMessage response = UseHttpClientGet(null, "GetactiveProductData", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
+
         [HttpPost]
         public IActionResult SaveProductData([FromBody] Parameters Data)
         {
@@ -533,6 +568,12 @@ namespace ManagementPortalApp.Controllers
         public IActionResult GetCustomerData()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetCustomerData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetCustomerActiveData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCustomerActiveData", "Settings");
             return new HttpResponseMessageResult(response);
         }
         [HttpPost]
@@ -662,6 +703,19 @@ namespace ManagementPortalApp.Controllers
         #endregion
 
         #region Purchase
+ 
+        [HttpGet]
+        public IActionResult GetactiveProductData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetactiveProductData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpGet]
+        public IActionResult GetCompanyActiveData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyActiveData", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         [HttpGet]
         public IActionResult GetMapCategory()
         {
@@ -805,47 +859,13 @@ namespace ManagementPortalApp.Controllers
         }
         #endregion
 
-        #region Company
-        [HttpPost]
-        public IActionResult SaveCompanyData([FromBody] Parameters Data)
-        {
-            UserInfo userinfo = GetUserInformation();
-            var userid = userinfo.UserID.ToString();
-            string jsonString = JsonConvert.SerializeObject(Data);
-
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "SavecompanyData", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
-        [HttpGet]
-        public IActionResult GetCompanyActiveData()
-        {
-            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyActiveData", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
-        [HttpGet]
-        public IActionResult GetCompanyData()
-        {
-            HttpResponseMessage response = UseHttpClientGet(null, "GetCompanyData", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
-        [HttpPost]
-        public IActionResult GetCompanyDataById([FromBody] Parameters Data)
-        {
-            UserInfo userinfo = GetUserInformation();
-            var userid = userinfo.UserID.ToString();
-            string jsonString = JsonConvert.SerializeObject(Data);
-
-            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCompanyDataById", "Settings");
-            return new HttpResponseMessageResult(response);
-        }
+     
         [HttpGet]
         public IActionResult GetLegerEntry()
         {
             HttpResponseMessage response = UseHttpClientGet(null, "GetLegerEntry", "Settings");
             return new HttpResponseMessageResult(response);
         }
-        #endregion
-
         #region StockOpeningBalance
         [HttpPost]
         public IActionResult SaveStockOpeningBalance([FromBody] Parameters Data)
@@ -886,6 +906,166 @@ namespace ManagementPortalApp.Controllers
             return new HttpResponseMessageResult(response);
         }
 
+        #endregion
+
+        #region Sale
+        [HttpGet]
+        public IActionResult GetStatusData()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetStatusData", "Settings");
+            return new HttpResponseMessageResult(response);
+        } 
+        [HttpGet]
+        public IActionResult GetStatusDataForEdit()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetStatusDataForEdit", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult GetProductSkubybarcode([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param5 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetProductSkubybarcode", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        [HttpPost]
+        public IActionResult SaveSaleWithDetails([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            var userid = userinfo.UserID.ToString();
+            Data.Param9 = userid;
+            string jsonString = JsonConvert.SerializeObject(Data);
+
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveSaleWithDetails", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region CustomerOpeningBalance
+        [HttpPost]
+        public IActionResult SaveCustomerOpeningBalance([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            Data.Param5 = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveCustomerOpeningBalance", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpGet]
+        public IActionResult GetOpeningBalanceCustomerBills()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetOpeningBalanceCustomerBills", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region SupplierLedger
+        [HttpPost]
+        public IActionResult GetSupplierLedgers([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierLedgers", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region CustomerLedger
+        [HttpPost]
+        public IActionResult GetCustomerLedgers([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCustomerLedgers", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region SupplierPayment
+        [HttpGet]
+        public IActionResult GetPaymentVoucherNo()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetPaymentVoucherNo", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpGet]
+        public IActionResult GetSupplierPayments()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetSupplierPayments", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult GetSupplierPaymentById([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetSupplierPaymentById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult SaveSupplierPayment([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            Data.Param7 = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveSupplierPayment", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteSupplierPayment([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteSupplierPayment", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+        #endregion
+
+        #region CustomerReceipt
+        [HttpGet]
+        public IActionResult GetReceiptVoucherNo()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetReceiptVoucherNo", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpGet]
+        public IActionResult GetCustomerReceipts()
+        {
+            HttpResponseMessage response = UseHttpClientGet(null, "GetCustomerReceipts", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult GetCustomerReceiptById([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "GetCustomerReceiptById", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult SaveCustomerReceipt([FromBody] Parameters Data)
+        {
+            UserInfo userinfo = GetUserInformation();
+            Data.Param7 = userinfo.UserID.ToString();
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "SaveCustomerReceipt", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCustomerReceipt([FromBody] Parameters Data)
+        {
+            string jsonString = JsonConvert.SerializeObject(Data);
+            HttpResponseMessage response = UseHttpClientPost(jsonString, "DeleteCustomerReceipt", "Settings");
+            return new HttpResponseMessageResult(response);
+        }
         #endregion
     }
 

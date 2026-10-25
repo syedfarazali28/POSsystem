@@ -122,7 +122,7 @@ function GetCategoryData() {
                     $("#Categorydata").select2({
                         placeholder: "-- Select Category --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
@@ -252,7 +252,7 @@ function GetProductByCategoryID(categoryID) {
                     targetDropdown.select2({
                         placeholder: "-- Select Product --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
@@ -305,7 +305,7 @@ function GetProductskuByProductID(productID) {
                     $("#productsku").select2({
                         placeholder: "-- Select Product --",
                         allowClear: true,
-                        width: 'resolve',
+                        width: '100%',
                         minimumResultsForSearch: 0
                     });
 
